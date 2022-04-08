@@ -1,6 +1,6 @@
-﻿using Casino.BLL.ButtonPushHandlers.Implementation;
-using Casino.BLL.ButtonPushHandlers.Interfaces;
-using Casino.BLL.ButtonsHelper;
+﻿using Casino.BLL.ButtonsGenerators;
+using Casino.BLL.ScreenHandlers.Implementation;
+using Casino.BLL.ScreenHandlers.Interfaces;
 using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
@@ -12,7 +12,7 @@ namespace Casino.TelegramUI;
 class Program
 {
     private static readonly ITelegramBotClient Bot = new TelegramBotClient("610837243:AAE6tS9UYngU_qzd6-peNQYDslFy-KfygTs");
-    private static readonly Dictionary<long, IButtonPushHandler> InlineButtonPushHandlers = new();
+    private static readonly Dictionary<long, IScreenHandler> ChatScreenHandlers = new();
 
     public static void Main()
     {
@@ -46,23 +46,23 @@ class Program
             
             if (IsItStartMessage(message!))
             {
-                await InitialBot(message!);
+                await InitializeBotWithKeyboardButtons(message!);
                 return;
             }
 
             if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
             {
                 var chatId = newMessage.Message!.Chat.Id;
-                var buttonPushHandler = GetCurrentButtonPushHandler(telegramBotClient, cancellationToken, chatId, message);
+                var buttonPushHandler = GetCurrentScreenHandler(telegramBotClient, cancellationToken, chatId, message);
 
                 var commandText = message!.Text;
-                await buttonPushHandler.PushAsync(commandText);
+                await buttonPushHandler.PushButtonAsync(commandText);
             }
             else if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
             {
-                var inlineButtonPushHandler = new InlineButtonPushHandler(telegramBotClient, cancellationToken);
+                var inlineButtonPushHandler = new InlineScreenHandler(telegramBotClient, cancellationToken);
                 var commandText = newMessage.CallbackQuery!.Data;
-                await inlineButtonPushHandler.PushAsync(commandText);
+                await inlineButtonPushHandler.PushButtonAsync(commandText);
             }
         }
         catch (Exception e)
@@ -71,34 +71,42 @@ class Program
         }
     }
 
-    private static KeyboardButtonPushHandler GetCurrentButtonPushHandler(ITelegramBotClient telegramBotClient,
+    private static KeyboardScreenHandler GetCurrentScreenHandler(ITelegramBotClient telegramBotClient,
         CancellationToken cancellationToken, long chatId, Message? message)
     {
-        KeyboardButtonPushHandler buttonPushHandler;
+        KeyboardScreenHandler screenHandler;
         if (IsItNewClientChat(chatId))
         {
-            buttonPushHandler = new KeyboardButtonPushHandler(message!, telegramBotClient, cancellationToken);
-            InlineButtonPushHandlers.Add(chatId, buttonPushHandler);
+            screenHandler = new KeyboardScreenHandler(message!, telegramBotClient, cancellationToken);
+            ChatScreenHandlers.Add(chatId, screenHandler);
         }
         else
         {
-            buttonPushHandler = (KeyboardButtonPushHandler) InlineButtonPushHandlers[chatId];
+            screenHandler = (KeyboardScreenHandler) ChatScreenHandlers[chatId];
         }
 
-        return buttonPushHandler;
+        return screenHandler;
     }
 
     private static bool IsItNewClientChat(long? chatId)
     {
-        return chatId  != null && !InlineButtonPushHandlers.ContainsKey((long)chatId);
+        return chatId  != null && !ChatScreenHandlers.ContainsKey((long)chatId);
     }
 
     private static bool IsUpdateTypeCallBackAndCallbackNotNull(Update newMessage) =>
          newMessage.Type == UpdateType.CallbackQuery && newMessage.CallbackQuery != null;
 
-    private static async Task InitialBot(Message message)
+    private static async Task InitializeBotWithKeyboardButtons(Message message)
     {
-        var startButtons = ButtonsGeneratorHelper.GetStartButtons();
+        var buttonGenerator = new KeyboardButtonsGenerator();
+        buttonGenerator.InitStartButtons();
+        var startButtons = buttonGenerator.GetReplyKeyboardMarkup;
+
+        var chatId = message.Chat.Id;
+        if (ChatScreenHandlers.ContainsKey(chatId))
+        {
+            ChatScreenHandlers.Remove(chatId);
+        }
 
         await Bot.SendTextMessageAsync(message.Chat.Id, "Start...",
             replyToMessageId: message.MessageId, replyMarkup: startButtons);
