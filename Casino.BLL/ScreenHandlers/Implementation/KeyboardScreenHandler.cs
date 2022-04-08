@@ -15,14 +15,11 @@ namespace Casino.BLL.ScreenHandlers.Implementation
         private string[] _availableCommands;
 
         private ReplyKeyboardMarkup? _replyKeyboardButtons;
-        private InlineKeyboardMarkup _inlineKeyboardButtons;
         private string? _replyText;
         private KeyboardButtonsGenerator _keyboardButtonsGenerator;
-        private InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
 
         public string? GetReplyText => _replyText;
         public ReplyKeyboardMarkup? GetReplyKeyboardButtons => _replyKeyboardButtons;
-        public InlineKeyboardMarkup GetInlineKeyboardButtons => _inlineKeyboardButtons;
 
         public KeyboardScreenHandler(Message message,
             ITelegramBotClient telegramBotClient,
@@ -36,8 +33,6 @@ namespace Casino.BLL.ScreenHandlers.Implementation
             _keyboardButtonsGenerator = new KeyboardButtonsGenerator();
             _keyboardButtonsGenerator.InitStartButtons();
             _availableCommands = _keyboardButtonsGenerator.GetAvailableCommands;
-
-            _inlineKeyboardButtonsGenerator = new InlineKeyboardButtonsGenerator();
         }
 
         public async Task PushButtonAsync(string? commandText)
@@ -66,10 +61,7 @@ namespace Casino.BLL.ScreenHandlers.Implementation
             }
             
             await _telegramBotClient.SendTextMessageAsync(_chat.Id, _replyText,
-                cancellationToken: _cancellationToken, replyMarkup: _replyKeyboardButtons);
-
-            await _telegramBotClient.SendTextMessageAsync(_chat.Id, "test",
-                cancellationToken: _cancellationToken, replyMarkup: _inlineKeyboardButtons);
+                cancellationToken: _cancellationToken, replyMarkup: _replyKeyboardButtons); ;
         }
 
         private void PushBackButton()
@@ -102,9 +94,6 @@ namespace Casino.BLL.ScreenHandlers.Implementation
             _replyKeyboardButtons = _keyboardButtonsGenerator.GetReplyKeyboardMarkup;
             _availableCommands = _keyboardButtonsGenerator.GetAvailableCommands;
             _replyText = ButtonTextConstants.StartGameButtonText;
-
-            _inlineKeyboardButtonsGenerator.InitGetInfoButtons();
-            _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         }
     }
 }

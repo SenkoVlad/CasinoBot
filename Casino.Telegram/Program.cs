@@ -1,11 +1,15 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ScreenHandlers.Implementation;
 using Casino.BLL.ScreenHandlers.Interfaces;
+using Casino.DAL.Repositories.Implementation;
+using Casino.DAL.Repositories.Interfaces;
 using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Casino.TelegramUI;
 
@@ -13,10 +17,17 @@ class Program
 {
     private static readonly ITelegramBotClient Bot = new TelegramBotClient("610837243:AAE6tS9UYngU_qzd6-peNQYDslFy-KfygTs");
     private static readonly Dictionary<long, IScreenHandler> ChatScreenHandlers = new();
+    private static IHost? Hosting;
 
-    public static void Main()
+    public static async Task Main()
     {
         Console.WriteLine("Bot started!");
+
+        Hosting = Host.CreateDefaultBuilder()
+            .ConfigureServices((_, services) =>
+                services.AddScoped<IBalanceRepository, BalanceRepository>())
+            .Build();
+
         var cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellationTokenSource.Token;
         var receiverOption = new ReceiverOptions();
@@ -25,7 +36,9 @@ class Program
             HandleUpdateError,
             receiverOption,
             cancellationToken);
-        
+
+        await Hosting.RunAsync(token: cancellationToken);
+
         Console.ReadLine();
     }
 
@@ -42,11 +55,14 @@ class Program
     {
         try
         {
+            using IServiceScope serviceScope = Hosting!.Services.CreateScope();
+            IServiceProvider provider = serviceScope.ServiceProvider;
+
             var message = newMessage.Message;
             
-            if (IsItStartMessage(message!))
+            if (IsItStartMessageAndNotNull(message))
             {
-                await InitializeBotWithKeyboardButtons(message!);
+                await InitializeBotWithInlineButtons(message!);
                 return;
             }
 
@@ -60,7 +76,8 @@ class Program
             }
             else if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
             {
-                var inlineButtonPushHandler = new InlineScreenHandler(telegramBotClient, cancellationToken);
+                var inlineButtonPushHandler = new InlineScreenHandler(newMessage.CallbackQuery!.Message!, 
+                    telegramBotClient, cancellationToken, provider);
                 var commandText = newMessage.CallbackQuery!.Data;
                 await inlineButtonPushHandler.PushButtonAsync(commandText);
             }
@@ -68,6 +85,27 @@ class Program
         catch (Exception e)
         {
             Console.WriteLine(e);
+        }
+    }
+
+    private static async Task InitializeBotWithInlineButtons(Message message)
+    {
+        var buttonGenerator = new InlineKeyboardButtonsGenerator();
+        buttonGenerator.InitStartButtons();
+        var startButtons = buttonGenerator.GetInlineKeyboardMarkup;
+
+        var chatId = message.Chat.Id;
+        DeleteChatScreenHandlerIfExists(chatId);
+
+        await Bot.SendTextMessageAsync(message.Chat.Id, "Choose an action...",
+            replyToMessageId: message.MessageId, replyMarkup : startButtons);
+    }
+
+    private static void DeleteChatScreenHandlerIfExists(long chatId)
+    {
+        if (ChatScreenHandlers.ContainsKey(chatId))
+        {
+            ChatScreenHandlers.Remove(chatId);
         }
     }
 
@@ -103,10 +141,7 @@ class Program
         var startButtons = buttonGenerator.GetReplyKeyboardMarkup;
 
         var chatId = message.Chat.Id;
-        if (ChatScreenHandlers.ContainsKey(chatId))
-        {
-            ChatScreenHandlers.Remove(chatId);
-        }
+        DeleteChatScreenHandlerIfExists(chatId);
 
         await Bot.SendTextMessageAsync(message.Chat.Id, "Start...",
             replyToMessageId: message.MessageId, replyMarkup: startButtons);
@@ -115,7 +150,7 @@ class Program
     private static bool IsUpdateTypeMessageAndMessageNotNull(Update newMessage) =>
         newMessage.Type == UpdateType.Message && newMessage.Message != null;
 
-    private static bool IsItStartMessage(Message message) =>
-        message.Text?.ToLower() == "/start";
+    private static bool IsItStartMessageAndNotNull(Message? message) =>
+        message != null && message.Text?.ToLower() == "/start";
 }
 
