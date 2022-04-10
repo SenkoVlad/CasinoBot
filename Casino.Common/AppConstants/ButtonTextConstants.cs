@@ -9,7 +9,13 @@ public class ButtonTextConstants
     public const string MenuButtonText = "Menu";
 
     public const string RussianRouletteGameButtonText = "Russian roulette";
+    
     public const string DiceGameButtonText = "Dice";
+    
+    public const string FootballGameButtonText = "Football";
+    public const string HitBallButtonText = "Hit ball";
+    public const string BackFromFootballButtonCallbackData = "Back from football";
+
     public const string BackButtonText = "Back";
 
     public const string StartDiceGameButtonText = "Start dice game";

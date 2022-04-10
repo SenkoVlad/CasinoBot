@@ -5,6 +5,7 @@ using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Casino.BLL.ScreenHandlers.Implementation;
@@ -39,41 +40,78 @@ public class InlineScreenHandler : IScreenHandler
         switch (commandText)
         {
             case ButtonTextConstants.GamesButtonText:
-                PushGamesButton();
+            case ButtonTextConstants.BackFromFootballButtonCallbackData:
+                await PushGamesButtonAsync();
                 break;
             case ButtonTextConstants.MenuButtonText:
-                PushMenuButton();
+                await PushMenuButtonAsync();
                 break;
             case ButtonTextConstants.BalanceButtonText:
-                PushGetBalanceButton();
+                await PushGetBalanceButtonAsync();
+                break;
+            case ButtonTextConstants.FootballGameButtonText:
+                await PushFootballButtonAsync();
+                break;
+            case ButtonTextConstants.HitBallButtonText:
+                await PushHitBallButtonAsync();
                 break;
         }
+    }
 
+    private async Task PushHitBallButtonAsync()
+    {
+        await _telegramBotClient.DeleteMessageAsync(_message.Chat.Id, _message.MessageId, _cancellationToken);
+
+        var hitResult = await _telegramBotClient.SendDiceAsync(_message.Chat.Id, Emoji.Football,
+            cancellationToken: _cancellationToken);
+        var score = hitResult.Dice?.Value;
+        await Task.Delay(3500, _cancellationToken);
+        _replyText = ReplyConstants.GoalScores.Contains((int) score!) ? "GOAL!" : "MISS ((";
+        
+        await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, cancellationToken: _cancellationToken);
+        _inlineKeyboardButtonsGenerator.InitFootballButtons();
+        _replyText = ButtonTextConstants.FootballGameButtonText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        
+        await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, 
+            replyMarkup: _inlineKeyboardButtons, cancellationToken: _cancellationToken);
+    }
+
+    private async Task PushFootballButtonAsync()
+    {
+        _inlineKeyboardButtonsGenerator.InitFootballButtons();
+        _replyText = ButtonTextConstants.FootballGameButtonText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
             _inlineKeyboardButtons, _cancellationToken);
     }
 
-    private async void PushGetBalanceButton()
+    private async Task PushGetBalanceButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitGetBalanceButtons();
-        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         _replyText = _balanceRepository.GetBalanceAsync(_message.Chat.Id).ToString();
-
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, _message.MessageId, 
             text: _replyText, cancellationToken: _cancellationToken);
+        await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
+            _inlineKeyboardButtons, _cancellationToken);
     }
 
-    private void PushMenuButton()
+    private async Task PushMenuButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitStartButtons();
-        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         _replyText = ButtonTextConstants.GamesButtonText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
+            _inlineKeyboardButtons, _cancellationToken);
     }
 
-    private void PushGamesButton()
+    private async Task PushGamesButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitGamesButtons();
-        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         _replyText = ButtonTextConstants.GamesButtonText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
+            _inlineKeyboardButtons, _cancellationToken);
     }
 }

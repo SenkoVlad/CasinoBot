@@ -23,8 +23,8 @@ public class InlineKeyboardButtonsGenerator
             CallbackData = ButtonTextConstants.BalanceButtonText
         };
 
-        var buttonRow = new[]{ getInfoButton, balanceButton, gamesButton };
-        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRow);
+        var buttonRows = new[]{ getInfoButton, balanceButton, gamesButton };
+        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
     public void InitGamesButtons()
@@ -37,13 +37,21 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = ButtonTextConstants.RussianRouletteGameButtonText
         };
+        var footballGameButton = new InlineKeyboardButton(ButtonTextConstants.FootballGameButtonText)
+        {
+            CallbackData = ButtonTextConstants.FootballGameButtonText
+        };
         var backButton = new InlineKeyboardButton(ButtonTextConstants.BackButtonText)
         {
             CallbackData = ButtonTextConstants.MenuButtonText
         };
 
-        var buttonRow = new[] { russianRouletteGameButton, diceGameButton, backButton};
-        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRow);
+        var buttonRows = new[] 
+        {
+            new[] { footballGameButton, russianRouletteGameButton, diceGameButton },
+            new[] { backButton}
+        };
+        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
     public void InitGetBalanceButtons()
@@ -53,7 +61,22 @@ public class InlineKeyboardButtonsGenerator
             CallbackData = ButtonTextConstants.MenuButtonText
         };
 
-        var buttonRow = new[] { backButton };
-        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRow);
+        var buttonRows = new[] { backButton };
+        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+    }
+
+    public void InitFootballButtons()
+    {
+        var hitBallButton = new InlineKeyboardButton(ButtonTextConstants.HitBallButtonText)
+        {
+            CallbackData = ButtonTextConstants.HitBallButtonText
+        };
+        var backButton = new InlineKeyboardButton(ButtonTextConstants.BackButtonText)
+        {
+            CallbackData = ButtonTextConstants.BackFromFootballButtonCallbackData
+        };
+
+        var buttonRows = new[] { hitBallButton, backButton };
+        _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 }

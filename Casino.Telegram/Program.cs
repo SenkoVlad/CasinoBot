@@ -97,8 +97,7 @@ class Program
         var chatId = message.Chat.Id;
         DeleteChatScreenHandlerIfExists(chatId);
 
-        await Bot.SendTextMessageAsync(message.Chat.Id, "Choose an action...",
-            replyToMessageId: message.MessageId, replyMarkup : startButtons);
+        await Bot.SendTextMessageAsync(message.Chat.Id, "Choose an action...", replyMarkup : startButtons);
     }
 
     private static void DeleteChatScreenHandlerIfExists(long chatId)
