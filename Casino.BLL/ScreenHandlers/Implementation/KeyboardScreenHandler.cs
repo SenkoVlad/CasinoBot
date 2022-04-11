@@ -20,7 +20,7 @@ namespace Casino.BLL.ScreenHandlers.Implementation
 
         public string? GetReplyText => _replyText;
         public ReplyKeyboardMarkup? GetReplyKeyboardButtons => _replyKeyboardButtons;
-
+        
         public KeyboardScreenHandler(Message message,
             ITelegramBotClient telegramBotClient,
             CancellationToken cancellationToken)

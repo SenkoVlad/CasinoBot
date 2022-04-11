@@ -1,6 +1,7 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ScreenHandlers.Implementation;
 using Casino.BLL.ScreenHandlers.Interfaces;
+using Casino.Common.AppConstants;
 using Casino.DAL.Repositories.Implementation;
 using Casino.DAL.Repositories.Interfaces;
 using Newtonsoft.Json;
@@ -15,7 +16,7 @@ namespace Casino.TelegramUI;
 
 class Program
 {
-    private static readonly ITelegramBotClient Bot = new TelegramBotClient("610837243:AAE6tS9UYngU_qzd6-peNQYDslFy-KfygTs");
+    private static readonly ITelegramBotClient Bot = new TelegramBotClient(AppConstants.BotToken);
     private static readonly Dictionary<long, IScreenHandler> ChatScreenHandlers = new();
     private static IHost? Hosting;
 

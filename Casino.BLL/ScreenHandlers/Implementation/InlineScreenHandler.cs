@@ -70,8 +70,8 @@ public class InlineScreenHandler : IScreenHandler
         
         await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, cancellationToken: _cancellationToken);
         _inlineKeyboardButtonsGenerator.InitFootballButtons();
-        _replyText = ButtonTextConstants.FootballGameButtonText;
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        _replyText = ButtonTextConstants.FootballGameButtonText;
         
         await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, 
             replyMarkup: _inlineKeyboardButtons, cancellationToken: _cancellationToken);
@@ -80,8 +80,9 @@ public class InlineScreenHandler : IScreenHandler
     private async Task PushFootballButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitFootballButtons();
-        _replyText = ButtonTextConstants.FootballGameButtonText;
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        _replyText = ButtonTextConstants.FootballGameButtonText;
+     
         await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
             _inlineKeyboardButtons, _cancellationToken);
     }
@@ -89,8 +90,9 @@ public class InlineScreenHandler : IScreenHandler
     private async Task PushGetBalanceButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitGetBalanceButtons();
-        _replyText = _balanceRepository.GetBalanceAsync(_message.Chat.Id).ToString();
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        _replyText = _balanceRepository.GetBalanceAsync(_message.Chat.Id).ToString();
+        
         await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, _message.MessageId, 
             text: _replyText, cancellationToken: _cancellationToken);
         await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
@@ -102,6 +104,7 @@ public class InlineScreenHandler : IScreenHandler
         _inlineKeyboardButtonsGenerator.InitStartButtons();
         _replyText = ButtonTextConstants.GamesButtonText;
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+       
         await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
             _inlineKeyboardButtons, _cancellationToken);
     }
@@ -111,6 +114,7 @@ public class InlineScreenHandler : IScreenHandler
         _inlineKeyboardButtonsGenerator.InitGamesButtons();
         _replyText = ButtonTextConstants.GamesButtonText;
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+    
         await _telegramBotClient.EditMessageReplyMarkupAsync(_message.Chat.Id, _message.MessageId,
             _inlineKeyboardButtons, _cancellationToken);
     }
