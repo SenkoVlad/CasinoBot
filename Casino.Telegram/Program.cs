@@ -33,7 +33,7 @@ class Program
         var cancellationToken = cancellationTokenSource.Token;
         var receiverOption = new ReceiverOptions();
         Bot.StartReceiving(
-            HandleUpdateAsync,
+            HandleUpdate,
             HandleUpdateError,
             receiverOption,
             cancellationToken);
@@ -51,42 +51,59 @@ class Program
         throw new NotImplementedException();
     }
 
-    private static async Task HandleUpdateAsync(ITelegramBotClient telegramBotClient, 
+    private static Task HandleUpdate(ITelegramBotClient telegramBotClient, 
         Update newMessage, CancellationToken cancellationToken)
     {
-        try
+        ProcessMessage(telegramBotClient, newMessage, cancellationToken);
+        return Task.CompletedTask;
+    }
+
+    private static void ProcessMessage(ITelegramBotClient telegramBotClient, Update newMessage,
+        CancellationToken cancellationToken)
+    {
+        Task.Run(async () =>
         {
-            using IServiceScope serviceScope = Hosting!.Services.CreateScope();
-            IServiceProvider provider = serviceScope.ServiceProvider;
+                try
+                {
+                    //var _chatId = newMessage.Message != null
+                    //    ? newMessage.Message.Chat.Id
+                    //    : newMessage.CallbackQuery!.Message!.Chat.Id;
+                    //Console.WriteLine($"New Message: {newMessage.Id} | Form chat {_chatId}");
 
-            var message = newMessage.Message;
-            
-            if (IsItStartMessageAndNotNull(message))
-            {
-                await InitializeBotWithInlineButtons(message!);
-                return;
-            }
+                    using IServiceScope serviceScope = Hosting!.Services.CreateScope();
+                    IServiceProvider provider = serviceScope.ServiceProvider;
 
-            if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
-            {
-                var chatId = newMessage.Message!.Chat.Id;
-                var buttonPushHandler = GetCurrentScreenHandler(telegramBotClient, cancellationToken, chatId, message);
+                    var message = newMessage.Message;
 
-                var commandText = message!.Text;
-                await buttonPushHandler.PushButtonAsync(commandText);
-            }
-            else if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
-            {
-                var inlineButtonPushHandler = new InlineScreenHandler(newMessage.CallbackQuery!.Message!, 
-                    telegramBotClient, cancellationToken, provider);
-                var commandText = newMessage.CallbackQuery!.Data;
-                await inlineButtonPushHandler.PushButtonAsync(commandText);
-            }
+                    if (IsItStartMessageAndNotNull(message))
+                    {
+                        await InitializeBotWithInlineButtons(message!);
+                        return;
+                    }
+
+                    if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
+                    {
+                        var chatId = newMessage.Message!.Chat.Id;
+                        var buttonPushHandler =
+                            GetCurrentScreenHandler(telegramBotClient, cancellationToken, chatId, message);
+
+                        var commandText = message!.Text;
+                        await buttonPushHandler.PushButtonAsync(commandText);
+                    }
+                    else if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
+                    {
+                        var inlineButtonPushHandler = new InlineScreenHandler(newMessage.CallbackQuery!.Message!,
+                            telegramBotClient, cancellationToken, provider);
+                        var commandText = newMessage.CallbackQuery!.Data;
+                        await inlineButtonPushHandler.PushButtonAsync(commandText);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        , cancellationToken);
     }
 
     private static async Task InitializeBotWithInlineButtons(Message message)

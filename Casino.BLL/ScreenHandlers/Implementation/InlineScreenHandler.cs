@@ -55,11 +55,21 @@ public class InlineScreenHandler : IScreenHandler
             case ButtonTextConstants.HitBallButtonText:
                 await PushHitBallButtonAsync();
                 break;
+            case ButtonTextConstants.DiceGameButtonText:
+                await PushDiceButtonAsync();
+                break;
         }
+    }
+
+    private async Task PushDiceButtonAsync()
+    {
+        throw new Exception();
     }
 
     private async Task PushHitBallButtonAsync()
     {
+        await _telegramBotClient.DeleteMessageAsync(_message.Chat.Id, _message.MessageId, _cancellationToken);
+
         var goodLuckMessage = await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, MessageTextConstants.GoodLuckFootBallMessageText,
             cancellationToken: _cancellationToken);
         var goodLuckMessageId = goodLuckMessage.MessageId;
