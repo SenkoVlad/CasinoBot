@@ -60,21 +60,29 @@ public class InlineScreenHandler : IScreenHandler
 
     private async Task PushHitBallButtonAsync()
     {
-        await _telegramBotClient.DeleteMessageAsync(_message.Chat.Id, _message.MessageId, _cancellationToken);
+        var goodLuckMessage = await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, MessageTextConstants.GoodLuckFootBallMessageText,
+            cancellationToken: _cancellationToken);
+        var goodLuckMessageId = goodLuckMessage.MessageId;
 
         var hitResult = await _telegramBotClient.SendDiceAsync(_message.Chat.Id, Emoji.Football,
             cancellationToken: _cancellationToken);
         var score = hitResult.Dice?.Value;
         await Task.Delay(3500, _cancellationToken);
-        _replyText = ReplyConstants.GoalScores.Contains((int) score!) ? "GOAL!" : "MISS ((";
+
+        _replyText = IsItGoal(score) ? "GOAL!" : "MISS ((";
         
-        await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, cancellationToken: _cancellationToken);
+        await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, text: _replyText, messageId: goodLuckMessageId, cancellationToken: _cancellationToken);
         _inlineKeyboardButtonsGenerator.InitFootballButtons();
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         _replyText = ButtonTextConstants.FootballGameButtonText;
         
         await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: _replyText, 
             replyMarkup: _inlineKeyboardButtons, cancellationToken: _cancellationToken);
+    }
+
+    private static bool IsItGoal(int? score)
+    {
+        return ReplyConstants.GoalScores.Contains((int) score!);
     }
 
     private async Task PushFootballButtonAsync()
