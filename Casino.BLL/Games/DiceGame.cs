@@ -6,7 +6,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace Casino.BLL.Games;
 
-public class DiceGame : IGame
+public class DiceGame : Game
 {
     private readonly Message _message;
     private readonly ITelegramBotClient _telegramBotClient;
@@ -23,18 +23,7 @@ public class DiceGame : IGame
         _diceBet = diceBet;
     }
 
-    public async Task PlayRoundAsync()
-    {
-        await SentStartMessageAsync();
-        await PlayGameRoundAsync();
-
-        await Task.Delay(3500);
-
-        await SendRoundResultAsync();
-        await InitGameAsync();
-    }
-
-    private async Task InitGameAsync()
+    protected override async Task InitGameAsync()
     {
         var inlineKeyboardButtonsGenerator = new InlineKeyboardButtonsGenerator();
         inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons();
@@ -45,20 +34,20 @@ public class DiceGame : IGame
             replyMarkup: inlineKeyboardButtons);
     }
 
-    private async Task SentStartMessageAsync()
+    protected override async Task SentStartMessageAsync()
     {
-        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, _message.MessageId,
-            MessageTextConstants.GoodLuckFootBallMessageText);
+        var startMessage = $"{MessageTextConstants.GoodLuckFootBallMessageText}. Your bet is {_diceBet}";
+        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, _message.MessageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
 
-    private async Task PlayGameRoundAsync()
+    protected override async Task PlayGameRoundAsync()
     {
         var diceResult = await _telegramBotClient.SendDiceAsync(_message.Chat.Id, Emoji.Dice);
         _scoreResult = diceResult.Dice?.Value;
     }
 
-    private async Task SendRoundResultAsync()
+    protected override async Task SendRoundResultAsync()
     {
         var roundResultMessage = _scoreResult == _diceBet ? "Win" : "Lose";
         await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, text: roundResultMessage,
