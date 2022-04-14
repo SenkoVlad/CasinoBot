@@ -1,6 +1,5 @@
-﻿using Casino.BLL.ButtonsGenerators;
+﻿using Casino.BLL.Models;
 using Casino.BLL.ScreenHandlers.Implementation;
-using Casino.BLL.ScreenHandlers.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.DAL.Repositories.Implementation;
 using Casino.DAL.Repositories.Interfaces;
@@ -17,7 +16,6 @@ namespace Casino.TelegramUI;
 class Program
 {
     private static readonly ITelegramBotClient Bot = new TelegramBotClient(AppConstants.BotToken);
-    private static readonly Dictionary<long, IScreenHandler> ChatScreenHandlers = new();
     private static IHost? Hosting;
 
     public static async Task Main()
@@ -65,10 +63,12 @@ class Program
         {
                 try
                 {
-                    //var _chatId = newMessage.Message != null
-                    //    ? newMessage.Message.Chat.Id
-                    //    : newMessage.CallbackQuery!.Message!.Chat.Id;
-                    //Console.WriteLine($"New Message: {newMessage.Id} | Form chat {_chatId}");
+                    var telegramMessage = new TelegramMessage
+                    {
+                        TelegramBotClient = telegramBotClient,
+                        Message = newMessage
+                    };
+                    var messageJson = JsonConvert.SerializeObject(telegramMessage);
 
                     using IServiceScope serviceScope = Hosting!.Services.CreateScope();
                     IServiceProvider provider = serviceScope.ServiceProvider;
@@ -77,25 +77,20 @@ class Program
 
                     if (IsItStartMessageAndNotNull(message))
                     {
-                        await InitializeBotWithInlineButtons(message!);
+                        await InitializeBotWithInlineButtons(message!, provider, cancellationToken);
                         return;
                     }
 
-                    if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
+                    if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
                     {
-                        var chatId = newMessage.Message!.Chat.Id;
-                        var buttonPushHandler =
-                            GetCurrentScreenHandler(telegramBotClient, cancellationToken, chatId, message);
-
-                        var commandText = message!.Text;
-                        await buttonPushHandler.PushButtonAsync(commandText);
-                    }
-                    else if (IsUpdateTypeCallBackAndCallbackNotNull(newMessage))
-                    {
+                        var commandModel = GetCommandModel(newMessage);
                         var inlineButtonPushHandler = new InlineScreenHandler(newMessage.CallbackQuery!.Message!,
                             telegramBotClient, cancellationToken, provider);
-                        var commandText = newMessage.CallbackQuery!.Data;
-                        await inlineButtonPushHandler.PushButtonAsync(commandText);
+                        await inlineButtonPushHandler.PushButtonAsync(commandModel);
+                    }
+                    else if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
+                    {
+                        await Bot.DeleteMessageAsync(message!.Chat.Id, message!.MessageId, cancellationToken);
                     }
                 }
                 catch (Exception e)
@@ -106,63 +101,26 @@ class Program
         , cancellationToken);
     }
 
-    private static async Task InitializeBotWithInlineButtons(Message message)
+    private static CommandModel GetCommandModel(Update newMessage)
     {
-        var buttonGenerator = new InlineKeyboardButtonsGenerator();
-        buttonGenerator.InitStartButtons();
-        var startButtons = buttonGenerator.GetInlineKeyboardMarkup;
-
-        var chatId = message.Chat.Id;
-        DeleteChatScreenHandlerIfExists(chatId);
-
-        await Bot.SendTextMessageAsync(message.Chat.Id, "Choose an action...", replyMarkup : startButtons);
+        var commandJson = newMessage.CallbackQuery!.Data;
+        var commandModel = JsonConvert.DeserializeObject<CommandModel>(commandJson);
+        return commandModel;
     }
 
-    private static void DeleteChatScreenHandlerIfExists(long chatId)
+    private static async Task InitializeBotWithInlineButtons(Message message, IServiceProvider provider, CancellationToken cancellationToken)
     {
-        if (ChatScreenHandlers.ContainsKey(chatId))
+        var inlineButtonPushHandler = new InlineScreenHandler(message,
+            Bot, cancellationToken, provider);
+        var commandModel = new CommandModel
         {
-            ChatScreenHandlers.Remove(chatId);
-        }
-    }
-
-    private static KeyboardScreenHandler GetCurrentScreenHandler(ITelegramBotClient telegramBotClient,
-        CancellationToken cancellationToken, long chatId, Message? message)
-    {
-        KeyboardScreenHandler screenHandler;
-        if (IsItNewClientChat(chatId))
-        {
-            screenHandler = new KeyboardScreenHandler(message!, telegramBotClient, cancellationToken);
-            ChatScreenHandlers.Add(chatId, screenHandler);
-        }
-        else
-        {
-            screenHandler = (KeyboardScreenHandler) ChatScreenHandlers[chatId];
-        }
-
-        return screenHandler;
-    }
-
-    private static bool IsItNewClientChat(long? chatId)
-    {
-        return chatId  != null && !ChatScreenHandlers.ContainsKey((long)chatId);
+            CommandText = AppConstants.StartCommand
+        };
+        await inlineButtonPushHandler.PushButtonAsync(commandModel);
     }
 
     private static bool IsUpdateTypeCallBackAndCallbackNotNull(Update newMessage) =>
          newMessage.Type == UpdateType.CallbackQuery && newMessage.CallbackQuery != null;
-
-    private static async Task InitializeBotWithKeyboardButtons(Message message)
-    {
-        var buttonGenerator = new KeyboardButtonsGenerator();
-        buttonGenerator.InitStartButtons();
-        var startButtons = buttonGenerator.GetReplyKeyboardMarkup;
-
-        var chatId = message.Chat.Id;
-        DeleteChatScreenHandlerIfExists(chatId);
-
-        await Bot.SendTextMessageAsync(message.Chat.Id, "Start...",
-            replyToMessageId: message.MessageId, replyMarkup: startButtons);
-    }
 
     private static bool IsUpdateTypeMessageAndMessageNotNull(Update newMessage) =>
         newMessage.Type == UpdateType.Message && newMessage.Message != null;
@@ -170,4 +128,13 @@ class Program
     private static bool IsItStartMessageAndNotNull(Message? message) =>
         message != null && message.Text?.ToLower() == "/start";
 }
+
+public class TelegramMessage
+{
+    public ITelegramBotClient? TelegramBotClient { get; set; }
+    public Update? Message { get; set; }
+}
+
+
+
 
