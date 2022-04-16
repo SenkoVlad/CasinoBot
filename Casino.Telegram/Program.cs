@@ -13,8 +13,6 @@ using Microsoft.Extensions.Hosting;
 
 namespace Casino.TelegramUI;
 
-
-
 class Program
 {
     private static readonly ITelegramBotClient Bot = new TelegramBotClient(AppConstants.BotToken);
@@ -22,6 +20,8 @@ class Program
 
     public static async Task Main()
     {
+
+        //rebase 1
         Console.WriteLine("Bot started!");
 
         Hosting = Host.CreateDefaultBuilder()
