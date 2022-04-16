@@ -40,6 +40,8 @@ class Program
 
         await Hosting.RunAsync(token: cancellationToken);
 
+        //master commit 1
+
         Console.ReadLine();
     }
 
