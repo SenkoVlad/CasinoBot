@@ -22,6 +22,8 @@ class Program
     {
         //test1
         //test2
+        //test3
+
         Console.WriteLine("Bot started!");
 
         Hosting = Host.CreateDefaultBuilder()
