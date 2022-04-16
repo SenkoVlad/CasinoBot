@@ -43,6 +43,7 @@ class Program
         await Hosting.RunAsync(token: cancellationToken);
 
         //master commit 1
+        //master commit 2
 
         Console.ReadLine();
     }
