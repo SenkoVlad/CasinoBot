@@ -20,6 +20,7 @@ class Program
 
     public static async Task Main()
     {
+        //test1
         Console.WriteLine("Bot started!");
 
         Hosting = Host.CreateDefaultBuilder()
