@@ -20,10 +20,6 @@ class Program
 
     public static async Task Main()
     {
-
-        //rebase 1
-        //rebase 2
-        //rebase 3
         Console.WriteLine("Bot started!");
 
         Hosting = Host.CreateDefaultBuilder()
@@ -41,9 +37,6 @@ class Program
             cancellationToken);
 
         await Hosting.RunAsync(token: cancellationToken);
-
-        //master commit 1
-        //master commit 2
 
         Console.ReadLine();
     }
