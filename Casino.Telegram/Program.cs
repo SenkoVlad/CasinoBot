@@ -23,6 +23,7 @@ class Program
 
         //rebase 1
         //rebase 2
+        //rebase 3
         Console.WriteLine("Bot started!");
 
         Hosting = Host.CreateDefaultBuilder()
