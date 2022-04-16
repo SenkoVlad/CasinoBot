@@ -4,8 +4,19 @@ namespace Casino.DAL.Repositories.Implementation;
 
 public class BalanceRepository : IBalanceRepository
 {
-    public int GetBalanceAsync(long chatId)
+
+    private int _balance;
+
+    public BalanceRepository()
     {
-        return 100;
+        _balance = 100;
+    }
+
+    public int GetBalanceAsync(long chatId) => _balance;
+
+    public bool AddScoreToBalanceAsync(long chatId, int newBalance)
+    {
+        _balance += newBalance;
+        return true;
     }
 }

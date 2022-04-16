@@ -3,6 +3,7 @@
 public class MessageTextConstants
 {
     public const string GoodLuckFootBallMessageText = "Good luck";
-    public const string StartMessageText = "Choose an action";
-    public static string ChooseYourBet = "Choose your bet";
+    public const string ChooseActionMessageText = "Choose an action";
+    public const string ChooseYourBetMessageText = "Choose your bet";
+    public const string ChooseGameModeMessageText = "Choose play mode";
 }

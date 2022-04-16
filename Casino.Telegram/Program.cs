@@ -24,7 +24,7 @@ class Program
 
         Hosting = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
-                services.AddScoped<IBalanceRepository, BalanceRepository>())
+                services.AddSingleton<IBalanceRepository, BalanceRepository>())
             .Build();
 
         var cancellationTokenSource = new CancellationTokenSource();

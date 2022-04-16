@@ -1,5 +1,6 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.Common.AppConstants;
+using Casino.DAL.Repositories.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -10,16 +11,21 @@ public class DiceGame : Game
 {
     private readonly Message _message;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly IBalanceRepository _balanceRepository;
     private readonly int _diceBet;
     private int? _scoreResult;
     private int _goodLuckMessageId;
+    private bool _didWin;
+    public bool IsWon => _didWin;
 
     public DiceGame(Message message, 
         ITelegramBotClient telegramBotClient,
-        int diceBet)
+        IBalanceRepository balanceRepository,
+        int diceBet) : base(message, balanceRepository)
     {
         _message = message;
         _telegramBotClient = telegramBotClient;
+        _balanceRepository = balanceRepository;
         _diceBet = diceBet;
     }
 
@@ -27,7 +33,8 @@ public class DiceGame : Game
     {
         var inlineKeyboardButtonsGenerator = new InlineKeyboardButtonsGenerator();
         inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons();
-        var chooseYourBetMessage = MessageTextConstants.ChooseYourBet;
+        var balance = _balanceRepository.GetBalanceAsync(_message.Chat.Id);
+        var chooseYourBetMessage = $"{MessageTextConstants.ChooseYourBetMessageText}. Your balance: {balance}";
         var inlineKeyboardButtons = inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: chooseYourBetMessage,
@@ -47,9 +54,14 @@ public class DiceGame : Game
         _scoreResult = diceResult.Dice?.Value;
     }
 
-    protected override async Task SendRoundResultAsync()
+    protected override void SetRoundResult()
     {
-        var roundResultMessage = _scoreResult == _diceBet ? "Win" : "Lose";
+        _didWin = _scoreResult == _diceBet;
+    }
+
+    protected override async Task SendRoundResultMessageAsync()
+    {
+        var roundResultMessage = _didWin ? "Win" : "Lose";
         await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }

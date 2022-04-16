@@ -1,5 +1,6 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.Common.AppConstants;
+using Casino.DAL.Repositories.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -8,24 +9,29 @@ namespace Casino.BLL.Games;
 
 public class FootBallGame : Game
 {
-    private readonly Message _message;
+    public readonly Message _message;
     private readonly ITelegramBotClient _telegramBotClient;
+    public readonly IBalanceRepository _balanceRepository;
     private int? _scoreResult;
     private int _goodLuckMessageId;
-
+    private bool _didWin;
+    public bool IsWon => _didWin;
     public FootBallGame(Message message,
-        ITelegramBotClient telegramBotClient)
+        ITelegramBotClient telegramBotClient,
+        IBalanceRepository balanceRepository) : base(message, balanceRepository)
     {
         _message = message;
         _telegramBotClient = telegramBotClient;
+        _balanceRepository = balanceRepository;
     }
 
     protected override async Task InitGameAsync()
     {
         var inlineKeyboardButtonsGenerator = new InlineKeyboardButtonsGenerator();
-        inlineKeyboardButtonsGenerator.InitFootballButtons();
+        inlineKeyboardButtonsGenerator.InitPlayFootballDemoButtons();
         var inlineKeyboardButtons = inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
-        var footballGameButtonText = ButtonTextConstants.FootballGameButtonText;
+        var balance = _balanceRepository.GetBalanceAsync(_message.Chat.Id);
+        var footballGameButtonText = $"{ButtonTextConstants.FootballGameButtonText}. Your balance: {balance}";
 
         await _telegramBotClient.SendTextMessageAsync(_message.Chat.Id, text: footballGameButtonText,
             replyMarkup: inlineKeyboardButtons);
@@ -44,15 +50,20 @@ public class FootBallGame : Game
         _scoreResult = hitResult.Dice?.Value;
     }
 
-    protected override async Task SendRoundResultAsync()
+    protected override void SetRoundResult()
     {
-        var roundResultMessage = IsItGoal() ? "GOAL!" : "MISS ((";
+        _didWin = DidYouWin();
+    }
+
+    protected override async Task SendRoundResultMessageAsync()
+    {
+        var roundResultMessage = _didWin ? "GOAL!" : "MISS ((";
 
         await _telegramBotClient.EditMessageTextAsync(_message.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }
 
-    private bool IsItGoal()
+    private bool DidYouWin()
     {
         return ReplyConstants.GoalScores.Contains((int)_scoreResult!);
     }
