@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,14 +9,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.4" />
     <PackageReference Include="Telegram.Bot" Version="17.0.0" />
     <PackageReference Include="Telegram.Bot.Extensions.Polling" Version="1.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Casino.BLL\Casino.BLL.csproj" />
     <ProjectReference Include="..\Casino.Common\Casino.Common.csproj" />
-    <ProjectReference Include="..\Casino.DAL\Casino.DAL.csproj" />
+    <ProjectReference Include="..\Casino.Configuration\Casino.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

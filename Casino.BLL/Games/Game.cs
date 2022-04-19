@@ -1,17 +1,17 @@
 ﻿using Casino.DAL.Repositories.Interfaces;
-using Telegram.Bot.Types;
 
 namespace Casino.BLL.Games;
 
 public abstract class Game
 {
-    private readonly IBalanceRepository _balanceRepository;
-    private bool _didWin;
-    private readonly Message _message;
+    protected bool DidWin;
 
-    protected Game(Message message, IBalanceRepository balanceRepository)
+    private readonly IBalanceRepository _balanceRepository;
+    private readonly long _chatId;
+
+    protected Game(long chatId, IBalanceRepository balanceRepository)
     {
-        _message = message;
+        _chatId = chatId;
         _balanceRepository = balanceRepository;
     }
 
@@ -22,16 +22,16 @@ public abstract class Game
 
         await Task.Delay(3500);
 
-        SetRoundResult();
+        DidWin = GetRoundResult();
         await UpdateBalanceAsync();
         await SendRoundResultMessageAsync();
         await InitGameAsync();
     }
     public virtual Task UpdateBalanceAsync()
     {
-        var updateBalanceResult = _didWin
-            ? _balanceRepository.AddScoreToBalanceAsync(_message.Chat.Id, 10)
-            : _balanceRepository.AddScoreToBalanceAsync(_message.Chat.Id, -10);
+        var updateBalanceResult = DidWin
+            ? _balanceRepository.AddScoreToBalanceAsync(_chatId, 10)
+            : _balanceRepository.AddScoreToBalanceAsync(_chatId, -10);
 
         return Task.CompletedTask;
     }
@@ -39,6 +39,6 @@ public abstract class Game
     protected abstract Task InitGameAsync();
     protected abstract Task SentStartMessageAsync();
     protected abstract Task PlayGameRoundAsync();
-    protected abstract void SetRoundResult();
+    protected abstract bool GetRoundResult();
     protected abstract Task SendRoundResultMessageAsync();
 }

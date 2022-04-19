@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.TelegramUI", "Casino.Telegram\Casino.TelegramUI.csproj", "{DA5D1439-4156-4013-8A44-0A063EBABA37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino.TelegramConsumer", "Casino.Telegram\Casino.TelegramConsumer.csproj", "{DA5D1439-4156-4013-8A44-0A063EBABA37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.BLL", "Casino.BLL\Casino.BLL.csproj", "{D2CF6312-09AE-4067-81A8-07FE1DE90BB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino.BLL", "Casino.BLL\Casino.BLL.csproj", "{D2CF6312-09AE-4067-81A8-07FE1DE90BB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.Common", "Casino.Common\Casino.Common.csproj", "{3DE1AD1E-F27B-48BE-8E29-8A24A15D5AE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino.Common", "Casino.Common\Casino.Common.csproj", "{3DE1AD1E-F27B-48BE-8E29-8A24A15D5AE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.DAL", "Casino.DAL\Casino.DAL.csproj", "{4AFC96F7-0D1C-4CBB-98F2-43107A273AE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Casino.DAL", "Casino.DAL\Casino.DAL.csproj", "{4AFC96F7-0D1C-4CBB-98F2-43107A273AE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.Tests", "Casino.Tests\Casino.Tests.csproj", "{5553F53F-4591-4493-94C2-14DBFA2088B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.TelegramSender", "Casino.TelegramMessagesReceiver\Casino.TelegramSender.csproj", "{98790EC0-3590-4EC7-A98B-6C62A37B5BAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Casino.Configuration", "Casino.Configuration\Casino.Configuration.csproj", "{6640ADC5-EE29-4C70-A9F1-930D7F60A43C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{4AFC96F7-0D1C-4CBB-98F2-43107A273AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AFC96F7-0D1C-4CBB-98F2-43107A273AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AFC96F7-0D1C-4CBB-98F2-43107A273AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5553F53F-4591-4493-94C2-14DBFA2088B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5553F53F-4591-4493-94C2-14DBFA2088B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5553F53F-4591-4493-94C2-14DBFA2088B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5553F53F-4591-4493-94C2-14DBFA2088B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98790EC0-3590-4EC7-A98B-6C62A37B5BAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98790EC0-3590-4EC7-A98B-6C62A37B5BAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98790EC0-3590-4EC7-A98B-6C62A37B5BAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98790EC0-3590-4EC7-A98B-6C62A37B5BAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6640ADC5-EE29-4C70-A9F1-930D7F60A43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6640ADC5-EE29-4C70-A9F1-930D7F60A43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6640ADC5-EE29-4C70-A9F1-930D7F60A43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6640ADC5-EE29-4C70-A9F1-930D7F60A43C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
