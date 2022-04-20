@@ -13,5 +13,9 @@ public enum Command
     MakeBetButtonCommand,
     GetInfoButtonCommand,
     ChooseRussianRouletteGameButtonCommand,
-    RealPlayFootballButtonCommand
+    RealPlayFootballButtonCommand,
+    DoNothing,
+    IncreaseBalancePayment,
+    DecreaseBalancePayment,
+    DepositPayment
 }

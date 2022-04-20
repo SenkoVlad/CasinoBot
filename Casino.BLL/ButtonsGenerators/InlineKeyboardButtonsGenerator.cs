@@ -78,7 +78,7 @@ public class InlineKeyboardButtonsGenerator
         _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
-    public void InitGetBalanceButtons()
+    public void InitGetBalanceButtons(int payment)
     {
         var backButton = new InlineKeyboardButton(ButtonTextConstants.BackButtonText)
         {
@@ -87,8 +87,45 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ToMenuButtonCommand
             })
         };
+        var currentPayment = string.Concat(payment, ButtonTextConstants.BalancePaymentButtonText);
+        var  balancePaymentAmountButton = new InlineKeyboardButton(currentPayment)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DoNothing
+            })
+        };
+        var increaseBalanceButton = new InlineKeyboardButton(ButtonTextConstants.IncreaseBalancePaymentButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.IncreaseBalancePayment,
+                CommandParam = payment + 1
+            })
+        };
+        var decreaseBalanceButton = new InlineKeyboardButton(ButtonTextConstants.DecreaseBalancePaymentButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DecreaseBalancePayment,
+                CommandParam = payment - 1
+            })
+        };
+        var addBalanceButton = new InlineKeyboardButton(ButtonTextConstants.AddBalanceButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DepositPayment,
+                CommandParam = payment
+            })
+        };
 
-        var buttonRows = new[] { backButton };
+        var buttonRows = new[]
+        {
+            new [] { decreaseBalanceButton, balancePaymentAmountButton, increaseBalanceButton },
+            new [] { addBalanceButton },
+            new [] { backButton }
+        };
         _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 

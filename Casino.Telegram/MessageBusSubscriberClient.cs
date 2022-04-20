@@ -16,28 +16,26 @@ public class MessageBusSubscriberClient : IMessageBusSubscriberClient
     private readonly IConnection _rabbitMqConnection;
     private readonly IModel _rabbitMqChannel;
     private readonly string _rabbitMqQueueName;
-    private readonly IAppConfiguration _appConfiguration;
 
     public MessageBusSubscriberClient(IServiceProvider serviceProvider, 
         IAppConfiguration appConfiguration)
     {
         _serviceProvider = serviceProvider;
-        _appConfiguration = appConfiguration;
         var messageBusConnectionFactory = new ConnectionFactory
         {
-            HostName = _appConfiguration.RabbitHostName,
-            Port = _appConfiguration.RabbitPort
+            HostName = appConfiguration.RabbitHostName,
+            Port = appConfiguration.RabbitPort
         };
 
         try
         {
             _rabbitMqConnection = messageBusConnectionFactory.CreateConnection();
             _rabbitMqChannel = _rabbitMqConnection.CreateModel();
-            _rabbitMqChannel.ExchangeDeclare(exchange: _appConfiguration.TelegramMessagesExchange, type: ExchangeType.Fanout, durable:true);
-            _rabbitMqQueueName = _rabbitMqChannel.QueueDeclare(_appConfiguration.TelegramMessagesQueue, true, exclusive:false, autoDelete:false).QueueName;
+            _rabbitMqChannel.ExchangeDeclare(exchange: appConfiguration.TelegramMessagesExchange, type: ExchangeType.Fanout, durable:true);
+            _rabbitMqQueueName = _rabbitMqChannel.QueueDeclare(appConfiguration.TelegramMessagesQueue, true, exclusive:false, autoDelete:false).QueueName;
             _rabbitMqChannel.QueueBind(queue: _rabbitMqQueueName,
-                exchange: _appConfiguration.TelegramMessagesExchange,
-                routingKey: _appConfiguration.TelegramMessageBaseRoute);
+                exchange: appConfiguration.TelegramMessagesExchange,
+                routingKey: appConfiguration.TelegramMessageBaseRoute);
             _rabbitMqConnection.ConnectionShutdown += RabbitMqConnectionOnConnectionShutdown;
         }
         catch (Exception)

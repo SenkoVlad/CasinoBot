@@ -70,7 +70,22 @@ public class InlineScreenHandler : IScreenHandler
                 var dice = commandDto.CommandParam;
                 await PushChooseDice(dice);
                 break;
+            case Command.IncreaseBalancePayment:
+            case Command.DecreaseBalancePayment:
+                var newPayment = commandDto.CommandParam;
+                await PushGetBalanceButtonAsync(newPayment);
+                break;
+            case Command.DepositPayment:
+                var deposit = commandDto.CommandParam;
+                await PushDepositButtonAsync(deposit);
+                break;
         }
+    }
+
+    private async Task PushDepositButtonAsync(int deposit)
+    {
+       _balanceRepository.AddScoreToBalanceAsync(_chatId, deposit);
+       await PushGetBalanceButtonAsync();
     }
 
     private async Task PushChooseFootballGame()
@@ -120,12 +135,13 @@ public class InlineScreenHandler : IScreenHandler
             text: _replyText,replyMarkup: _inlineKeyboardButtons);
     }
 
-    private async Task PushGetBalanceButtonAsync()
+    private async Task PushGetBalanceButtonAsync(int payment = AppConstants.DefaultPayment)
     {
-        _inlineKeyboardButtonsGenerator.InitGetBalanceButtons();
+        _inlineKeyboardButtonsGenerator.InitGetBalanceButtons(payment);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
-        _replyText = _balanceRepository.GetBalanceAsync(_chatId).ToString();
-        
+        var currentBalance = _balanceRepository.GetBalanceAsync(_chatId).ToString();
+        _replyText = ReplyConstants.GetMyBalanceMessage(currentBalance);
+
         await _telegramBotClient.EditMessageTextAsync(_chatId, _messageId, 
             _replyText, replyMarkup: _inlineKeyboardButtons);
     }

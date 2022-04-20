@@ -14,9 +14,9 @@ public class BalanceRepository : IBalanceRepository
 
     public int GetBalanceAsync(long chatId) => _balance;
 
-    public bool AddScoreToBalanceAsync(long chatId, int newBalance)
+    public bool AddScoreToBalanceAsync(long chatId, int changeBalanceBy)
     {
-        _balance += newBalance;
+        _balance += changeBalanceBy;
         return true;
     }
 }

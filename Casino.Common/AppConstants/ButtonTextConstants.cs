@@ -23,4 +23,8 @@ public class ButtonTextConstants
     public const string BackButtonText = "Back";
     public const string HitBallButtonText = "Hit!";
 
+    public const string BalancePaymentButtonText = "💵";
+    public const string IncreaseBalancePaymentButtonText = "🔼";
+    public const string DecreaseBalancePaymentButtonText = "🔽";
+    public const string AddBalanceButtonText = "Deposit";
 }
