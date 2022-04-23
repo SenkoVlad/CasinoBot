@@ -11,11 +11,16 @@ public enum Command
     ChooseDiceGameButtonCommand,
     DemoPlayFootballButtonCommand,
     MakeBetButtonCommand,
-    GetInfoButtonCommand,
+    SettingsCommand,
     ChooseRussianRouletteGameButtonCommand,
     RealPlayFootballButtonCommand,
     DoNothing,
     IncreaseBalancePayment,
     DecreaseBalancePayment,
-    DepositPayment
+    DepositPayment,
+    IncreaseFootballBetPayment,
+    DecreaseFootballBetPayment,
+    IncreaseDiceBetPayment,
+    DecreaseDiceBetPayment,
+    SwitchLanguageCommand
 }

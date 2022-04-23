@@ -5,14 +5,16 @@ namespace Casino.BLL.Games;
 public abstract class Game
 {
     protected bool DidWin;
-
-    private readonly IBalanceRepository _balanceRepository;
+    protected int UserBet;
+    
     private readonly long _chatId;
+    private readonly IBalanceRepository _balanceRepository;
 
-    protected Game(long chatId, IBalanceRepository balanceRepository)
+    protected Game(long chatId, IBalanceRepository balanceRepository, int userBet)
     {
         _chatId = chatId;
         _balanceRepository = balanceRepository;
+        UserBet = userBet;
     }
 
     public virtual async Task PlayRoundAsync()
@@ -30,8 +32,8 @@ public abstract class Game
     public virtual Task UpdateBalanceAsync()
     {
         var updateBalanceResult = DidWin
-            ? _balanceRepository.AddScoreToBalanceAsync(_chatId, 10)
-            : _balanceRepository.AddScoreToBalanceAsync(_chatId, -10);
+            ? _balanceRepository.AddScoreToBalanceAsync(_chatId, UserBet)
+            : _balanceRepository.AddScoreToBalanceAsync(_chatId, -UserBet);
 
         return Task.CompletedTask;
     }

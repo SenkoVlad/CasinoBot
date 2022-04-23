@@ -64,7 +64,7 @@ public class MessageBusClient : IMessageBusClient
         }
     }
 
-    public void PublishPlatform(TelegramMessageDto telegramMessageDto)
+    public void PublishMessage(TelegramMessageDto telegramMessageDto)
     {
         var messageJson = JsonSerializer.Serialize(telegramMessageDto);
         if (_rabbitMqConnection is { IsOpen: true })

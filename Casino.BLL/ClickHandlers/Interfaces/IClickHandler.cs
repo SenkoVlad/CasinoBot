@@ -1,11 +1,11 @@
 ﻿using Casino.Common.Dtos;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Casino.BLL.ScreenHandlers.Interfaces;
+namespace Casino.BLL.ClickHandlers.Interfaces;
 
-public interface IScreenHandler
+public interface IClickHandler
 {
-    public Task PushButtonAsync(CommandDto commandDto);
+    public Task PushButtonAsync();
     public string? GetReplyText { get; }
     public ReplyKeyboardMarkup? GetReplyKeyboardButtons { get; }
 }

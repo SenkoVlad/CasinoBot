@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot;
 
-namespace Casino.TelegramConsumer;
+namespace Casino.TelegramConsumer.RabbitMq;
 
 public interface IMessageBusSubscriberClient
 {

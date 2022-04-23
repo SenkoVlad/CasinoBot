@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using Casino.BLL.ScreenHandlers.Implementation;
+using Casino.BLL.ClickHandlers.Implementation;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
 using Casino.Configuration.Configuration;
@@ -8,7 +8,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Telegram.Bot;
 
-namespace Casino.TelegramConsumer;
+namespace Casino.TelegramConsumer.RabbitMq;
 
 public class MessageBusSubscriberClient : IMessageBusSubscriberClient
 {
@@ -71,17 +71,15 @@ public class MessageBusSubscriberClient : IMessageBusSubscriberClient
         {
             try
             {
-                switch (telegramMessage.Message.MessageType)
+                switch (telegramMessage.MessageType)
                 {
                     case MessageType.Start:
-                        await ProcessStartMessageAsync(telegramMessage, telegramBotClient);
-                        break;
                     case MessageType.Callback:
                         await ProcessButtonClickAsync(telegramMessage, telegramBotClient);
                         break;
                     case MessageType.UserMessage:
-                        await telegramBotClient.DeleteMessageAsync(telegramMessage.Message.ChatId,
-                            telegramMessage.Message.MessageId);
+                        await telegramBotClient.DeleteMessageAsync(telegramMessage.ChatId,
+                            telegramMessage.MessageId);
                         break;
                 }
             }
@@ -94,12 +92,11 @@ public class MessageBusSubscriberClient : IMessageBusSubscriberClient
 
     private async Task ProcessButtonClickAsync(TelegramMessageDto telegramMessage, ITelegramBotClient telegramBotClient)
     {
-        var inlineButtonPushHandler = new InlineScreenHandler(
-            telegramMessage.Message.ChatId,
-            telegramMessage.Message.MessageId,
+        var inlineButtonPushHandler = new ButtonClickHandler(
+            telegramMessage,
             telegramBotClient,
             _serviceProvider);
-        await inlineButtonPushHandler.PushButtonAsync(telegramMessage.Message.CommandDto);
+        await inlineButtonPushHandler.PushButtonAsync();
     }
 
     public void Dispose()
@@ -112,15 +109,5 @@ public class MessageBusSubscriberClient : IMessageBusSubscriberClient
             _rabbitMqChannel.Dispose();
             _rabbitMqConnection.Dispose();
         }
-    }
-
-    private async Task ProcessStartMessageAsync(TelegramMessageDto message, ITelegramBotClient telegramBotClient)
-    {
-        var inlineButtonPushHandler = new InlineScreenHandler(message.Message.ChatId, message.Message.MessageId, 
-            telegramBotClient, _serviceProvider);
-        await inlineButtonPushHandler.PushButtonAsync(new CommandDto
-        {
-            Command = Command.StartCommand
-        });
     }
 }

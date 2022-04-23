@@ -4,5 +4,5 @@ namespace Casino.TelegramSender.RabbitMq;
 
 public interface IMessageBusClient
 {
-    public void PublishPlatform(TelegramMessageDto telegramMessageDto);
+    public void PublishMessage(TelegramMessageDto telegramMessageDto);
 }

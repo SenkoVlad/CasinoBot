@@ -1,5 +1,6 @@
 ﻿using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
+using Casino.Common.Enum;
 using Casino.Configuration.Configuration;
 using Casino.TelegramSender.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
@@ -62,8 +63,8 @@ class Program
         {
             try
             {
-                using IServiceScope serviceScope = _hosting!.Services.CreateScope();
-                IServiceProvider provider = serviceScope.ServiceProvider;
+                using var serviceScope = _hosting!.Services.CreateScope();
+                var provider = serviceScope.ServiceProvider;
                 var messageBusClient = provider.GetRequiredService<IMessageBusClient>();
 
                 var message = newMessage.Message;
@@ -71,14 +72,18 @@ class Program
 
                 if (IsItStartMessageAndNotNull(message))
                 {
-                    telegramMessage.Message = new MessageDto
+                    telegramMessage = new TelegramMessageDto
                     {
                         Text = message!.Text,
                         ChatId = message.Chat.Id,
                         MessageId = message.MessageId,
-                        MessageType = MessageType.Start
+                        MessageType = MessageType.Start,
+                        CommandDto = new CommandDto
+                        {
+                            Command = Command.StartCommand
+                        }
                     };
-                    messageBusClient.PublishPlatform(telegramMessage);
+                    messageBusClient.PublishMessage(telegramMessage);
                     return;
                 }
 
@@ -87,7 +92,7 @@ class Program
                     var callbackMessage = newMessage.CallbackQuery!.Message!;
                     var commandDto = GetCommandDto(newMessage);
 
-                    telegramMessage.Message = new MessageDto
+                    telegramMessage = new TelegramMessageDto
                     {
                         Text = callbackMessage.Text,
                         ChatId = callbackMessage.Chat.Id,
@@ -98,14 +103,14 @@ class Program
                 }
                 else if (IsUpdateTypeMessageAndMessageNotNull(newMessage))
                 {
-                    telegramMessage.Message = new MessageDto
+                    telegramMessage = new TelegramMessageDto
                     {
                         ChatId = message!.Chat.Id,
                         MessageId = message.MessageId,
                         MessageType = MessageType.UserMessage
                     };
                 }
-                messageBusClient.PublishPlatform(telegramMessage);
+                messageBusClient.PublishMessage(telegramMessage);
             }
             catch (Exception e)
             {
