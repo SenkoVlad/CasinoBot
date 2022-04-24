@@ -2,9 +2,12 @@
 using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Interfaces;
 using Casino.BLL.Games;
+using Casino.BLL.Models;
+using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
+using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -22,9 +25,10 @@ public class ButtonClickHandler : IClickHandler
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private InlineKeyboardMarkup? _inlineKeyboardButtons;
     private string? _replyText;
-    private readonly IStringLocalizer<ButtonClickHandler> _localizer;
+    private readonly IStringLocalizer<Resources> _localizer;
     private readonly IChatsLanguagesInMemoryRepository _chatsLanguagesInMemoryRepository;
     private readonly IChatRepository _chatRepository;
+    private readonly IChatService _chatService;
     public string? GetReplyText => _replyText;
     public ReplyKeyboardMarkup GetReplyKeyboardButtons => null!;
 
@@ -36,9 +40,10 @@ public class ButtonClickHandler : IClickHandler
         _telegramBotClient = telegramBotClient;
         _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
-        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<ButtonClickHandler>>();
+        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
         _chatRepository = serviceProvider.GetRequiredService<IChatRepository>();
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
+        _chatService = serviceProvider.GetRequiredService<IChatService>();
     }
 
     public async Task PushButtonAsync()
@@ -113,15 +118,14 @@ public class ButtonClickHandler : IClickHandler
         _chatsLanguagesInMemoryRepository.AddOrUpdateChatLanguage(_telegramMessageDto.ChatId, newLanguage);
         await _chatRepository.UpdateChatLanguageAsync(_telegramMessageDto.ChatId, newLanguage);
         await PushSettingsButtonAsync();
-
     }
 
     private async Task PushSettingsButtonAsync()
     {
         var currentLanguage = _chatsLanguagesInMemoryRepository.GetChatLanguage(_telegramMessageDto.ChatId);
-        _inlineKeyboardButtonsGenerator.InitSettingsButtons(currentLanguage);
+        _inlineKeyboardButtonsGenerator.InitSettingsButtons();
         _replyText = string.Concat(
-            _localizer[ResourceConstants.CurrentLanguageButtonText],
+            _localizer[Resources.CurrentLanguageButtonText],
             currentLanguage);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
@@ -137,7 +141,7 @@ public class ButtonClickHandler : IClickHandler
     private async Task PushChooseFootballGame()
     {
         _inlineKeyboardButtonsGenerator.InitChooseFootballMode();
-        _replyText = _localizer[ResourceConstants.ChooseGameModeMessageText];
+        _replyText = _localizer[Resources.ChooseGameModeMessageText];
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
             replyMarkup: _inlineKeyboardButtons);
@@ -152,8 +156,12 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task StartBotAsync()
     {
+        var chat = await _chatService.GetOrCreateChatIfNotExistAsync(_telegramMessageDto.ChatId);
         _inlineKeyboardButtonsGenerator.InitStartButtons();
-        _replyText = _localizer[ResourceConstants.ChooseActionMessageText];
+        _replyText = string.Concat(
+            _localizer[Resources.GetMyBalanceMessageText, chat.Balance],
+            Environment.NewLine,
+             _localizer[Resources.ChooseActionMessageText]);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.SendTextMessageAsync(_telegramMessageDto.ChatId, _replyText,
             replyMarkup: _inlineKeyboardButtons);
@@ -162,7 +170,7 @@ public class ButtonClickHandler : IClickHandler
     private async Task PushDiceButtonAsync(int userDiceBet = AppConstants.DefaultUserBet)
     {
         _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(userDiceBet);
-        _replyText = _localizer[ResourceConstants.ChooseYourBetMessageText];
+        _replyText = _localizer[Resources.ChooseYourBetMessageText];
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
             replyMarkup: _inlineKeyboardButtons);
@@ -179,7 +187,7 @@ public class ButtonClickHandler : IClickHandler
     {
         _inlineKeyboardButtonsGenerator.InitPlayFootballDemoButtons(userBet);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
-        _replyText = $"{ResourceConstants.FootballGameButtonText}"; await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId,
+        _replyText = $"{Resources.FootballGameButtonText}"; await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId,
             _telegramMessageDto.MessageId, 
             text: _replyText,replyMarkup: _inlineKeyboardButtons);
     }
@@ -189,7 +197,7 @@ public class ButtonClickHandler : IClickHandler
         _inlineKeyboardButtonsGenerator.InitGetBalanceButtons(payment);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         var currentBalance = _balanceRepository.GetBalanceAsync(_telegramMessageDto.ChatId).ToString();
-        _replyText = _localizer[ResourceConstants.GetMyBalanceMessageText, currentBalance];
+        _replyText = _localizer[Resources.GetMyBalanceMessageText, currentBalance];
 
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, 
             _replyText, replyMarkup: _inlineKeyboardButtons);
@@ -198,20 +206,20 @@ public class ButtonClickHandler : IClickHandler
     private async Task PushMenuButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitStartButtons();
-        _replyText = _localizer[ResourceConstants.ChooseActionMessageText];
+        _replyText = _localizer[Resources.ChooseActionMessageText];
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId,
-            _localizer[ResourceConstants.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
+            _localizer[Resources.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
     }
 
     private async Task PushGamesButtonAsync()
     {
         _inlineKeyboardButtonsGenerator.InitGamesButtons();
-        _replyText = _localizer[ResourceConstants.ChooseActionMessageText];
+        _replyText = _localizer[Resources.ChooseActionMessageText];
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId,
-            _localizer[ResourceConstants.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
+            _localizer[Resources.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
     }
 }

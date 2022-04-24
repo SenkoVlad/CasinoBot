@@ -1,6 +1,6 @@
 ﻿namespace Casino.Common.AppConstants;
 
-public class ResourceConstants
+public class Resources
 {
     public const string SettingsButtonText = "Settings";
     public const string BalanceButtonText = "Balance";

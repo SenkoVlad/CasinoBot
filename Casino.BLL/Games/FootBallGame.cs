@@ -14,7 +14,7 @@ public class FootBallGame : Game
     private readonly int _messageId;
     private readonly IBalanceRepository _balanceRepository;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
-    private readonly IStringLocalizer<ButtonClickHandler> _localizer;
+    private readonly IStringLocalizer<Resources> _localizer;
     private readonly ITelegramBotClient _telegramBotClient;
     private int? _scoreResult;
     private int _goodLuckMessageId;
@@ -27,7 +27,7 @@ public class FootBallGame : Game
         IBalanceRepository balanceRepository,
         int userBet,
         InlineKeyboardButtonsGenerator inlineKeyboardButtonsGenerator,
-        IStringLocalizer<ButtonClickHandler> localizer) : base(chatId, balanceRepository, userBet)
+        IStringLocalizer<Resources> localizer) : base(chatId, balanceRepository, userBet)
     {
         _chatId = chatId;
         _telegramBotClient = telegramBotClient;
@@ -42,7 +42,7 @@ public class FootBallGame : Game
         _inlineKeyboardButtonsGenerator.InitPlayFootballDemoButtons(UserBet);
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         var balance = _balanceRepository.GetBalanceAsync(_chatId);
-        var footballGameButtonText = $"{_localizer[ResourceConstants.GoodLuckFootBallMessageText]}. Your balance: {balance}";
+        var footballGameButtonText = $"{_localizer[Resources.GoodLuckFootBallMessageText]}. Your balance: {balance}";
         await _telegramBotClient.SendTextMessageAsync(_chatId, text: footballGameButtonText,
             replyMarkup: inlineKeyboardButtons);
     }
@@ -50,7 +50,7 @@ public class FootBallGame : Game
     protected override async Task SentStartMessageAsync()
     {
         var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_chatId, _messageId,
-            _localizer[ResourceConstants.GoodLuckFootBallMessageText]);
+            _localizer[Resources.GoodLuckFootBallMessageText]);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
 

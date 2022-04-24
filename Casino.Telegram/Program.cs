@@ -1,6 +1,8 @@
 ﻿using System.Globalization;
 using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Implementation;
+using Casino.BLL.Services.Implementation;
+using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
@@ -20,7 +22,7 @@ namespace Casino.Telegram;
 class Program
 {
     private static IHost? _hosting;
-    private static ITelegramBotClient bot = new TelegramBotClient(AppConstants.BotToken);
+    private static readonly ITelegramBotClient Bot = new TelegramBotClient(AppConstants.BotToken);
 
     public static async Task Main()
     {
@@ -31,14 +33,15 @@ class Program
                     .AddSingleton<IBalanceRepository, BalanceRepository>()
                     .AddSingleton<IChatsLanguagesInMemoryRepository, ChatsLanguagesInMemoryRepository>()
                     .AddScoped<InlineKeyboardButtonsGenerator>()
-                    .AddScoped<IChatRepository, ChatRepository>()
+                    .AddScoped<IChatService, ChatService>()
+                    .AddScoped<IChatRepository, ChatRepository>(provider => new ChatRepository(AppConstants.DbConnectionString))
                     .AddLocalization())
             .Build();
 
         var cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellationTokenSource.Token;
         var receiverOption = new ReceiverOptions();
-        bot.StartReceiving(
+        Bot.StartReceiving(
             HandleUpdate,
             HandleUpdateError,
             receiverOption,
@@ -80,10 +83,10 @@ class Program
                 {
                     case MessageType.Start:
                     case MessageType.Callback:
-                        await ProcessButtonClickAsync(telegramMessage, bot, provider);
+                        await ProcessButtonClickAsync(telegramMessage, Bot, provider);
                         break;
                     case MessageType.UserMessage:
-                        await bot.DeleteMessageAsync(telegramMessage.ChatId,
+                        await Bot.DeleteMessageAsync(telegramMessage.ChatId,
                             telegramMessage.MessageId, cancellationToken);
                         break;
                 }

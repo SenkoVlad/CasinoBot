@@ -1,9 +1,6 @@
-﻿using System.Globalization;
-using Casino.BLL.ClickHandlers.Implementation;
-using Casino.Common.AppConstants;
+﻿using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
-using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -15,30 +12,30 @@ public class InlineKeyboardButtonsGenerator
     private InlineKeyboardMarkup _inlineKeyboardMarkup = null!;
     public InlineKeyboardMarkup GetInlineKeyboardMarkup => _inlineKeyboardMarkup;
 
-    private readonly IStringLocalizer<ButtonClickHandler> _localizer;
+    private readonly IStringLocalizer<Resources> _localizer;
 
-    public InlineKeyboardButtonsGenerator(IStringLocalizer<ButtonClickHandler> localizer)
+    public InlineKeyboardButtonsGenerator(IStringLocalizer<Resources> localizer)
     {
         _localizer = localizer;
     }
 
     public void InitStartButtons()
     {
-        var gamesButton = new InlineKeyboardButton(_localizer[ResourceConstants.GamesButtonText])
+        var gamesButton = new InlineKeyboardButton(_localizer[Resources.GamesButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.GetGamesButtonCommand
             })
         };
-        var settingButton = new InlineKeyboardButton(_localizer[ResourceConstants.SettingsButtonText])
+        var settingButton = new InlineKeyboardButton(_localizer[Resources.SettingsButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.SettingsCommand
             })
         };
-        var balanceButton = new InlineKeyboardButton(_localizer[ResourceConstants.BalanceButtonText])
+        var balanceButton = new InlineKeyboardButton(_localizer[Resources.BalanceButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -52,28 +49,28 @@ public class InlineKeyboardButtonsGenerator
 
     public void InitGamesButtons()
     {
-        var diceGameButton = new InlineKeyboardButton(_localizer[ResourceConstants.DiceGameButtonText])
+        var diceGameButton = new InlineKeyboardButton(_localizer[Resources.DiceGameButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.ChooseDiceGameButtonCommand
             })
         };
-        var russianRouletteGameButton = new InlineKeyboardButton(_localizer[ResourceConstants.RussianRouletteGameButtonText])
+        var russianRouletteGameButton = new InlineKeyboardButton(_localizer[Resources.RussianRouletteGameButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.ChooseRussianRouletteGameButtonCommand
             })
         };
-        var footballGameButton = new InlineKeyboardButton(_localizer[ResourceConstants.FootballGameButtonText])
+        var footballGameButton = new InlineKeyboardButton(_localizer[Resources.FootballGameButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.ChooseFootballGameButtonCommand
             })
         };
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -91,7 +88,7 @@ public class InlineKeyboardButtonsGenerator
 
     public void InitGetBalanceButtons(int payment)
     {
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -122,7 +119,7 @@ public class InlineKeyboardButtonsGenerator
                 CommandParamJson = JsonConvert.SerializeObject(payment - 1)
             })
         };
-        var addBalanceButton = new InlineKeyboardButton(_localizer[ResourceConstants.AddBalanceButtonText])
+        var addBalanceButton = new InlineKeyboardButton(_localizer[Resources.AddBalanceButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -142,7 +139,7 @@ public class InlineKeyboardButtonsGenerator
 
     public void InitPlayFootballDemoButtons(int userBet)
     {
-        var hitBallButton = new InlineKeyboardButton(_localizer[ResourceConstants.HitBallButtonText])
+        var hitBallButton = new InlineKeyboardButton(_localizer[Resources.HitBallButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -150,7 +147,7 @@ public class InlineKeyboardButtonsGenerator
                 CommandParamJson = JsonConvert.SerializeObject(userBet)
             })
         };
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -287,7 +284,7 @@ public class InlineKeyboardButtonsGenerator
                 CommandParamJson = JsonConvert.SerializeObject(userBet - 1)
             })
         };
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -315,21 +312,21 @@ public class InlineKeyboardButtonsGenerator
 
     public void InitChooseFootballMode()
     {
-        var playDemoFootballButton = new InlineKeyboardButton(_localizer[ResourceConstants.DemoPlayFootBallButtonText])
+        var playDemoFootballButton = new InlineKeyboardButton(_localizer[Resources.DemoPlayFootBallButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.DemoPlayFootballButtonCommand
             })
         };
-        var playRealFootballButton = new InlineKeyboardButton(_localizer[ResourceConstants.RealPlayFootBallButtonText])
+        var playRealFootballButton = new InlineKeyboardButton(_localizer[Resources.RealPlayFootBallButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.RealPlayFootballButtonCommand
             })
         };
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -350,7 +347,7 @@ public class InlineKeyboardButtonsGenerator
         _inlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
-    public void InitSettingsButtons(string currentLanguage)
+    public void InitSettingsButtons()
     {
         var en = "en-US";
         var ru = "ru-RU";
@@ -371,7 +368,8 @@ public class InlineKeyboardButtonsGenerator
                 CommandParamJson = ru
             })
         };
-        var backButton = new InlineKeyboardButton(_localizer[ResourceConstants.BackButtonText])
+        var a = _localizer[Resources.BackButtonText];
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
