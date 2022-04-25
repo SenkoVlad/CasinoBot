@@ -1,7 +1,10 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Implementation;
+using Casino.BLL.Models;
+using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.DAL.Repositories.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
@@ -10,7 +13,7 @@ namespace Casino.BLL.Games;
 
 public class DiceGame : Game
 {
-    private readonly long _chatId;
+    private readonly GameModel _gameModel;
     private readonly int _messageId;
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly IBalanceRepository _balanceRepository;
@@ -20,45 +23,49 @@ public class DiceGame : Game
     private int? _scoreResult;
     private int _goodLuckMessageId;
     
-    public DiceGame(long chatId,
+    public DiceGame(
+        GameModel gameModel,
         int messageId,
         ITelegramBotClient telegramBotClient,
-        IBalanceRepository balanceRepository,
+        IChatService chatService,
         int diceBet,
-        int userBet,
-        InlineKeyboardButtonsGenerator inlineKeyboardButtonsGenerator,
-        IStringLocalizer<Resources> localizer) : base(chatId, balanceRepository, userBet)
+        IServiceProvider serviceProvider) : base(gameModel, chatService)
     {
-        _chatId = chatId;
-        _telegramBotClient = telegramBotClient;
-        _balanceRepository = balanceRepository;
-        _diceBet = diceBet;
-        _inlineKeyboardButtonsGenerator = inlineKeyboardButtonsGenerator;
-        _localizer = localizer;
+        _gameModel = gameModel;
         _messageId = messageId;
+        _telegramBotClient = telegramBotClient;
+        _diceBet = diceBet;
+        _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
+        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
+        _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
     }
 
-    protected override async Task InitGameAsync()
+    protected override async Task InitDemoGameAsync()
     {
-        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(UserBet);
-        var balance = _balanceRepository.GetBalanceAsync(_chatId);
+        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel.UserBet);
+        var balance = _balanceRepository.GetBalanceAsync(_gameModel.ChatId);
         var chooseYourBetMessage = $"{_localizer[Resources.ChooseYourBetMessageText]}. Your balance: {balance}";
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
-        await _telegramBotClient.SendTextMessageAsync(_chatId, text: chooseYourBetMessage,
+        await _telegramBotClient.SendTextMessageAsync(_gameModel.ChatId, text: chooseYourBetMessage,
             replyMarkup: inlineKeyboardButtons);
+    }
+
+    protected override Task InitRealGameAsync()
+    {
+        throw new NotImplementedException();
     }
 
     protected override async Task SentStartMessageAsync()
     {
         var startMessage = $"{_localizer[Resources.GoodLuckFootBallMessageText]}. Your bet is {_diceBet}";
-        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_chatId, _messageId, startMessage);
+        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, _messageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
 
     protected override async Task PlayGameRoundAsync()
     {
-        var diceResult = await _telegramBotClient.SendDiceAsync(_chatId, Emoji.Dice);
+        var diceResult = await _telegramBotClient.SendDiceAsync(_gameModel.ChatId, Emoji.Dice);
         _scoreResult = diceResult.Dice?.Value;
     }
 
@@ -69,8 +76,8 @@ public class DiceGame : Game
 
     protected override async Task SendRoundResultMessageAsync()
     {
-        var roundResultMessage = DidWin ? "Win" : "Lose";
-        await _telegramBotClient.EditMessageTextAsync(_chatId, text: roundResultMessage,
+        var roundResultMessage = _gameModel.DidWin ? "Win" : "Lose";
+        await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }
 }

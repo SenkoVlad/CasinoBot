@@ -7,7 +7,6 @@ using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
-using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -21,6 +20,7 @@ public class ButtonClickHandler : IClickHandler
 {
     private readonly TelegramMessageDto _telegramMessageDto;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly IServiceProvider _serviceProvider;
     private readonly IBalanceRepository _balanceRepository;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private InlineKeyboardMarkup? _inlineKeyboardButtons;
@@ -38,6 +38,7 @@ public class ButtonClickHandler : IClickHandler
     {
         _telegramMessageDto = telegramMessageDto;
         _telegramBotClient = telegramBotClient;
+        _serviceProvider = serviceProvider;
         _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
@@ -149,8 +150,14 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushChooseDice(int diceBet, int userBet)
     {
-        var diceGame = new DiceGame(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _telegramBotClient,
-            _balanceRepository, diceBet, userBet, _inlineKeyboardButtonsGenerator, _localizer);
+        var gameModel = new GameModel
+        {
+            ChatId = _telegramMessageDto.ChatId,
+            UserBet = userBet,
+            IsDemoPlay = true
+        };
+        var diceGame = new DiceGame(gameModel, _telegramMessageDto.MessageId, _telegramBotClient, 
+            _chatService ,diceBet, _serviceProvider);
         await diceGame.PlayRoundAsync();
     }
 
@@ -178,8 +185,14 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushHitBallButtonAsync(int userBet)
     {
-        var footBallGame = new FootBallGame(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId,
-            _telegramBotClient, _balanceRepository, userBet, _inlineKeyboardButtonsGenerator, _localizer);
+        var gameModel = new GameModel
+        {
+            ChatId = _telegramMessageDto.ChatId,
+            UserBet = userBet,
+            IsDemoPlay = true
+        };
+        var footBallGame = new FootBallGame(gameModel, _telegramMessageDto.MessageId,
+            _telegramBotClient, _chatService, _serviceProvider);
         await footBallGame.PlayRoundAsync();
     }
 
@@ -205,12 +218,16 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushMenuButtonAsync()
     {
+        var chat = await _chatRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
         _inlineKeyboardButtonsGenerator.InitStartButtons();
-        _replyText = _localizer[Resources.ChooseActionMessageText];
+        _replyText = string.Concat(
+            _localizer[Resources.GetMyBalanceMessageText, chat!.Balance],
+            Environment.NewLine,
+            _localizer[Resources.ChooseActionMessageText]);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
-        await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId,
-            _localizer[Resources.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
+        await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
+            replyMarkup: _inlineKeyboardButtons);
     }
 
     private async Task PushGamesButtonAsync()

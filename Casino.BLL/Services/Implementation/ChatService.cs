@@ -1,4 +1,5 @@
-﻿using Casino.BLL.Services.Interfaces;
+﻿using Casino.BLL.Models;
+using Casino.BLL.Services.Interfaces;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 
@@ -26,5 +27,21 @@ public class ChatService : IChatService
         }
 
         return chat!;
+    }
+
+    public async Task ChangeBalanceByIdAsync(GameModel gameModel)
+    {
+        var score = gameModel.DidWin
+            ? gameModel.UserBet
+            : -gameModel.UserBet;
+
+        if (gameModel.IsDemoPlay)
+        {
+            await _chatRepository.ChangeDemoBalanceAsync(gameModel.ChatId, score);
+        }
+        else
+        {
+            await _chatRepository.ChangeBalanceAsync(gameModel.ChatId, score);
+        }
     }
 }

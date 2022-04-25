@@ -1,20 +1,17 @@
-﻿using Casino.DAL.Repositories.Interfaces;
+﻿using Casino.BLL.Models;
+using Casino.BLL.Services.Interfaces;
 
 namespace Casino.BLL.Games;
 
 public abstract class Game
 {
-    protected bool DidWin;
-    protected int UserBet;
-    
-    private readonly long _chatId;
-    private readonly IBalanceRepository _balanceRepository;
+    private readonly GameModel _gameModel;
+    private readonly IChatService _chatService;
 
-    protected Game(long chatId, IBalanceRepository balanceRepository, int userBet)
+    protected Game(GameModel gameModel, IChatService chatService)
     {
-        _chatId = chatId;
-        _balanceRepository = balanceRepository;
-        UserBet = userBet;
+        _gameModel = gameModel;
+        _chatService = chatService;
     }
 
     public virtual async Task PlayRoundAsync()
@@ -24,21 +21,28 @@ public abstract class Game
 
         await Task.Delay(3500);
 
-        DidWin = GetRoundResult();
+        _gameModel.DidWin = GetRoundResult();
         await UpdateBalanceAsync();
         await SendRoundResultMessageAsync();
-        await InitGameAsync();
+
+        if (_gameModel.IsDemoPlay)
+        {
+            await InitDemoGameAsync();
+        }
+        else
+        {
+            await InitRealGameAsync();
+        }
     }
-    public virtual Task UpdateBalanceAsync()
+
+
+    public virtual async Task UpdateBalanceAsync()
     {
-        var updateBalanceResult = DidWin
-            ? _balanceRepository.AddScoreToBalanceAsync(_chatId, UserBet)
-            : _balanceRepository.AddScoreToBalanceAsync(_chatId, -UserBet);
-
-        return Task.CompletedTask;
+        await _chatService.ChangeBalanceByIdAsync(_gameModel);
     }
 
-    protected abstract Task InitGameAsync();
+    protected abstract Task InitDemoGameAsync();
+    protected abstract Task InitRealGameAsync();
     protected abstract Task SentStartMessageAsync();
     protected abstract Task PlayGameRoundAsync();
     protected abstract bool GetRoundResult();

@@ -1,5 +1,4 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Dapper;
@@ -56,6 +55,34 @@ public class ChatRepository : IChatRepository
         {
             Console.WriteLine(e);
             return null;
+        }
+    }
+
+    public async Task ChangeDemoBalanceAsync(long chatId, int score)
+    {
+        try
+        {
+            await using var db = new SqlConnection(_connectionString);
+            var sqlQuery = "UPDATE dbo.Chats SET demoBalance = demoBalance + @score WHERE Id = @chatId";
+            await db.ExecuteAsync(sqlQuery, new { chatId, score });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async Task ChangeBalanceAsync(long chatId, int score)
+    {
+        try
+        {
+            await using var db = new SqlConnection(_connectionString);
+            var sqlQuery = "UPDATE dbo.Chats SET balance = balance + @score WHERE Id = @chatId";
+            await db.ExecuteAsync(sqlQuery, new { chatId, score });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
     }
 }
