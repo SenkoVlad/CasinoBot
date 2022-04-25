@@ -38,7 +38,7 @@ public abstract class Game
 
     public virtual async Task UpdateBalanceAsync()
     {
-        await _chatService.ChangeBalanceByIdAsync(_gameModel);
+        await _chatService.ChangeBalanceAsync(_gameModel);
     }
 
     protected abstract Task InitDemoGameAsync();

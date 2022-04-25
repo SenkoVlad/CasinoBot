@@ -16,7 +16,7 @@ public class DiceGame : Game
     private readonly GameModel _gameModel;
     private readonly int _messageId;
     private readonly ITelegramBotClient _telegramBotClient;
-    private readonly IBalanceRepository _balanceRepository;
+    private readonly IChatService _chatService;
     private readonly int _diceBet;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private readonly IStringLocalizer<Resources> _localizer;
@@ -34,20 +34,26 @@ public class DiceGame : Game
         _gameModel = gameModel;
         _messageId = messageId;
         _telegramBotClient = telegramBotClient;
+        _chatService = chatService;
         _diceBet = diceBet;
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
-        _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
     }
 
     protected override async Task InitDemoGameAsync()
     {
+        var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        _gameModel.Chat = new ChatModel
+        {
+            Id = chat.Id,
+            Balance = chat.Balance,
+            DemoBalance = chat.DemoBalance
+        };
         _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel.UserBet);
-        var balance = _balanceRepository.GetBalanceAsync(_gameModel.ChatId);
-        var chooseYourBetMessage = $"{_localizer[Resources.ChooseYourBetMessageText]}. Your balance: {balance}";
+        var chooseYourBetMessage = _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance];
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
-        await _telegramBotClient.SendTextMessageAsync(_gameModel.ChatId, text: chooseYourBetMessage,
+        await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: chooseYourBetMessage,
             replyMarkup: inlineKeyboardButtons);
     }
 
@@ -59,13 +65,13 @@ public class DiceGame : Game
     protected override async Task SentStartMessageAsync()
     {
         var startMessage = $"{_localizer[Resources.GoodLuckFootBallMessageText]}. Your bet is {_diceBet}";
-        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, _messageId, startMessage);
+        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
 
     protected override async Task PlayGameRoundAsync()
     {
-        var diceResult = await _telegramBotClient.SendDiceAsync(_gameModel.ChatId, Emoji.Dice);
+        var diceResult = await _telegramBotClient.SendDiceAsync(_gameModel.Chat.Id, Emoji.Dice);
         _scoreResult = diceResult.Dice?.Value;
     }
 
@@ -77,7 +83,7 @@ public class DiceGame : Game
     protected override async Task SendRoundResultMessageAsync()
     {
         var roundResultMessage = _gameModel.DidWin ? "Win" : "Lose";
-        await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, text: roundResultMessage,
+        await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }
 }

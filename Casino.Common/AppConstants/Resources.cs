@@ -25,4 +25,5 @@ public class Resources
     public const string ChooseYourBetMessageText = "ChooseYourBet";
     public const string ChooseGameModeMessageText = "ChooseGameMode";
     public const string GetMyBalanceMessageText = "MyBalance";
+    public const string GetMyDemoBalanceMessageText = "MyDemoBalance";
 }

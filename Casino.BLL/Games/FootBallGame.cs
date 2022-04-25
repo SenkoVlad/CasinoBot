@@ -3,6 +3,7 @@ using Casino.BLL.ClickHandlers.Implementation;
 using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
+using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -16,9 +17,9 @@ public class FootBallGame : Game
     private readonly int _messageId;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private readonly IStringLocalizer<Resources> _localizer;
-    private readonly IBalanceRepository _balanceRepository;
     private readonly GameModel _gameModel;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly IChatService _chatService;
     private int? _scoreResult;
     private int _goodLuckMessageId;
 
@@ -33,19 +34,25 @@ public class FootBallGame : Game
     {
         _gameModel = gameModel;
         _telegramBotClient = telegramBotClient;
+        _chatService = chatService;
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
-        _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
         _messageId = messageId;
     }
 
     protected override async Task InitDemoGameAsync()
     {
-        _inlineKeyboardButtonsGenerator.InitPlayFootballDemoButtons(_gameModel.UserBet);
+        var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        _gameModel.Chat = new ChatModel
+        {
+            Id = chat.Id,
+            Balance = chat.Balance,
+            DemoBalance = chat.DemoBalance
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayDemoFootballButtons(_gameModel);
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
-        var balance = _balanceRepository.GetBalanceAsync(_gameModel.ChatId);
-        var footballGameButtonText = $"{_localizer[Resources.GoodLuckFootBallMessageText]}. Your balance: {balance}";
-        await _telegramBotClient.SendTextMessageAsync(_gameModel.ChatId, text: footballGameButtonText,
+        var footballGameButtonText = _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance];
+        await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: footballGameButtonText,
             replyMarkup: inlineKeyboardButtons);
     }
 
@@ -56,14 +63,14 @@ public class FootBallGame : Game
 
     protected override async Task SentStartMessageAsync()
     {
-        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, _messageId,
+        var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId,
             _localizer[Resources.GoodLuckFootBallMessageText]);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
 
     protected override async Task PlayGameRoundAsync()
     {
-        var hitResult = await _telegramBotClient.SendDiceAsync(_gameModel.ChatId, Emoji.Football);
+        var hitResult = await _telegramBotClient.SendDiceAsync(_gameModel.Chat.Id, Emoji.Football);
         _scoreResult = hitResult.Dice?.Value;
     }
 
@@ -76,7 +83,7 @@ public class FootBallGame : Game
     {
         var roundResultMessage = _gameModel.DidWin ? "GOAL!" : "MISS ((";
 
-        await _telegramBotClient.EditMessageTextAsync(_gameModel.ChatId, text: roundResultMessage,
+        await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }
 }

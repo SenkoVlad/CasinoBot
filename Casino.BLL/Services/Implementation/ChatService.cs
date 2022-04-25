@@ -29,7 +29,7 @@ public class ChatService : IChatService
         return chat!;
     }
 
-    public async Task ChangeBalanceByIdAsync(GameModel gameModel)
+    public async Task ChangeBalanceAsync(GameModel gameModel)
     {
         var score = gameModel.DidWin
             ? gameModel.UserBet
@@ -37,11 +37,32 @@ public class ChatService : IChatService
 
         if (gameModel.IsDemoPlay)
         {
-            await _chatRepository.ChangeDemoBalanceAsync(gameModel.ChatId, score);
+            await _chatRepository.ChangeDemoBalanceAsync(gameModel.Chat.Id, score);
         }
         else
         {
-            await _chatRepository.ChangeBalanceAsync(gameModel.ChatId, score);
+            await _chatRepository.ChangeBalanceAsync(gameModel.Chat.Id, score);
         }
     }
+
+    public async Task<Chat> GetChatByIdOrException(long chatId)
+    {
+        var chat = await _chatRepository.GetChatByIdAsync(chatId);
+        if (chat == null)
+        {
+            throw new EntityNotFoundException($"Chat with id {chatId} is not found");
+        }
+
+        return chat;
+    }
+}
+
+public class EntityNotFoundException : Exception
+{
+    public EntityNotFoundException(string message)
+    {
+        Message = message;
+    }
+
+    public override string Message { get; }
 }

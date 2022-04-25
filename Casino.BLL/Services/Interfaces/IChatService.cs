@@ -6,5 +6,6 @@ namespace Casino.BLL.Services.Interfaces;
 public interface IChatService
 {
     Task<Chat> GetOrCreateChatIfNotExistAsync(long chatId);
-    Task ChangeBalanceByIdAsync(GameModel gameModel);
+    Task ChangeBalanceAsync(GameModel gameModel);
+    Task<Chat> GetChatByIdOrException(long chatId);
 }

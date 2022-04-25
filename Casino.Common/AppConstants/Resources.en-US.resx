@@ -156,6 +156,9 @@
   <data name="MyBalance" xml:space="preserve">
     <value>Your balance is {0:D}💲</value>
   </data>
+  <data name="MyDemoBalance" xml:space="preserve">
+    <value>You demo balance is {0:D} ♦️</value>
+  </data>
   <data name="PlayFootballDemo" xml:space="preserve">
     <value>Play football demo</value>
   </data>
