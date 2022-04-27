@@ -40,7 +40,7 @@ public class DiceGame : Game
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
     }
 
-    protected override async Task InitDemoGameAsync()
+    protected override async Task InitGameAsync()
     {
         var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
         _gameModel.Chat = new ChatModel
@@ -49,17 +49,14 @@ public class DiceGame : Game
             Balance = chat.Balance,
             DemoBalance = chat.DemoBalance
         };
-        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel.UserBet);
-        var chooseYourBetMessage = _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance];
+        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel);
+        var chooseYourBetMessage = _gameModel.IsDemoPlay
+            ? _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance]
+            : _localizer[Resources.GetMyBalanceMessageText, _gameModel.Chat.Balance];
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: chooseYourBetMessage,
             replyMarkup: inlineKeyboardButtons);
-    }
-
-    protected override Task InitRealGameAsync()
-    {
-        throw new NotImplementedException();
     }
 
     protected override async Task SentStartMessageAsync()

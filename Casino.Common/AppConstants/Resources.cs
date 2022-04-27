@@ -7,7 +7,7 @@ public class Resources
     public const string GamesButtonText = "Games";
 
     public const string RussianRouletteGameButtonText = "RussianRoulette";
-    
+
     public const string DiceGameButtonText = "Dice";
 
     public const string FootballGameButtonText = "Football";
@@ -26,4 +26,6 @@ public class Resources
     public const string ChooseGameModeMessageText = "ChooseGameMode";
     public const string GetMyBalanceMessageText = "MyBalance";
     public const string GetMyDemoBalanceMessageText = "MyDemoBalance";
+    public const string FootballMissMessageText = "FootballMiss";
+    public const string FootballGoalButtonText = "FootballGoal";
 }

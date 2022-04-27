@@ -1,10 +1,7 @@
 ﻿using Casino.BLL.ButtonsGenerators;
-using Casino.BLL.ClickHandlers.Implementation;
 using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
-using Casino.DAL.Models;
-using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Telegram.Bot;
@@ -40,7 +37,7 @@ public class FootBallGame : Game
         _messageId = messageId;
     }
 
-    protected override async Task InitDemoGameAsync()
+    protected override async Task InitGameAsync()
     {
         var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
         _gameModel.Chat = new ChatModel
@@ -49,16 +46,13 @@ public class FootBallGame : Game
             Balance = chat.Balance,
             DemoBalance = chat.DemoBalance
         };
-        _inlineKeyboardButtonsGenerator.InitPlayDemoFootballButtons(_gameModel);
+        _inlineKeyboardButtonsGenerator.InitPlayFootballButtons(_gameModel);
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
-        var footballGameButtonText = _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance];
+        var footballGameButtonText = _gameModel.IsDemoPlay
+            ? _localizer[Resources.GetMyDemoBalanceMessageText, _gameModel.Chat.DemoBalance]
+            : _localizer[Resources.GetMyBalanceMessageText, _gameModel.Chat.Balance];
         await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: footballGameButtonText,
             replyMarkup: inlineKeyboardButtons);
-    }
-
-    protected override Task InitRealGameAsync()
-    {
-        throw new NotImplementedException();
     }
 
     protected override async Task SentStartMessageAsync()
@@ -81,8 +75,9 @@ public class FootBallGame : Game
 
     protected override async Task SendRoundResultMessageAsync()
     {
-        var roundResultMessage = _gameModel.DidWin ? "GOAL!" : "MISS ((";
-
+        var roundResultMessage = _gameModel.DidWin 
+            ? _localizer[Resources.FootballGoalButtonText] 
+            : _localizer[Resources.FootballMissMessageText];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }

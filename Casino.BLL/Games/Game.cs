@@ -25,14 +25,7 @@ public abstract class Game
         await UpdateBalanceAsync();
         await SendRoundResultMessageAsync();
 
-        if (_gameModel.IsDemoPlay)
-        {
-            await InitDemoGameAsync();
-        }
-        else
-        {
-            await InitRealGameAsync();
-        }
+        await InitGameAsync();
     }
 
 
@@ -41,8 +34,7 @@ public abstract class Game
         await _chatService.ChangeBalanceAsync(_gameModel);
     }
 
-    protected abstract Task InitDemoGameAsync();
-    protected abstract Task InitRealGameAsync();
+    protected abstract Task InitGameAsync();
     protected abstract Task SentStartMessageAsync();
     protected abstract Task PlayGameRoundAsync();
     protected abstract bool GetRoundResult();

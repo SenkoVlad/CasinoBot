@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Implementation;
+using Casino.BLL.Extensions;
 using Casino.BLL.Services.Implementation;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
@@ -15,6 +16,7 @@ using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 using MessageType = Casino.Common.Enum.MessageType;
 
 namespace Casino.Telegram;
@@ -165,6 +167,17 @@ class Program
     {
         var commandJson = newMessage.CallbackQuery!.Data;
         var commandDto = JsonConvert.DeserializeObject<CommandDto>(commandJson);
+
+        var allScreenButtons = new List<InlineKeyboardButton>();
+        var buttonsLists = newMessage.CallbackQuery!.Message!.ReplyMarkup?.InlineKeyboard!;
+        
+        foreach (var buttons in buttonsLists)
+        {
+            allScreenButtons.AddRange(buttons.ToArray());
+        }
+        var button = allScreenButtons.FirstOrDefault(b => b.CallbackData == commandJson);
+        var textData = button!.LoginUrl?.ForwardText;
+
         return commandDto;
     }
 

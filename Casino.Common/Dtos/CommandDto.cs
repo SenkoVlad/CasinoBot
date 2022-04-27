@@ -5,5 +5,5 @@ namespace Casino.Common.Dtos;
 public class CommandDto
 {
     public Command Command { get; set; }
-    public string? CommandParamJson { get; set; }
+    public string? CommandParam { get; set; }
 }

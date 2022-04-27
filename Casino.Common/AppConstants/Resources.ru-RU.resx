@@ -144,6 +144,12 @@
   <data name="Football" xml:space="preserve">
     <value>Футбол</value>
   </data>
+  <data name="FootballGoal" xml:space="preserve">
+    <value>Гол ⚽️</value>
+  </data>
+  <data name="FootballMiss" xml:space="preserve">
+    <value>Промах 😟</value>
+  </data>
   <data name="Games" xml:space="preserve">
     <value>Игры</value>
   </data>
