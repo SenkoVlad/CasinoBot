@@ -36,7 +36,7 @@ class Program
                     .AddSingleton<IChatsLanguagesInMemoryRepository, ChatsLanguagesInMemoryRepository>()
                     .AddScoped<InlineKeyboardButtonsGenerator>()
                     .AddScoped<IChatService, ChatService>()
-                    .AddScoped<IChatRepository, ChatRepository>(provider => new ChatRepository(AppConstants.DbConnectionString))
+                    .AddScoped<IChatRepository, ChatRepository>(_ => new ChatRepository(AppConstants.DbConnectionString))
                     .AddLocalization())
             .Build();
 
@@ -97,6 +97,10 @@ class Program
             {
                 Console.WriteLine(e);
             }
+            finally
+            {
+                await Bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
+            }
         }, cancellationToken);
     }
 
@@ -132,7 +136,7 @@ class Program
                 MessageType = MessageType.Start,
                 CommandDto = new CommandDto
                 {
-                    Command = Command.StartCommand
+                    Command = Command.Start
                 }
             };
         }
@@ -167,17 +171,6 @@ class Program
     {
         var commandJson = newMessage.CallbackQuery!.Data;
         var commandDto = JsonConvert.DeserializeObject<CommandDto>(commandJson);
-
-        var allScreenButtons = new List<InlineKeyboardButton>();
-        var buttonsLists = newMessage.CallbackQuery!.Message!.ReplyMarkup?.InlineKeyboard!;
-        
-        foreach (var buttons in buttonsLists)
-        {
-            allScreenButtons.AddRange(buttons.ToArray());
-        }
-        var button = allScreenButtons.FirstOrDefault(b => b.CallbackData == commandJson);
-        var textData = button!.LoginUrl?.ForwardText;
-
         return commandDto;
     }
 

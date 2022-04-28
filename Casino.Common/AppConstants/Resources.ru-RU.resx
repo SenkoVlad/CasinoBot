@@ -165,6 +165,12 @@
   <data name="MyDemoBalance" xml:space="preserve">
     <value>Твой демо баланс: {0:D} ♦️</value>
   </data>
+  <data name="PlayDiceDemo" xml:space="preserve">
+    <value>Игра в кости демо</value>
+  </data>
+  <data name="PlayDiceReal" xml:space="preserve">
+    <value>Игра в кости на деньги</value>
+  </data>
   <data name="PlayFootballDemo" xml:space="preserve">
     <value>Играть демо</value>
   </data>

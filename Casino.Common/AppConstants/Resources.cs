@@ -6,13 +6,13 @@ public class Resources
     public const string BalanceButtonText = "Balance";
     public const string GamesButtonText = "Games";
 
-    public const string RussianRouletteGameButtonText = "RussianRoulette";
-
     public const string DiceGameButtonText = "Dice";
 
     public const string FootballGameButtonText = "Football";
     public const string DemoPlayFootBallButtonText = "PlayFootballDemo";
+    public const string DemoPlayDiceButtonText = "PlayDiceDemo";
     public const string RealPlayFootBallButtonText = "PlayFootballReal";
+    public const string RealPlayDiceButtonText = "PlayDiceReal";
 
     public const string BackButtonText = "Back";
     public const string HitBallButtonText = "HitBall";

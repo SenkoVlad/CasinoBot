@@ -1,4 +1,6 @@
-﻿using System.Data.SqlClient;
+﻿using System.Collections.ObjectModel;
+using System.Data.SqlClient;
+using Casino.DAL.DataModels;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Dapper;
@@ -11,21 +13,38 @@ public class ChatRepository : IChatRepository
 
     public ChatRepository(string connectionString)
     {
-        this._connectionString = connectionString;
+        _connectionString = connectionString;
     }
 
-    public Dictionary<long, string> GetChatsLanguages()
+    public async Task<IEnumerable<ChatDataModel>> GetChatsLanguagesAsync()
     {
-        return new Dictionary<long, string>
+        try
         {
-            { 194245484, "ru-RU" },
-            { 5280713563, "en-US" }
-        };
+            await using var db = new SqlConnection(_connectionString);
+            var sql = "SELECT C.Id, C.language FROM dbo.Chats AS C";
+            var languages = await db.QueryAsync<ChatDataModel>(sql);
+            return languages;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
     }
 
-    public Task UpdateChatLanguageAsync(long chatId, string language)
+    public async Task UpdateChatLanguageAsync(long chatId, string language)
     {
-        return  Task.CompletedTask;
+        try
+        {
+            await using var db = new SqlConnection(_connectionString);
+            var sqlQuery = "UPDATE dbo.Chats SET language=@language WHERE id=@id";
+            await db.ExecuteAsync(sqlQuery, new {language, id = chatId});
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public async Task AddAsync(Chat chat)
@@ -35,26 +54,31 @@ public class ChatRepository : IChatRepository
             await using var db = new SqlConnection(_connectionString);
             var sqlQuery = "INSERT INTO Chats (id, language, balance, demoBalance) VALUES (@id, @language, @balance, @demoBalance)";
             await db.ExecuteAsync(sqlQuery, chat);
-
         }
         catch (Exception exception)
         {
-            Console.WriteLine(exception);
+            Console.WriteLine(exception.Message);
+            throw;
         }
     }
 
-    public async Task<Chat?> GetChatByIdAsync(long chatId)
+    public async Task<Chat> GetChatByIdAsync(long chatId)
     {
         try
         {
             await using var db = new SqlConnection(_connectionString);
-            var chat = await db.QueryFirstOrDefaultAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
+            var chat = await db.QueryFirstAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
+            if (chat == null)
+            {
+                throw new Exception($"Method {nameof(GetChatByIdAsync)}. Chat with id {chatId} is not found");
+            }
+
             return chat;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            return null;
+            throw;
         }
     }
 
@@ -68,7 +92,8 @@ public class ChatRepository : IChatRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(e.Message);
+            throw;
         }
     }
 
@@ -82,7 +107,8 @@ public class ChatRepository : IChatRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(e.Message);
+            throw;
         }
     }
 }

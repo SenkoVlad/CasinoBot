@@ -2,6 +2,6 @@
 
 public class FootballGameParamDto
 {
-    public int UserBet { get; set; }
-    public bool IsDemoPlay { get; set; }
+    public int Bet { get; set; }
+    public bool IsDemo { get; set; }
 }

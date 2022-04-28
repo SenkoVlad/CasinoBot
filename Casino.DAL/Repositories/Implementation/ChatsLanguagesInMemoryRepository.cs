@@ -1,32 +1,63 @@
-﻿using Casino.Common.AppConstants;
+﻿using Casino.DAL.DataModels;
 using Casino.DAL.Repositories.Interfaces;
 
 namespace Casino.DAL.Repositories.Implementation;
 
 public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepository
 {
-    private readonly Dictionary<long, string> _usersLanguages;
+    private readonly List<ChatDataModel> _usersLanguages;
 
     public ChatsLanguagesInMemoryRepository(IChatRepository chatRepository)
     {
-        _usersLanguages = chatRepository.GetChatsLanguages();
+        _usersLanguages = chatRepository.GetChatsLanguagesAsync()
+            .GetAwaiter()
+            .GetResult()
+            .ToList();
     }
 
     public void AddOrUpdateChatLanguage(long chatId, string language)
     {
-        if (_usersLanguages.ContainsKey(chatId))
+        try
         {
-            _usersLanguages[chatId] = language;
+            var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
+
+            if (chat == null)
+            {
+                _usersLanguages.Add(new ChatDataModel
+                {
+                    Id = chatId,
+                    Language = language
+                });
+            }
+            else
+            {
+                chat.Language = language;
+            }
         }
-        else
+        catch (Exception e)
         {
-            _usersLanguages.Add(chatId, language);
+            Console.WriteLine($"Method {nameof(AddOrUpdateChatLanguage)}. {e.Message}");
+            throw;
         }
     }
 
     public string GetChatLanguage(long chatId)
     {
-        _usersLanguages.TryGetValue(chatId, out var language);
-        return language ?? AppConstants.DefaultLanguage;
+        try
+        {
+            var chat = _usersLanguages.First(c => c.Id == chatId);
+
+            if (chat == null)
+            {
+                throw new Exception($"Method {nameof(GetChatLanguage)}. Chat language with id {chatId} is not found");
+            }
+
+            return chat.Language;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

@@ -80,7 +80,7 @@ class Program
                         MessageType = MessageType.Start,
                         CommandDto = new CommandDto
                         {
-                            Command = Command.StartCommand
+                            Command = Command.Start
                         }
                     };
                     messageBusClient.PublishMessage(telegramMessage);

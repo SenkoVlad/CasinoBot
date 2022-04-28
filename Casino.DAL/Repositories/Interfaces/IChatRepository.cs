@@ -1,13 +1,14 @@
-﻿using Casino.DAL.Models;
+﻿using Casino.DAL.DataModels;
+using Casino.DAL.Models;
 
 namespace Casino.DAL.Repositories.Interfaces;
 
 public interface IChatRepository
 {
-    public Dictionary<long, string> GetChatsLanguages();
+    public Task<IEnumerable<ChatDataModel>> GetChatsLanguagesAsync();
     public Task UpdateChatLanguageAsync(long chatId, string language);
     public Task AddAsync(Chat chat);
-    public Task<Chat?> GetChatByIdAsync(long chatId);
+    public Task<Chat> GetChatByIdAsync(long chatId);
     Task ChangeDemoBalanceAsync(long chatId, int score);
     Task ChangeBalanceAsync(long chatId, int score);
 }

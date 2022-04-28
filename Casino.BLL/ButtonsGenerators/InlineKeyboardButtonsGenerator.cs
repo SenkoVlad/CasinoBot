@@ -26,21 +26,21 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.GetGamesButtonCommand
+                Command = Command.GetGames
             })
         };
         var settingButton = new InlineKeyboardButton(_localizer[Resources.SettingsButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.SettingsCommand
+                Command = Command.Settings
             })
         };
         var balanceButton = new InlineKeyboardButton(_localizer[Resources.BalanceButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.GetBalanceButtonCommand
+                Command = Command.GetBalance
             })
         };
 
@@ -66,47 +66,40 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseDiceGameButtonCommand
-            })
-        };
-        var russianRouletteGameButton = new InlineKeyboardButton(_localizer[Resources.RussianRouletteGameButtonText])
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.ChooseRussianRouletteGameButtonCommand
+                Command = Command.ChooseDice
             })
         };
         var footballGameButton = new InlineKeyboardButton(_localizer[Resources.FootballGameButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseFootballGameButtonCommand
+                Command = Command.ChooseFootball
             })
         };
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ToMenuButtonCommand
+                Command = Command.ToMenuButton
             })
         };
 
         var buttonRows = new[] 
         {
-            new[] { footballGameButton, russianRouletteGameButton, diceGameButton },
+            new[] { footballGameButton, diceGameButton },
             new[] { backButton}
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = _localizer[Resources.ChooseActionMessageText];
     }
 
-    public void InitGetBalanceButtons(int payment, string currentBalance)
+    public void InitGetBalanceButtons(int payment, ChatModel chatModel)
     {
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ToMenuButtonCommand
+                Command = Command.ToMenuButton
             })
         };
         var currentPayment = string.Concat(payment, ButtonConstants.DollarSignButtonText);
@@ -121,16 +114,16 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.IncreaseBalancePayment,
-                CommandParam = JsonConvert.SerializeObject(payment + 1)
+                Command = Command.IncreaseBalance,
+                Param = JsonConvert.SerializeObject(payment + 1)
             })
         };
         var decreaseBalanceButton = new InlineKeyboardButton(ButtonConstants.DecreaseAmountButtonText)
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DecreaseBalancePayment,
-                CommandParam = JsonConvert.SerializeObject(payment - 1)
+                Command = Command.DecreaseBalance,
+                Param = JsonConvert.SerializeObject(payment - 1)
             })
         };
         var addBalanceButton = new InlineKeyboardButton(_localizer[Resources.AddBalanceButtonText])
@@ -138,7 +131,7 @@ public class InlineKeyboardButtonsGenerator
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.DepositPayment,
-                CommandParam = JsonConvert.SerializeObject(payment)
+                Param = JsonConvert.SerializeObject(payment)
             })
         };
 
@@ -149,7 +142,7 @@ public class InlineKeyboardButtonsGenerator
             new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.GetMyBalanceMessageText, currentBalance];
+        ReplyText = _localizer[Resources.GetMyBalanceMessageText, chatModel.Balance];
     }
 
     public void InitPlayFootballButtons(GameModel gameModel)
@@ -158,11 +151,11 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.HitBallButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new FootballGameParamDto
+                Command = Command.HitBall,
+                Param = JsonConvert.SerializeObject(new FootballGameParamDto
                 {
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = gameModel.IsDemoPlay
                 })
             })
         };
@@ -170,7 +163,7 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseFootballGameButtonCommand
+                Command = Command.ChooseFootball
             })
         };
         var currentUserBet = string.Concat(gameModel.UserBet, ButtonConstants.DollarSignButtonText);
@@ -185,11 +178,11 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.IncreaseFootballBetPayment,
-                CommandParam = JsonConvert.SerializeObject(new FootballGameParamDto
+                Command = Command.IncreaseFootballBet,
+                Param = JsonConvert.SerializeObject(new FootballGameParamDto
                 {
-                    UserBet = gameModel.UserBet + 1,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet + 1,
+                    IsDemo = gameModel.IsDemoPlay
                 })
             })
         };
@@ -197,11 +190,11 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DecreaseFootballBetPayment,
-                CommandParam = JsonConvert.SerializeObject(new FootballGameParamDto
+                Command = Command.DecreaseFootballBet,
+                Param = JsonConvert.SerializeObject(new FootballGameParamDto
                 {
-                    UserBet = gameModel.UserBet - 1,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet - 1,
+                    IsDemo = gameModel.IsDemoPlay
                 })
             })
         };
@@ -222,12 +215,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 1,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -235,12 +228,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 2,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -248,12 +241,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 3,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -261,12 +254,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 4,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo =  Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -274,12 +267,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 5,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -287,16 +280,16 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.MakeBetButtonCommand,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 6,
-                    UserBet = gameModel.UserBet,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
-        var currentUserBet = string.Concat(gameModel, ButtonConstants.DollarSignButtonText);
+        var currentUserBet = string.Concat(gameModel.UserBet, ButtonConstants.DollarSignButtonText);
         var currentUserBetButton = new InlineKeyboardButton(currentUserBet)
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -308,12 +301,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData =  JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.IncreaseDiceBetPayment,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.IncreaseDiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 1,
-                    UserBet = gameModel.UserBet + 1,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet + 1,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -321,12 +314,12 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DecreaseDiceBetPayment,
-                CommandParam = JsonConvert.SerializeObject(new DiceGameParamDto
+                Command = Command.DecreaseDiceBet,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 1,
-                    UserBet = gameModel.UserBet - 1,
-                    IsDemoPlay = gameModel.IsDemoPlay
+                    Bet = gameModel.UserBet - 1,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
@@ -334,7 +327,7 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.GetGamesButtonCommand
+                Command = Command.GetGames
             })
         };
 
@@ -365,23 +358,23 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.PlatFootballButtonCommand,
-                CommandParam = true.ToString()
+                Command = Command.PlayFootball,
+                Param = true.ToString()
             })
         };
         var playRealFootballButton = new InlineKeyboardButton(_localizer[Resources.RealPlayFootBallButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.PlatFootballButtonCommand,
-                CommandParam = false.ToString()
+                Command = Command.PlayFootball,
+                Param = false.ToString()
             })
         };
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.GetGamesButtonCommand
+                Command = Command.GetGames
             })
         };
         var buttonRows = new[]
@@ -389,6 +382,46 @@ public class InlineKeyboardButtonsGenerator
             new[]
             {
                 playDemoFootballButton, playRealFootballButton,
+            },
+            new []
+            {
+                backButton
+            }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.ChooseGameModeMessageText];
+    }
+
+    public void InitChooseDiceMode()
+    {
+        var playDemoDiceButton = new InlineKeyboardButton(_localizer[Resources.DemoPlayDiceButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.PlayDice,
+                Param = true.ToString()
+            })
+        };
+        var playRealDiceButton = new InlineKeyboardButton(_localizer[Resources.RealPlayDiceButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.PlayDice,
+                Param = false.ToString()
+            })
+        };
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.GetGames
+            })
+        };
+        var buttonRows = new[]
+        {
+            new[]
+            {
+                playDemoDiceButton, playRealDiceButton,
             },
             new []
             {
@@ -408,16 +441,16 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.SwitchLanguageCommand,
-                CommandParam = en
+                Command = Command.SwitchLanguage,
+                Param = en
             })
         };
         var switchToRussianButton = new InlineKeyboardButton(ru)
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.SwitchLanguageCommand,
-                CommandParam = ru
+                Command = Command.SwitchLanguage,
+                Param = ru
             })
         };
         var a = _localizer[Resources.BackButtonText];
@@ -425,7 +458,7 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ToMenuButtonCommand
+                Command = Command.ToMenuButton
             })
         };
         var buttonRows = new[]
