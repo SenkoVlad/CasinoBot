@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Casino.Common\Casino.Common.csproj" />
+    <ProjectReference Include="..\Casino.Configuration\Casino.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

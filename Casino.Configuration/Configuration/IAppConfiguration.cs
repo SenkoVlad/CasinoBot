@@ -7,4 +7,6 @@ public interface IAppConfiguration
     public string RabbitHostName { get; }
     public string TelegramMessageBaseRoute { get; }
     public string TelegramMessagesQueue { get; }
+    public string DbConnectionString { get; }
+    public string BotApiToken { get; }
 }

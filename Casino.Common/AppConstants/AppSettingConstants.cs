@@ -7,4 +7,7 @@ public class AppSettingConstants
     public const string RabbitHostNameSettingName = "RabbitMq:RabbitHostName";
     public const string RabbitTelegramMessageBaseRouteSettingName = "RabbitMq:BaseRoute";
     public const string RabbitTelegramMessagesQueueSettingName = "RabbitMq:TelegramQueue";
+
+    public const string DbConnectionStringEnvVar = "DbConnectionString";
+    public const string BotApiTokenEnvVar = "BotApiToken";
 }

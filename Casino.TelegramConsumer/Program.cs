@@ -14,7 +14,6 @@ class Program
     public static async Task Main()
     {
         Console.WriteLine("Bot started!");
-        var bot = new TelegramBotClient(AppConstants.BotToken);
         var hosting = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
                         services.AddScoped<IBalanceRepository, BalanceRepository>()
@@ -28,6 +27,9 @@ class Program
         using IServiceScope serviceScope = hosting!.Services.CreateScope();
         IServiceProvider provider = serviceScope.ServiceProvider;
         var busSubscriberClient = provider.GetRequiredService<IMessageBusSubscriberClient>();
+        var configuration = provider.GetRequiredService<IAppConfiguration>();
+
+        var bot = new TelegramBotClient(configuration.BotApiToken);
         await busSubscriberClient.StartListening(bot);
 
         await hosting.RunAsync(token: cancellationToken);

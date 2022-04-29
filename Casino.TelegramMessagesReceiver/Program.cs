@@ -21,12 +21,16 @@ class Program
     {
         Console.WriteLine("Bot started!");
 
-        ITelegramBotClient bot = new TelegramBotClient(AppConstants.BotToken);
         _hosting = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
-                        services.AddSingleton<IMessageBusClient, MessageBusClient>()
-                                .AddSingleton<IAppConfiguration, AppConfiguration>())
+                services
+                    .AddSingleton<IMessageBusClient, MessageBusClient>()
+                    .AddSingleton<IAppConfiguration, AppConfiguration>()
+                    .AddSingleton<IAppConfiguration, AppConfiguration>())
             .Build();
+
+        var configuration = _hosting.Services.GetRequiredService<IAppConfiguration>();
+        ITelegramBotClient bot = new TelegramBotClient(configuration.BotApiToken);
 
         var cancellationTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellationTokenSource.Token;

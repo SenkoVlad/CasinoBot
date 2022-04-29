@@ -26,7 +26,7 @@ public class ChatService : IChatService
             chat = await _chatRepository.GetChatByIdAsync(chatId);
         }
 
-        return chat!;
+        return chat;
     }
 
     public async Task ChangeBalanceAsync(GameModel gameModel)

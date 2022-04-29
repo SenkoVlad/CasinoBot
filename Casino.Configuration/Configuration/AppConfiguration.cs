@@ -18,4 +18,7 @@ public class AppConfiguration : IAppConfiguration
 
     public string TelegramMessagesQueue =>
         _configuration.GetSection(AppSettingConstants.RabbitTelegramMessagesQueueSettingName).Value;
+
+    public string DbConnectionString => Environment.GetEnvironmentVariable(AppSettingConstants.DbConnectionStringEnvVar)!;
+    public string BotApiToken => Environment.GetEnvironmentVariable(AppSettingConstants.BotApiTokenEnvVar)!;
 }

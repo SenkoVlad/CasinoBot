@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Casino.Configuration.Configuration;
 using Casino.DAL.DataModels;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
@@ -11,9 +12,9 @@ public class ChatRepository : IChatRepository
 {
     private readonly string _connectionString;
 
-    public ChatRepository(string connectionString)
+    public ChatRepository(IAppConfiguration appConfiguration)
     {
-        _connectionString = connectionString;
+        _connectionString = appConfiguration.DbConnectionString;
     }
 
     public async Task<IEnumerable<ChatDataModel>> GetChatsLanguagesAsync()

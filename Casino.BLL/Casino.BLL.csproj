@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Casino.Common\Casino.Common.csproj" />
+    <ProjectReference Include="..\Casino.Configuration\Casino.Configuration.csproj" />
     <ProjectReference Include="..\Casino.DAL\Casino.DAL.csproj" />
   </ItemGroup>
 

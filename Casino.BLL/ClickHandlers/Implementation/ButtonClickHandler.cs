@@ -7,6 +7,7 @@ using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
+using Casino.Configuration.Configuration;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +23,6 @@ public class ButtonClickHandler : IClickHandler
     private readonly TelegramMessageDto _telegramMessageDto;
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IBalanceRepository _balanceRepository;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private InlineKeyboardMarkup? _inlineKeyboardButtons;
     private string? _replyText;
@@ -30,6 +30,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IChatsLanguagesInMemoryRepository _chatsLanguagesInMemoryRepository;
     private readonly IChatRepository _chatRepository;
     private readonly IChatService _chatService;
+    private readonly IAppConfiguration _appConfiguration;
     public string? GetReplyText => _replyText;
     public ReplyKeyboardMarkup GetReplyKeyboardButtons => null!;
 
@@ -40,12 +41,12 @@ public class ButtonClickHandler : IClickHandler
         _telegramMessageDto = telegramMessageDto;
         _telegramBotClient = telegramBotClient;
         _serviceProvider = serviceProvider;
-        _balanceRepository = serviceProvider.GetRequiredService<IBalanceRepository>();
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
         _chatRepository = serviceProvider.GetRequiredService<IChatRepository>();
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
         _chatService = serviceProvider.GetRequiredService<IChatService>();
+        _appConfiguration = serviceProvider.GetRequiredService<IAppConfiguration>();
     }
 
     public async Task PushButtonAsync()
