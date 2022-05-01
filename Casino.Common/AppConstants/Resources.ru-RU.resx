@@ -160,7 +160,7 @@
     <value>Удар!</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
-    <value>Твой баланс: {0:D}💲</value>
+    <value>Твой баланс: {0:F2}💲</value>
   </data>
   <data name="MyDemoBalance" xml:space="preserve">
     <value>Твой демо баланс: {0:D} ♦️</value>

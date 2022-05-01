@@ -1,4 +1,5 @@
-﻿using Casino.DAL.DataModels;
+﻿using Casino.Common.AppConstants;
+using Casino.DAL.DataModels;
 using Casino.DAL.Repositories.Interfaces;
 
 namespace Casino.DAL.Repositories.Implementation;
@@ -45,11 +46,11 @@ public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepositor
     {
         try
         {
-            var chat = _usersLanguages.First(c => c.Id == chatId);
+            var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
 
             if (chat == null)
             {
-                throw new Exception($"Method {nameof(GetChatLanguage)}. Chat language with id {chatId} is not found");
+                return AppConstants.DefaultLanguage;
             }
 
             return chat.Language;

@@ -160,7 +160,7 @@
     <value>Hit!</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
-    <value>Your balance is {0:D}💲</value>
+    <value>Your balance is {0:F2}💲</value>
   </data>
   <data name="MyDemoBalance" xml:space="preserve">
     <value>You demo balance is {0:D} ♦️</value>

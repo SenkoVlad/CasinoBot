@@ -10,6 +10,6 @@ public class Chat
     [Key]
     public long Id { get; set; }
     public string Language { get; set; } = AppConstants.DefaultLanguage;
-    public int Balance { get; set; } = 0;
+    public double Balance { get; set; } = 0;
     public int DemoBalance { get; set; } = AppConstants.DefaultBalance;
 }

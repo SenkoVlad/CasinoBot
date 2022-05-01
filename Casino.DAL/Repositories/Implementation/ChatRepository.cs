@@ -68,12 +68,7 @@ public class ChatRepository : IChatRepository
         try
         {
             await using var db = new SqlConnection(_connectionString);
-            var chat = await db.QueryFirstAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
-            if (chat == null)
-            {
-                throw new Exception($"Method {nameof(GetChatByIdAsync)}. Chat with id {chatId} is not found");
-            }
-
+            var chat = await db.QueryFirstOrDefaultAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
             return chat;
         }
         catch (Exception e)

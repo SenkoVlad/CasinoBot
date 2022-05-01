@@ -5,7 +5,7 @@ IF OBJECT_ID('[dbo].[Chats]') IS NULL
             constraint Chats_pk
                 primary key nonclustered,
         language VARCHAR(5)  not null,
-        balance int not null,
+        balance FLOAT not null,
         demoBalance int not null
     )
 GO
