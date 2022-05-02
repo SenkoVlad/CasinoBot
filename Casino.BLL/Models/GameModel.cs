@@ -6,4 +6,5 @@ public class GameModel
     public int UserBet { get; set; }
     public bool DidWin { get; set; }
     public ChatModel Chat { get; set; } = null!;
+    public int GameId { get; set; }
 }

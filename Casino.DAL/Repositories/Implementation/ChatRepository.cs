@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using Casino.Configuration.Configuration;
 using Casino.DAL.DataModels;
 using Casino.DAL.Models;
@@ -78,7 +77,7 @@ public class ChatRepository : IChatRepository
         }
     }
 
-    public async Task ChangeDemoBalanceAsync(long chatId, int score)
+    public async Task ChangeDemoBalanceAsync(long chatId, double score)
     {
         try
         {
@@ -93,7 +92,7 @@ public class ChatRepository : IChatRepository
         }
     }
 
-    public async Task ChangeBalanceAsync(long chatId, int score)
+    public async Task ChangeBalanceAsync(long chatId, double score)
     {
         try
         {

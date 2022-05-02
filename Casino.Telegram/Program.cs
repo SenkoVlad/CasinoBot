@@ -17,9 +17,12 @@ class Program
 
         var hosting = Host.CreateDefaultBuilder()
             .ConfigureServices(service => service
-                    .AddSingleton<IBalanceRepository, BalanceRepository>()
                     .AddSingleton<IChatsLanguagesInMemoryRepository, ChatsLanguagesInMemoryRepository>()
                     .AddSingleton<IAppConfiguration, AppConfiguration>()
+                    .AddSingleton<IGamesRepo, GamesRepo>()
+                    .AddSingleton<IBettingResultsRepo, BettingResultsRepo>()
+                    .AddSingleton<GameParameters>()
+
                     .AddScoped<InlineKeyboardButtonsGenerator>()
                     .AddScoped<IChatService, ChatService>()
                     .AddScoped<IChatRepository, ChatRepository>()

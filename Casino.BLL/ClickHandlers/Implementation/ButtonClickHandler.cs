@@ -3,6 +3,7 @@ using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Interfaces;
 using Casino.BLL.Games;
 using Casino.BLL.Models;
+using Casino.BLL.Services.Implementation;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
@@ -30,7 +31,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IChatsLanguagesInMemoryRepository _chatsLanguagesInMemoryRepository;
     private readonly IChatRepository _chatRepository;
     private readonly IChatService _chatService;
-    private readonly IAppConfiguration _appConfiguration;
+    private readonly GameParameters _gameParametersService;
     public string? GetReplyText => _replyText;
     public ReplyKeyboardMarkup GetReplyKeyboardButtons => null!;
 
@@ -46,7 +47,7 @@ public class ButtonClickHandler : IClickHandler
         _chatRepository = serviceProvider.GetRequiredService<IChatRepository>();
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
         _chatService = serviceProvider.GetRequiredService<IChatService>();
-        _appConfiguration = serviceProvider.GetRequiredService<IAppConfiguration>();
+        _gameParametersService = serviceProvider.GetRequiredService<GameParameters>();
     }
 
     public async Task PushButtonAsync()
@@ -169,6 +170,7 @@ public class ButtonClickHandler : IClickHandler
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
+            GameId = (int)Common.Enum.Games.Dice,
             Chat = new ChatModel
             {
                 Id = _telegramMessageDto.ChatId,
@@ -225,6 +227,7 @@ public class ButtonClickHandler : IClickHandler
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
+            GameId = (int) Common.Enum.Games.Football,
             Chat = new ChatModel
             {
                 Id = _telegramMessageDto.ChatId,

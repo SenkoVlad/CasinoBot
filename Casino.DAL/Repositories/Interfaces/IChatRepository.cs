@@ -9,6 +9,6 @@ public interface IChatRepository
     public Task UpdateChatLanguageAsync(long chatId, string language);
     public Task AddAsync(Chat chat);
     public Task<Chat> GetChatByIdAsync(long chatId);
-    Task ChangeDemoBalanceAsync(long chatId, int score);
-    Task ChangeBalanceAsync(long chatId, int score);
+    Task ChangeDemoBalanceAsync(long chatId, double score);
+    Task ChangeBalanceAsync(long chatId, double score);
 }
