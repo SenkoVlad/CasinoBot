@@ -93,7 +93,7 @@ public class InlineKeyboardButtonsGenerator
         ReplyText = _localizer[Resources.ChooseActionResource];
     }
 
-    public void InitGetBalanceButtons(int payment, ChatModel chatModel)
+    public void InitGetBalanceButtons(ChatModel chatModel)
     {
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
@@ -102,43 +102,24 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ToMenuButton
             })
         };
-        var currentPayment = string.Concat(payment, ButtonConstants.DollarSignButtonText);
-        var  balancePaymentAmountButton = new InlineKeyboardButton(currentPayment)
+        var depositBalanceButton = new InlineKeyboardButton(_localizer[Resources.DepositBalance])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DoNothing
+                Command = Command.DepositBalance
             })
         };
-        var increaseBalanceButton = new InlineKeyboardButton(ButtonConstants.IncreaseAmountButtonText)
+        var withdrawBalanceButton = new InlineKeyboardButton(_localizer[Resources.WithdrawBalanceButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.IncreaseBalance,
-                Param = JsonConvert.SerializeObject(payment + 1)
-            })
-        };
-        var decreaseBalanceButton = new InlineKeyboardButton(ButtonConstants.DecreaseAmountButtonText)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DecreaseBalance,
-                Param = JsonConvert.SerializeObject(payment - 1)
-            })
-        };
-        var addBalanceButton = new InlineKeyboardButton(_localizer[Resources.AddBalanceButtonText])
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DepositPayment,
-                Param = JsonConvert.SerializeObject(payment)
+                Command = Command.WithdrawBalance
             })
         };
 
         var buttonRows = new[]
         {
-            new [] { decreaseBalanceButton, balancePaymentAmountButton, increaseBalanceButton },
-            new [] { addBalanceButton },
+            new [] {depositBalanceButton, withdrawBalanceButton},
             new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
@@ -476,5 +457,68 @@ public class InlineKeyboardButtonsGenerator
         ReplyText = string.Concat(
             _localizer[Resources.CurrentLanguageButtonText],
             currentLanguage);
+    }
+
+    public void InitDepositBalanceButtons()
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToBalanceButton
+            })
+        };
+        var walletButton = new InlineKeyboardButton(_localizer[Resources.WalletButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToBalanceButton
+            }),
+            Url = AppConstants.Wallet
+        };
+        var myWalletButton = new InlineKeyboardButton(_localizer[Resources.MyWalletButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToBalanceButton
+            }),
+            Url = AppConstants.MyWalletUrl
+        };
+        var instructionButton = new InlineKeyboardButton(_localizer[Resources.DepositInstructionButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DepositInstruction
+            }),
+            Url = AppConstants.DepositInstruction
+        };
+
+
+        var buttonRows = new[]
+        {
+            new [] {walletButton, myWalletButton},
+            new [] {instructionButton},
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.ShotStoryHowToDeposit];
+    }
+
+    public void InitWithdrawBalanceButtons(ChatModel chatModel)
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToBalanceButton
+            })
+        };
+
+        var buttonRows = new[]
+        {
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.GetMyBalanceResource, chatModel.Balance];
     }
 }

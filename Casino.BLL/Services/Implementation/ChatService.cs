@@ -59,22 +59,15 @@ public class ChatService : IChatService
 
     public async Task<Chat> GetChatByIdOrException(long chatId)
     {
-        var chat = await _chatRepository.GetChatByIdAsync(chatId);
-        if (chat == null)
+        try
         {
-            throw new EntityNotFoundException($"Chat with id {chatId} is not found");
+            var chat = await _chatRepository.GetChatByIdAsync(chatId);
+            return chat;
         }
-
-        return chat;
+        catch (EntityNotFoundException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
-}
-
-public class EntityNotFoundException : Exception
-{
-    public EntityNotFoundException(string message)
-    {
-        Message = message;
-    }
-
-    public override string Message { get; }
 }

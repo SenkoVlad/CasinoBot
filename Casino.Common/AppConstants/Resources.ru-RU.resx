@@ -138,6 +138,12 @@
   <data name="Deposit" xml:space="preserve">
     <value>Депозит</value>
   </data>
+  <data name="DepositBalance" xml:space="preserve">
+    <value>Пополнить баланс</value>
+  </data>
+  <data name="DepositInstruction" xml:space="preserve">
+    <value>Инструкция как пополнить баланс</value>
+  </data>
   <data name="Dice" xml:space="preserve">
     <value>Кости</value>
   </data>
@@ -177,6 +183,9 @@
   <data name="MyDemoBalance" xml:space="preserve">
     <value>Твой демо баланс: {0:D} ♦️</value>
   </data>
+  <data name="MyWallet" xml:space="preserve">
+    <value>2. Пополни, чтобы играть</value>
+  </data>
   <data name="PlayDiceDemo" xml:space="preserve">
     <value>Игра в кости демо</value>
   </data>
@@ -194,5 +203,14 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Настройки</value>
+  </data>
+  <data name="ShotStoryHowToDeposit" xml:space="preserve">
+    <value>1. Пополни свой внутренний кошелек в телеграме 2. Переведи столько, сколько хочешь боту, чтобы играть</value>
+  </data>
+  <data name="Wallet" xml:space="preserve">
+    <value>1. Твой кошелек в телеграм</value>
+  </data>
+  <data name="WithdrawBalance" xml:space="preserve">
+    <value>Вывести деньги</value>
   </data>
 </root>

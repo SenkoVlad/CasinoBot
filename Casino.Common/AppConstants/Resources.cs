@@ -17,12 +17,10 @@ public class Resources
     public const string BackButtonText = "Back";
     public const string HitBallButtonText = "HitBall";
 
-    public const string AddBalanceButtonText = "Deposit";
     public const string CurrentLanguageButtonText = "CurrentLanguage";
 
     public const string GoodLuckResource = "GoodLuck";
     public const string ChooseActionResource = "ChooseAction";
-    public const string ChooseYourBetMessageText = "ChooseYourBet";
     public const string ChooseGameModeResource = "ChooseGameMode";
     public const string GetMyBalanceResource = "MyBalance";
     public const string GetMyDemoBalanceResource = "MyDemoBalance";
@@ -32,4 +30,10 @@ public class Resources
     public const string DoNotHaveEnoughMoneyToDemoPlayResource = "DotHaveEnoughMoneyDemoBalance";
     public const string DiceWonResource = "DiceWon";
     public const string DiceLostResource = "DiceLost";
+    public const string MyWalletButtonText = "MyWallet";
+    public const string WalletButtonText = "Wallet";
+    public const string DepositInstructionButtonText = "DepositInstruction";
+    public const string WithdrawBalanceButtonText = "WithdrawBalance";
+    public const string DepositBalance = "DepositBalance";
+    public const string ShotStoryHowToDeposit = "ShotStoryHowToDeposit";
 }

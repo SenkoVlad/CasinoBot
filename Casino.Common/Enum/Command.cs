@@ -14,12 +14,13 @@ public enum Command
     Settings,
     PlayFootball,
     DoNothing,
-    IncreaseBalance,
-    DecreaseBalance,
-    DepositPayment,
     IncreaseFootballBet,
     DecreaseFootballBet,
     IncreaseDiceBet,
     DecreaseDiceBet,
-    SwitchLanguage
+    SwitchLanguage,
+    DepositBalance,
+    WithdrawBalance,
+    ToBalanceButton,
+    DepositInstruction
 }

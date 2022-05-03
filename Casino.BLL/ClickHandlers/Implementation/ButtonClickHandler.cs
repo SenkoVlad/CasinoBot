@@ -67,6 +67,7 @@ public class ButtonClickHandler : IClickHandler
             case Command.ToMenuButton:
                 await PushMenuButtonAsync();
                 break;
+            case Command.ToBalanceButton:
             case Command.GetBalance:
                 await PushGetBalanceButtonAsync();
                 break;
@@ -92,11 +93,6 @@ public class ButtonClickHandler : IClickHandler
                 var diceGameParamDto = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param);
                 await PushChooseDiceAsync(diceGameParamDto);
                 break;
-            case Command.IncreaseBalance:
-            case Command.DecreaseBalance:
-                var newPayment = int.Parse(commandDto.Param!);
-                await PushGetBalanceButtonAsync(newPayment);
-                break;
             case Command.IncreaseDiceBet:
             case Command.DecreaseDiceBet:
                 var diceGameParam = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param!);
@@ -107,9 +103,11 @@ public class ButtonClickHandler : IClickHandler
                 var footballGame = JsonConvert.DeserializeObject<FootballGameParamDto>(commandDto.Param!);
                 await PushFootballPlayButtonAsync(footballGame.IsDemo, footballGame.Bet);
                 break;
-            case Command.DepositPayment:
-                var deposit = int.Parse(commandDto.Param!);
-                await PushDepositButtonAsync(deposit);
+            case Command.DepositBalance:
+                await PushDepositBalanceButtonAsync();
+                break;
+            case Command.WithdrawBalance:
+                await PushWithdrawBalanceButtonAsync();
                 break;
             case Command.SwitchLanguage:
                 var language = commandDto.Param;
@@ -118,6 +116,31 @@ public class ButtonClickHandler : IClickHandler
             case Command.DoNothing:
                 break;
         }
+    }
+
+    private async Task PushWithdrawBalanceButtonAsync()
+    {
+        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = new ChatModel
+        {
+            Balance = chat.Balance,
+            DemoBalance = chat.DemoBalance,
+            Id = chat.Id
+        };
+        _inlineKeyboardButtonsGenerator.InitWithdrawBalanceButtons(chatModel);
+        _replyText = _inlineKeyboardButtonsGenerator.ReplyText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
+            replyMarkup: _inlineKeyboardButtons);
+    }
+
+    private async Task PushDepositBalanceButtonAsync()
+    {
+        _inlineKeyboardButtonsGenerator.InitDepositBalanceButtons();
+        _replyText = _inlineKeyboardButtonsGenerator.ReplyText;
+        _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
+        await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
+            replyMarkup: _inlineKeyboardButtons);
     }
 
     private async Task PushChooseDiceGame()
@@ -148,12 +171,6 @@ public class ButtonClickHandler : IClickHandler
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId, _replyText,
             replyMarkup: _inlineKeyboardButtons);
-    }
-
-    private async Task PushDepositButtonAsync(int deposit)
-    { 
-       await _chatRepository.ChangeBalanceAsync(_telegramMessageDto.ChatId, deposit);
-       await PushGetBalanceButtonAsync();
     }
 
     private async Task PushChooseFootballGame()
@@ -264,7 +281,7 @@ public class ButtonClickHandler : IClickHandler
             text: _replyText,replyMarkup: _inlineKeyboardButtons);
     }
 
-    private async Task PushGetBalanceButtonAsync(int payment = AppConstants.DefaultBalancePayment)
+    private async Task PushGetBalanceButtonAsync()
     {
         var chat = await _chatRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
         var chatModel = new ChatModel
@@ -273,7 +290,7 @@ public class ButtonClickHandler : IClickHandler
             DemoBalance = chat.DemoBalance,
             Id = chat.Id
         };
-        _inlineKeyboardButtonsGenerator.InitGetBalanceButtons(payment, chatModel);
+        _inlineKeyboardButtonsGenerator.InitGetBalanceButtons(chatModel);
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         _replyText = _inlineKeyboardButtonsGenerator.ReplyText;
 

@@ -12,4 +12,6 @@ public class ButtonConstants
     public const string DollarSignButtonText = "💵";
     public const string IncreaseAmountButtonText = "🔼";
     public const string DecreaseAmountButtonText = "🔽";
+    public const string DepositBalance = "Deposit";
+    public const string WithdrawBalance = "Withdraw";
 }

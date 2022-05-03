@@ -138,6 +138,12 @@
   <data name="Deposit" xml:space="preserve">
     <value>Deposit</value>
   </data>
+  <data name="DepositBalance" xml:space="preserve">
+    <value>Deposit money</value>
+  </data>
+  <data name="DepositInstruction" xml:space="preserve">
+    <value>Instruction how to top up balance</value>
+  </data>
   <data name="Dice" xml:space="preserve">
     <value>Dice</value>
   </data>
@@ -152,7 +158,6 @@
   </data>
   <data name="DotHaveEnoughMoneyRealBalance" xml:space="preserve">
     <value>You don't have enough money to play 😟 Top up the balance 💵 Your balance is {0:F2} $</value>
-    <comment> </comment>
   </data>
   <data name="Football" xml:space="preserve">
     <value>Football</value>
@@ -178,6 +183,9 @@
   <data name="MyDemoBalance" xml:space="preserve">
     <value>You demo balance is {0:D} ♦️</value>
   </data>
+  <data name="MyWallet" xml:space="preserve">
+    <value>2. Deposit to play</value>
+  </data>
   <data name="PlayDiceDemo" xml:space="preserve">
     <value>Play dice demo</value>
   </data>
@@ -195,5 +203,14 @@
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="ShotStoryHowToDeposit" xml:space="preserve">
+    <value>1. Top up your inner telegram wallet 2. Transfer as much as you like to wallet of the bot to play</value>
+  </data>
+  <data name="Wallet" xml:space="preserve">
+    <value>1. Your telegram wallet</value>
+  </data>
+  <data name="WithdrawBalance" xml:space="preserve">
+    <value>Withdraw money</value>
   </data>
 </root>
