@@ -180,8 +180,8 @@ public class ButtonClickHandler : IClickHandler
             UserBet = diceGameParam.Bet,
             IsDemoPlay = Convert.ToBoolean(diceGameParam.IsDemo)
         };
-        var diceGame = new DiceGame(gameModel, _telegramMessageDto.MessageId, _telegramBotClient, 
-            _chatService ,diceGameParam.Dice, _serviceProvider);
+        var diceGame = new DiceGame(gameModel, _telegramMessageDto.MessageId, _telegramBotClient
+            ,diceGameParam.Dice, _serviceProvider);
         await diceGame.PlayRoundAsync();
     }
 
@@ -238,7 +238,7 @@ public class ButtonClickHandler : IClickHandler
             IsDemoPlay = footballGameParam.IsDemo
         };
         var footBallGame = new FootBallGame(gameModel, _telegramMessageDto.MessageId,
-            _telegramBotClient, _chatService, _serviceProvider);
+            _telegramBotClient, _serviceProvider);
         await footBallGame.PlayRoundAsync();
     }
 
@@ -305,6 +305,6 @@ public class ButtonClickHandler : IClickHandler
         _inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.EditMessageTextAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId,
-            _localizer[Resources.ChooseActionMessageText], replyMarkup: _inlineKeyboardButtons);
+            _localizer[Resources.ChooseActionResource], replyMarkup: _inlineKeyboardButtons);
     }
 }

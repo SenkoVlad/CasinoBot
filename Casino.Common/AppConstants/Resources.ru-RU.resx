@@ -141,6 +141,18 @@
   <data name="Dice" xml:space="preserve">
     <value>Кости</value>
   </data>
+  <data name="DiceLost" xml:space="preserve">
+    <value>Неудача 😢</value>
+  </data>
+  <data name="DiceWon" xml:space="preserve">
+    <value>ПОБЕДА 🏆</value>
+  </data>
+  <data name="DotHaveEnoughMoneyDemoBalance" xml:space="preserve">
+    <value>Недостаточно средств 😟 Пополни баланс и начни играть по-настоящему 💵 Текущий демо баланс {0:D}</value>
+  </data>
+  <data name="DotHaveEnoughMoneyRealBalance" xml:space="preserve">
+    <value>Недостаточно средств 😟 Пополни баланс 💵 Текущий баланс {0:F2} $</value>
+  </data>
   <data name="Football" xml:space="preserve">
     <value>Футбол</value>
   </data>
@@ -153,7 +165,7 @@
   <data name="Games" xml:space="preserve">
     <value>Игры</value>
   </data>
-  <data name="GoodLuckFootBall" xml:space="preserve">
+  <data name="GoodLuck" xml:space="preserve">
     <value>Удачи</value>
   </data>
   <data name="HitBall" xml:space="preserve">

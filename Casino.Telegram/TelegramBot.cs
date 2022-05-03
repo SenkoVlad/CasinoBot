@@ -84,13 +84,6 @@ class TelegramBot
             {
                 Console.WriteLine(e);
             }
-            finally
-            {
-                if (newMessage.CallbackQuery != null)
-                {
-                    await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
-                }
-            }
         }, cancellationToken);
     }
 

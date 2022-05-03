@@ -141,6 +141,19 @@
   <data name="Dice" xml:space="preserve">
     <value>Dice</value>
   </data>
+  <data name="DiceLost" xml:space="preserve">
+    <value>Bad luck 😢</value>
+  </data>
+  <data name="DiceWon" xml:space="preserve">
+    <value>WIN 🏆</value>
+  </data>
+  <data name="DotHaveEnoughMoneyDemoBalance" xml:space="preserve">
+    <value>You don't have enough money to play 😟 Top up the balance and start playing real 💵 Your demo balance {0:D}</value>
+  </data>
+  <data name="DotHaveEnoughMoneyRealBalance" xml:space="preserve">
+    <value>You don't have enough money to play 😟 Top up the balance 💵 Your balance is {0:F2} $</value>
+    <comment> </comment>
+  </data>
   <data name="Football" xml:space="preserve">
     <value>Football</value>
   </data>
@@ -153,7 +166,7 @@
   <data name="Games" xml:space="preserve">
     <value>Games</value>
   </data>
-  <data name="GoodLuckFootBall" xml:space="preserve">
+  <data name="GoodLuck" xml:space="preserve">
     <value>Good luck</value>
   </data>
   <data name="HitBall" xml:space="preserve">

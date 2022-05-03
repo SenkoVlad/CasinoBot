@@ -20,12 +20,16 @@ public class Resources
     public const string AddBalanceButtonText = "Deposit";
     public const string CurrentLanguageButtonText = "CurrentLanguage";
 
-    public const string GoodLuckFootBallMessageText = "GoodLuckFootBall";
-    public const string ChooseActionMessageText = "ChooseAction";
+    public const string GoodLuckResource = "GoodLuck";
+    public const string ChooseActionResource = "ChooseAction";
     public const string ChooseYourBetMessageText = "ChooseYourBet";
-    public const string ChooseGameModeMessageText = "ChooseGameMode";
-    public const string GetMyBalanceMessageText = "MyBalance";
-    public const string GetMyDemoBalanceMessageText = "MyDemoBalance";
-    public const string FootballMissMessageText = "FootballMiss";
-    public const string FootballGoalButtonText = "FootballGoal";
+    public const string ChooseGameModeResource = "ChooseGameMode";
+    public const string GetMyBalanceResource = "MyBalance";
+    public const string GetMyDemoBalanceResource = "MyDemoBalance";
+    public const string FootballMissResource = "FootballMiss";
+    public const string DoNotHaveEnoughMoneyToRealPlayResource = "DotHaveEnoughMoneyRealBalance";
+    public const string FootballGoalResource = "FootballGoal";
+    public const string DoNotHaveEnoughMoneyToDemoPlayResource = "DotHaveEnoughMoneyDemoBalance";
+    public const string DiceWonResource = "DiceWon";
+    public const string DiceLostResource = "DiceLost";
 }

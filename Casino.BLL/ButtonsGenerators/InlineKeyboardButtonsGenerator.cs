@@ -52,11 +52,11 @@ public class InlineKeyboardButtonsGenerator
     private string GetBalanceMessage(ChatModel chat)
     {
         return string.Concat(
-            _localizer[Resources.GetMyBalanceMessageText, chat.Balance],
+            _localizer[Resources.GetMyBalanceResource, chat.Balance],
             Environment.NewLine,
-            _localizer[Resources.GetMyDemoBalanceMessageText, chat.DemoBalance],
+            _localizer[Resources.GetMyDemoBalanceResource, chat.DemoBalance],
             Environment.NewLine,
-            _localizer[Resources.ChooseActionMessageText]);
+            _localizer[Resources.ChooseActionResource]);
     }
 
 
@@ -90,7 +90,7 @@ public class InlineKeyboardButtonsGenerator
             new[] { backButton}
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.ChooseActionMessageText];
+        ReplyText = _localizer[Resources.ChooseActionResource];
     }
 
     public void InitGetBalanceButtons(int payment, ChatModel chatModel)
@@ -142,7 +142,7 @@ public class InlineKeyboardButtonsGenerator
             new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.GetMyBalanceMessageText, chatModel.Balance];
+        ReplyText = _localizer[Resources.GetMyBalanceResource, chatModel.Balance];
     }
 
     public void InitPlayFootballButtons(GameModel gameModel)
@@ -205,8 +205,8 @@ public class InlineKeyboardButtonsGenerator
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = gameModel.IsDemoPlay
-            ? _localizer[Resources.GetMyDemoBalanceMessageText, gameModel.Chat.DemoBalance]
-            : _localizer[Resources.GetMyBalanceMessageText, gameModel.Chat.Balance];
+            ? _localizer[Resources.GetMyDemoBalanceResource, gameModel.Chat.DemoBalance]
+            : _localizer[Resources.GetMyBalanceResource, gameModel.Chat.Balance];
     }
 
     public void InitDiceChooseBetButtons(GameModel gameModel)
@@ -348,8 +348,8 @@ public class InlineKeyboardButtonsGenerator
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = gameModel.IsDemoPlay
-            ? _localizer[Resources.GetMyDemoBalanceMessageText, gameModel.Chat.DemoBalance]
-            : _localizer[Resources.GetMyBalanceMessageText, gameModel.Chat.Balance];
+            ? _localizer[Resources.GetMyDemoBalanceResource, gameModel.Chat.DemoBalance]
+            : _localizer[Resources.GetMyBalanceResource, gameModel.Chat.Balance];
     }
 
     public void InitChooseFootballMode()
@@ -389,7 +389,7 @@ public class InlineKeyboardButtonsGenerator
             }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.ChooseGameModeMessageText];
+        ReplyText = _localizer[Resources.ChooseGameModeResource];
     }
 
     public void InitChooseDiceMode()
@@ -429,7 +429,7 @@ public class InlineKeyboardButtonsGenerator
             }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.ChooseGameModeMessageText];
+        ReplyText = _localizer[Resources.ChooseGameModeResource];
     }
 
     public void InitSettingsButtons(string currentLanguage)
