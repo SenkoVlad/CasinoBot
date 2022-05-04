@@ -1,7 +1,4 @@
-﻿using Casino.Common.AppConstants;
-using Casino.Configuration.Configuration;
-using Casino.DAL.Repositories.Implementation;
-using Casino.DAL.Repositories.Interfaces;
+﻿using Casino.Configuration.Configuration;
 using Casino.TelegramConsumer.RabbitMq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,8 +13,7 @@ class Program
         Console.WriteLine("Bot started!");
         var hosting = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
-                        services.AddScoped<IBalanceRepository, BalanceRepository>()
-                                .AddSingleton<IAppConfiguration, AppConfiguration>()
+                        services.AddSingleton<IAppConfiguration, AppConfiguration>()
                                 .AddSingleton<IMessageBusSubscriberClient, MessageBusSubscriberClient>())
                     .Build();
 

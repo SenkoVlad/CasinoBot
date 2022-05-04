@@ -95,7 +95,7 @@ public class InlineKeyboardButtonsGenerator
 
     public void InitGetBalanceButtons(ChatModel chatModel)
     {
-        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        var backButton = new InlineKeyboardButton( _localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -504,8 +504,10 @@ public class InlineKeyboardButtonsGenerator
         ReplyText = _localizer[Resources.ShotStoryHowToDeposit];
     }
 
-    public void InitWithdrawBalanceButtons(ChatModel chatModel)
+    public void InitWithdrawBalanceButtons(ChatModel chatModel, WithdrawModel withdrawModel)
     {
+        InlineKeyboardButton[][] buttonRows;
+
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -514,11 +516,127 @@ public class InlineKeyboardButtonsGenerator
             })
         };
 
-        var buttonRows = new[]
+        if (IsBalanceEnoughToWithdraw(chatModel.Balance))
         {
-            new [] { backButton }
-        };
+            var percent25BalanceButton = GetChooseWithdrawAmountButton(chatModel, withdrawModel, 25);
+            var percent50BalanceButton = GetChooseWithdrawAmountButton(chatModel, withdrawModel, 50);
+            var percent75BalanceButton = GetChooseWithdrawAmountButton(chatModel, withdrawModel, 75);
+            var wholeBalanceButton = GetChooseWithdrawAmountButton(chatModel, withdrawModel, 100);
+
+
+            var tonMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, WithdrawMethod.Ton, _localizer[Resources.TonWithdraw]);
+            var cardMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, WithdrawMethod.Card, _localizer[Resources.CardWithdraw]);
+
+            var confirmWithdraw = new InlineKeyboardButton(_localizer[Resources.WithdrawBalanceButtonText])
+            {
+                CallbackData = JsonConvert.SerializeObject(new CommandDto
+                {
+                    Command = Command.ConfirmWithdraw,
+                    Param = JsonConvert.SerializeObject(new WithdrawModel
+                    {
+                        Method = withdrawModel.Method,
+                        Amount = withdrawModel.Amount
+                    })
+                })
+            };
+
+            buttonRows = new[]
+            {
+                new[] {percent25BalanceButton, percent50BalanceButton, percent75BalanceButton, wholeBalanceButton},
+                new[] {tonMethodWithdraw, cardMethodWithdraw},
+                new[] {confirmWithdraw},
+                new[] {backButton}
+            };
+            ReplyText = string.Concat(
+                _localizer[Resources.GetMyBalanceResource, chatModel.Balance],
+                Environment.NewLine,
+                _localizer[Resources.ChooseAmountToWithdraw, chatModel.Balance]);
+        }
+        else
+        {
+            buttonRows = new[]
+            {
+                new [] { backButton }
+            };
+            ReplyText = string.Concat(
+                _localizer[Resources.DoNotHaveEnoughMoneyToWithdraw],
+                Environment.NewLine,
+                _localizer[Resources.GetMyBalanceResource, chatModel.Balance]);
+        }
+
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = _localizer[Resources.GetMyBalanceResource, chatModel.Balance];
     }
+
+    private InlineKeyboardButton GetChooseWithdrawMethodButton(WithdrawModel withdrawModel, WithdrawMethod withdrawMethod, string methodName)
+    {
+        var isClicked = IsWithdrawMethodButtonClick(withdrawModel, withdrawMethod);
+        var buttonText = isClicked
+            ? string.Concat("✔️", methodName)
+            : methodName;
+        var tonMethodWithdraw = new InlineKeyboardButton(buttonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.WithdrawBalance,
+                Param = JsonConvert.SerializeObject(new WithdrawModel
+                {
+                    Method = withdrawMethod,
+                    Amount = withdrawModel.Amount
+                })
+            })
+        };
+        return tonMethodWithdraw;
+    }
+
+    private InlineKeyboardButton GetChooseWithdrawAmountButton(ChatModel chatModel, WithdrawModel withdrawModel,
+        int percentOfBalanceToWithdraw)
+    {
+        var buttonText = GetWithdrawAmountButtonText(chatModel, withdrawModel, percentOfBalanceToWithdraw);
+        var percent25BalanceButton = new InlineKeyboardButton(buttonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.WithdrawBalance,
+                Param = JsonConvert.SerializeObject(new WithdrawModel
+                {
+                    Method = withdrawModel.Method,
+                    Amount = (int) (chatModel.Balance * percentOfBalanceToWithdraw / 100)
+                })
+            })
+        };
+        return percent25BalanceButton;
+    }
+
+    private string GetWithdrawAmountButtonText(ChatModel chatModel, WithdrawModel withdrawModel, int percentOfBalanceToWithdraw)
+    {
+        var amount = (int) (chatModel.Balance * percentOfBalanceToWithdraw / 100);
+        var isClicked = IsWithdrawAmountButtonClicked(withdrawModel, amount);
+        var buttonText = isClicked
+            ? string.Concat("✔️", _localizer[Resources.AmountWithdraw, percentOfBalanceToWithdraw, amount])
+            : _localizer[Resources.AmountWithdraw, percentOfBalanceToWithdraw, amount];
+        return buttonText;
+    }
+
+    private bool IsWithdrawMethodButtonClick(WithdrawModel withdrawModel, WithdrawMethod ton) => 
+        withdrawModel.Method == ton;
+
+    private static bool IsWithdrawAmountButtonClicked(WithdrawModel withdrawModel, int amount) => 
+        withdrawModel.Amount == amount;
+
+    private static bool IsBalanceEnoughToWithdraw(double balance) =>
+        (int)(balance * AppConstants.MinPercentOfBalanceToWithdraw / 100) >= AppConstants.MinBalanceToWithdraw;
+}
+
+public class WithdrawModel
+{
+    public WithdrawMethod Method { get; set; }
+    public int Amount { get; set; }
+}
+
+public enum WithdrawMethod
+{
+    Ton,
+    Card,
+    Eth,
+    Btc
 }

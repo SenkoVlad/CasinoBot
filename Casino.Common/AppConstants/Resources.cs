@@ -36,4 +36,9 @@ public class Resources
     public const string WithdrawBalanceButtonText = "WithdrawBalance";
     public const string DepositBalance = "DepositBalance";
     public const string ShotStoryHowToDeposit = "ShotStoryHowToDeposit";
+    public const string AmountWithdraw = "AmountWithdraw";
+    public const string DoNotHaveEnoughMoneyToWithdraw = "DoNotHaveEnoughMoneyToWithdraw";
+    public const string ChooseAmountToWithdraw = "AmountToWithdraw";
+    public const string TonWithdraw = "TonWithdraw";
+    public const string CardWithdraw = "CardWithdraw";
 }

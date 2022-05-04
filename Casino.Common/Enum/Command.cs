@@ -22,5 +22,7 @@ public enum Command
     DepositBalance,
     WithdrawBalance,
     ToBalanceButton,
-    DepositInstruction
+    DepositInstruction,
+    ConfirmWithdraw
+
 }

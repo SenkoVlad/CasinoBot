@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AmountToWithdraw" xml:space="preserve">
+    <value>Выберите сумму для вывода</value>
+  </data>
+  <data name="AmountWithdraw" xml:space="preserve">
+    <value>{0:D}% ({1:D}🍀)</value>
+  </data>
   <data name="Back" xml:space="preserve">
-    <value>Назад</value>
+    <value>Назад </value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Баланс</value>
+  </data>
+  <data name="CardWithdraw" xml:space="preserve">
+    <value>Банковская карта</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Выбери действие</value>
@@ -131,6 +140,9 @@
   </data>
   <data name="ChooseYourBet" xml:space="preserve">
     <value>Твоя ставка</value>
+  </data>
+  <data name="ConfirmWithdrawQuestion" xml:space="preserve">
+    <value>Вы подтверждаете вывод средств {0:D}🍀?</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Текущий язык: </value>
@@ -153,11 +165,16 @@
   <data name="DiceWon" xml:space="preserve">
     <value>ПОБЕДА 🏆</value>
   </data>
+  <data name="DoNotHaveEnoughMoneyToWithdraw" xml:space="preserve">
+    <value>Минимальный вывод равен 25% баланса и не может быть меньше чем 25🍀</value>
+  </data>
   <data name="DotHaveEnoughMoneyDemoBalance" xml:space="preserve">
-    <value>Недостаточно средств 😟 Пополни баланс и начни играть по-настоящему 💵 Текущий демо баланс {0:D}</value>
+    <value>Недостаточно средств 😟
+Пополни баланс и начни играть по-настоящему 💵 </value>
   </data>
   <data name="DotHaveEnoughMoneyRealBalance" xml:space="preserve">
-    <value>Недостаточно средств 😟 Пополни баланс 💵 Текущий баланс {0:F2} $</value>
+    <value>Недостаточно средств 😟 
+Пополни баланс 💵 </value>
   </data>
   <data name="Football" xml:space="preserve">
     <value>Футбол</value>
@@ -178,7 +195,7 @@
     <value>Удар!</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
-    <value>Твой баланс: {0:F2}💲</value>
+    <value>Твой баланс: {0:F2} 🍀</value>
   </data>
   <data name="MyDemoBalance" xml:space="preserve">
     <value>Твой демо баланс: {0:D} ♦️</value>
@@ -205,7 +222,15 @@
     <value>Настройки</value>
   </data>
   <data name="ShotStoryHowToDeposit" xml:space="preserve">
-    <value>1. Пополни свой внутренний кошелек в телеграме 2. Переведи столько, сколько хочешь боту, чтобы играть</value>
+    <value>1. Пополни свой внутренний кошелек в телеграме 
+2. Переведи столько, сколько хочешь боту, чтобы играть
+1 TON = 100🍀
+1 ETH = 150000🍀
+1 BTC = 2044000🍀
+130 RUB = 100🍀</value>
+  </data>
+  <data name="TonWithdraw" xml:space="preserve">
+    <value>TON</value>
   </data>
   <data name="Wallet" xml:space="preserve">
     <value>1. Твой кошелек в телеграм</value>

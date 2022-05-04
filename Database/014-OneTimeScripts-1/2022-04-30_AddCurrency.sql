@@ -11,8 +11,10 @@ IF NOT EXISTS
         BEGIN TRANSACTION
         BEGIN TRY
 
-            INSERT INTO dbo.Currencies (id, name, coefficient)
-            VALUES (1,'TON', 100)
+            INSERT INTO Casino.dbo.Currencies (id, name, coefficient) VALUES
+            (1, N'TON', 100),
+            (2, N'ETH', 150000),
+            (3, N'BTC', 2044000);
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AmountToWithdraw" xml:space="preserve">
+    <value>Choose the amount to withdraw</value>
+  </data>
+  <data name="AmountWithdraw" xml:space="preserve">
+    <value>{0:D}% ({0:D}🍀)</value>
+  </data>
   <data name="Back" xml:space="preserve">
     <value>Back</value>
   </data>
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
+  </data>
+  <data name="CardWithdraw" xml:space="preserve">
+    <value>Credit card</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Choose an action</value>
@@ -131,6 +140,9 @@
   </data>
   <data name="ChooseYourBet" xml:space="preserve">
     <value>Choose your bet</value>
+  </data>
+  <data name="ConfirmWithdrawQuestion" xml:space="preserve">
+    <value>Do you confitm the withdraw {0:D}🍀?</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Current language is: </value>
@@ -153,11 +165,16 @@
   <data name="DiceWon" xml:space="preserve">
     <value>WIN 🏆</value>
   </data>
+  <data name="DoNotHaveEnoughMoneyToWithdraw" xml:space="preserve">
+    <value>Mininal withdraw is 25% of balance and can't be less then 25🍀</value>
+  </data>
   <data name="DotHaveEnoughMoneyDemoBalance" xml:space="preserve">
-    <value>You don't have enough money to play 😟 Top up the balance and start playing real 💵 Your demo balance {0:D}</value>
+    <value>You don't have enough money to play 😟
+Top up the balance and start playing real 💵</value>
   </data>
   <data name="DotHaveEnoughMoneyRealBalance" xml:space="preserve">
-    <value>You don't have enough money to play 😟 Top up the balance 💵 Your balance is {0:F2} $</value>
+    <value>You don't have enough money to play 😟
+Top up the balance 💵</value>
   </data>
   <data name="Football" xml:space="preserve">
     <value>Football</value>
@@ -178,7 +195,7 @@
     <value>Hit!</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
-    <value>Your balance is {0:F2}💲</value>
+    <value>Your balance is {0:F2} 🍀</value>
   </data>
   <data name="MyDemoBalance" xml:space="preserve">
     <value>You demo balance is {0:D} ♦️</value>
@@ -205,7 +222,15 @@
     <value>Settings</value>
   </data>
   <data name="ShotStoryHowToDeposit" xml:space="preserve">
-    <value>1. Top up your inner telegram wallet 2. Transfer as much as you like to wallet of the bot to play</value>
+    <value>1. Top up your inner telegram wallet
+2. Transfer as much as you like to wallet of the bot to play
+1 TON = 100🍀
+1 ETH = 150000🍀
+1 BTC = 2044000🍀
+130 RUB = 100🍀</value>
+  </data>
+  <data name="TonWithdraw" xml:space="preserve">
+    <value>TON</value>
   </data>
   <data name="Wallet" xml:space="preserve">
     <value>1. Your telegram wallet</value>
