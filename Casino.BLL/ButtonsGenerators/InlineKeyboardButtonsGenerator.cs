@@ -626,17 +626,3 @@ public class InlineKeyboardButtonsGenerator
     private static bool IsBalanceEnoughToWithdraw(double balance) =>
         (int)(balance * AppConstants.MinPercentOfBalanceToWithdraw / 100) >= AppConstants.MinBalanceToWithdraw;
 }
-
-public class WithdrawModel
-{
-    public WithdrawMethod Method { get; set; }
-    public int Amount { get; set; }
-}
-
-public enum WithdrawMethod
-{
-    Ton,
-    Card,
-    Eth,
-    Btc
-}
