@@ -83,8 +83,8 @@ public class FootBallGame : Game
 
     protected override async Task SendRoundResultMessageAsync()
     {
-        var roundResultMessage = _gameModel.DidWin 
-            ? _localizer[Resources.FootballGoalResource] 
+        var roundResultMessage = _gameModel.DidWin
+            ? _localizer[Resources.FootballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
             : _localizer[Resources.FootballMissResource];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);

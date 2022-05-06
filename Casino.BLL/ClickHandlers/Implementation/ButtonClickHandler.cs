@@ -67,7 +67,7 @@ public class ButtonClickHandler : IClickHandler
                 await PushChooseDiceGame();
                 break;
             case Command.HitBall:
-                var footballGameParam = JsonConvert.DeserializeObject<FootballGameParamDto>(commandDto.Param);
+                var footballGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
                 await PushHitBallButtonAsync(footballGameParam);
                 break;
             case Command.PlayDice:
@@ -82,14 +82,12 @@ public class ButtonClickHandler : IClickHandler
                 var diceGameParamDto = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param);
                 await PushChooseDiceAsync(diceGameParamDto);
                 break;
-            case Command.IncreaseDiceBet:
-            case Command.DecreaseDiceBet:
-                var diceGameParam = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param!);
+            case Command.ChangeDiceBet:
+                var diceGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushDiceButtonAsync(Convert.ToBoolean(diceGameParam.IsDemo), diceGameParam.Bet);
                 break;
-            case Command.IncreaseFootballBet:
-            case Command.DecreaseFootballBet:
-                var footballGame = JsonConvert.DeserializeObject<FootballGameParamDto>(commandDto.Param!);
+            case Command.ChangeFootballBet:
+                var footballGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushFootballPlayButtonAsync(footballGame.IsDemo, footballGame.Bet);
                 break;
             case Command.DepositBalance:
@@ -214,7 +212,7 @@ public class ButtonClickHandler : IClickHandler
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }
 
-    private async Task PushDiceButtonAsync(bool isDemoPlay, int userDiceBet = AppConstants.DefaultUserBet)
+    private async Task PushDiceButtonAsync(bool isDemoPlay, int userDiceBet = AppConstants.MinBet)
     {
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
@@ -232,7 +230,7 @@ public class ButtonClickHandler : IClickHandler
         await EditCurrentScreenAsync();
     }
 
-    private async Task PushHitBallButtonAsync(FootballGameParamDto footballGameParam)
+    private async Task PushHitBallButtonAsync(GameBetParamDto gameBetParam)
     {
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
@@ -244,15 +242,15 @@ public class ButtonClickHandler : IClickHandler
                 Balance = chat!.Balance,
                 DemoBalance = chat.DemoBalance
             },
-            UserBet = footballGameParam.Bet,
-            IsDemoPlay = footballGameParam.IsDemo
+            UserBet = gameBetParam.Bet,
+            IsDemoPlay = gameBetParam.IsDemo
         };
         var footBallGame = new FootBallGame(gameModel, _telegramMessageDto.MessageId,
             _telegramBotClient, _serviceProvider);
         await footBallGame.PlayRoundAsync();
     }
 
-    private async Task PushFootballPlayButtonAsync(bool isDemoPlay, int userBet = AppConstants.DefaultUserBet)
+    private async Task PushFootballPlayButtonAsync(bool isDemoPlay, int userBet = AppConstants.MinBet)
     {
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel

@@ -124,22 +124,22 @@
     <value>{0:D}% ({0:D}🍀)</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Back</value>
+    <value>Back 🔙</value>
   </data>
   <data name="Balance" xml:space="preserve">
-    <value>Balance</value>
+    <value>Balance 💰</value>
   </data>
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Please choose another amount, you don't have enough on balance to withdraw ❗️</value>
   </data>
   <data name="CardWithdraw" xml:space="preserve">
-    <value>Credit card</value>
+    <value>Credit card 💳</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
-    <value>Choose an action</value>
+    <value>Choose an action ⤵️</value>
   </data>
   <data name="ChooseGameMode" xml:space="preserve">
-    <value>Choose play mode</value>
+    <value>Choose play mode ⤵️</value>
   </data>
   <data name="ChooseYourBet" xml:space="preserve">
     <value>Choose your bet</value>
@@ -151,22 +151,23 @@
     <value>Current language is: </value>
   </data>
   <data name="Deposit" xml:space="preserve">
-    <value>Deposit</value>
+    <value>Deposit 💸</value>
   </data>
   <data name="DepositBalance" xml:space="preserve">
     <value>Deposit money</value>
   </data>
   <data name="DepositInstruction" xml:space="preserve">
-    <value>Instruction how to top up balance</value>
+    <value>Instruction how to top up balance 📝</value>
   </data>
   <data name="Dice" xml:space="preserve">
-    <value>Dice</value>
+    <value>Dice 🎲</value>
   </data>
   <data name="DiceLost" xml:space="preserve">
     <value>Bad luck 😢</value>
   </data>
   <data name="DiceWon" xml:space="preserve">
-    <value>WIN 🏆</value>
+    <value>WIN 🏆
+You won {0:D} {1:S}</value>
   </data>
   <data name="DoNotHaveEnoughMoneyToWithdraw" xml:space="preserve">
     <value>The balance must be more 100🍀to withdraw</value>
@@ -180,25 +181,26 @@ Top up the balance and start playing real 💵</value>
 Top up the balance 💵</value>
   </data>
   <data name="Football" xml:space="preserve">
-    <value>Football</value>
-  </data>
-  <data name="FootballGoal" xml:space="preserve">
-    <value>Goal ⚽️</value>
+    <value>Football ⚽️</value>
   </data>
   <data name="FootballMiss" xml:space="preserve">
     <value>Miss 😟</value>
   </data>
+  <data name="FootballWon" xml:space="preserve">
+    <value>GOAL 🥅
+You won {0:D} {1:S}</value>
+  </data>
   <data name="Games" xml:space="preserve">
-    <value>Games</value>
+    <value>Games 🎮</value>
   </data>
   <data name="GoodLuck" xml:space="preserve">
-    <value>Good luck</value>
+    <value>Good luck 🤞</value>
   </data>
   <data name="HitBall" xml:space="preserve">
-    <value>Hit!</value>
+    <value>Hit ⚽️</value>
   </data>
   <data name="Menu" xml:space="preserve">
-    <value>Menu</value>
+    <value>Menu 🎛</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
     <value>Your balance is {0:F2} 🍀</value>
@@ -210,22 +212,22 @@ Top up the balance 💵</value>
     <value>2. Deposit to play</value>
   </data>
   <data name="PlayDiceDemo" xml:space="preserve">
-    <value>Play dice demo</value>
+    <value>Play dice demo ♦️</value>
   </data>
   <data name="PlayDiceReal" xml:space="preserve">
-    <value>Play dice real</value>
+    <value>Play dice real 🍀</value>
   </data>
   <data name="PlayFootballDemo" xml:space="preserve">
-    <value>Play football demo</value>
+    <value>Play football demo ♦️</value>
   </data>
   <data name="PlayFootballReal" xml:space="preserve">
-    <value>Play football real</value>
+    <value>Play football real 🍀</value>
   </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>Russian roulette</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Settings</value>
+    <value>Settings ⚙️</value>
   </data>
   <data name="ShotStoryHowToDeposit" xml:space="preserve">
     <value>1. Top up your inner telegram wallet
@@ -239,13 +241,13 @@ Top up the balance 💵</value>
     <value>Something wrong. Please try again 🔴⚠️</value>
   </data>
   <data name="TonWithdraw" xml:space="preserve">
-    <value>TON</value>
+    <value>TON 💎</value>
   </data>
   <data name="Wallet" xml:space="preserve">
     <value>1. Your telegram wallet</value>
   </data>
   <data name="WithdrawBalance" xml:space="preserve">
-    <value>Withdraw money</value>
+    <value>Withdraw money 💸</value>
   </data>
   <data name="WithdrawSuccess" xml:space="preserve">
     <value>Your withdraw will be processed soon

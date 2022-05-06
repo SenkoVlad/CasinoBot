@@ -69,7 +69,7 @@ public class DiceGame : Game
 
     protected override async Task SentStartMessageAsync()
     {
-        var startMessage = $"{_localizer[Resources.GoodLuckResource]}.{_diceBet}";
+        var startMessage = $"{_localizer[Resources.GoodLuckResource]}";
         var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
@@ -87,9 +87,9 @@ public class DiceGame : Game
 
     protected override async Task SendRoundResultMessageAsync()
     {
-        var roundResultMessage = _gameModel.DidWin ? 
-            _localizer[Resources.DiceWonResource] :
-            _localizer[Resources.DiceLostResource];
+        var roundResultMessage = _gameModel.DidWin 
+            ? _localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+            : _localizer[Resources.DiceLostResource];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }

@@ -26,7 +26,7 @@ public class Resources
     public const string GetMyDemoBalanceResource = "MyDemoBalance";
     public const string FootballMissResource = "FootballMiss";
     public const string DoNotHaveEnoughMoneyToRealPlayResource = "DotHaveEnoughMoneyRealBalance";
-    public const string FootballGoalResource = "FootballGoal";
+    public const string FootballWonResource = "FootballWon";
     public const string DoNotHaveEnoughMoneyToDemoPlayResource = "DotHaveEnoughMoneyDemoBalance";
     public const string DiceWonResource = "DiceWon";
     public const string DiceLostResource = "DiceLost";

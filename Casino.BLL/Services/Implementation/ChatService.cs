@@ -34,7 +34,7 @@ public class ChatService : IChatService
         return chat;
     }
 
-    public async Task ChangeBalanceAsync(GameModel gameModel)
+    public async Task<double> ChangeBalanceAsync(GameModel gameModel)
     {
         var bettingResult = _gameParameters.BettingResults.FirstOrDefault(b =>
             b.IsWin == gameModel.DidWin && 
@@ -57,6 +57,8 @@ public class ChatService : IChatService
         {
             await _chatRepository.ChangeBalanceAsync(gameModel.Chat.Id, score);
         }
+
+        return score;
     }
 
     public async Task<Chat> GetChatByIdOrException(long chatId)

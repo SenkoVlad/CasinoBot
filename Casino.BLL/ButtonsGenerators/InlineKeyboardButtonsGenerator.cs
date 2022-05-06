@@ -122,7 +122,7 @@ public class InlineKeyboardButtonsGenerator
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
                 Command = Command.HitBall,
-                Param = JsonConvert.SerializeObject(new FootballGameParamDto
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
                 {
                     Bet = gameModel.UserBet,
                     IsDemo = gameModel.IsDemoPlay
@@ -136,42 +136,14 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ChooseFootball
             })
         };
-        var currentUserBet = string.Concat(gameModel.UserBet, ButtonConstants.DollarSignButtonText);
-        var currentUserBetButton = new InlineKeyboardButton(currentUserBet)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DoNothing
-            })
-        };
-        var increaseBetButton = new InlineKeyboardButton(ButtonConstants.IncreaseAmountButtonText)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.IncreaseFootballBet,
-                Param = JsonConvert.SerializeObject(new FootballGameParamDto
-                {
-                    Bet = gameModel.UserBet + 1,
-                    IsDemo = gameModel.IsDemoPlay
-                })
-            })
-        };
-        var decreaseBetButton = new InlineKeyboardButton(ButtonConstants.DecreaseAmountButtonText)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DecreaseFootballBet,
-                Param = JsonConvert.SerializeObject(new FootballGameParamDto
-                {
-                    Bet = gameModel.UserBet - 1,
-                    IsDemo = gameModel.IsDemoPlay
-                })
-            })
-        };
+        var betButtonsPanel = GetBetButtonsPanel(gameModel, Command.ChangeFootballBet);
+
         var buttonRows = new[]
         {
-            new[] { decreaseBetButton, currentUserBetButton, increaseBetButton},
-            new[] { hitBallButton, backButton }
+            betButtonsPanel[0],
+            betButtonsPanel[1],
+            new[] { hitBallButton },
+            new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = gameModel.IsDemoPlay
@@ -259,40 +231,8 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var currentUserBet = string.Concat(gameModel.UserBet, ButtonConstants.DollarSignButtonText);
-        var currentUserBetButton = new InlineKeyboardButton(currentUserBet)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DoNothing
-            })
-        };
-        var increaseBetButton = new InlineKeyboardButton(ButtonConstants.IncreaseAmountButtonText)
-        {
-            CallbackData =  JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.IncreaseDiceBet,
-                Param = JsonConvert.SerializeObject(new DiceGameParamDto
-                {
-                    Dice = 1,
-                    Bet = gameModel.UserBet + 1,
-                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
-                })
-            })
-        };
-        var decreaseBetButton = new InlineKeyboardButton(ButtonConstants.DecreaseAmountButtonText)
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.DecreaseDiceBet,
-                Param = JsonConvert.SerializeObject(new DiceGameParamDto
-                {
-                    Dice = 1,
-                    Bet = gameModel.UserBet - 1,
-                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
-                })
-            })
-        };
+        var betButtonsPanel = GetBetButtonsPanel(gameModel, Command.ChangeDiceBet);
+
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -303,15 +243,13 @@ public class InlineKeyboardButtonsGenerator
 
         var buttonRows = new[] 
         {
-            new []
-            {
-                decreaseBetButton, currentUserBetButton, increaseBetButton
-            },
+            betButtonsPanel[0],
+            betButtonsPanel[1],
             new[] 
             { 
                 onePointButton, twoPointButton, threePointButton, fourPointButton, fivePointButton, sixPointButton
             },
-            new []
+            new[]
             {
                 backButton
             }
@@ -590,6 +528,98 @@ public class InlineKeyboardButtonsGenerator
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = _localizer[Resources.WithdrawSuccess];
+    }
+
+    private InlineKeyboardButton[][] GetBetButtonsPanel(GameModel gameModel, Command changeDiceBet)
+    {
+        var currentUserBet = string.Concat(gameModel.UserBet, ButtonConstants.DollarSignButtonText);
+        var currentUserBetButton = new InlineKeyboardButton(currentUserBet)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DoNothing
+            })
+        };
+        var increaseBetButton = new InlineKeyboardButton(ButtonConstants.IncreaseAmountButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = changeDiceBet,
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
+                {
+                    Bet = GetAndCheckIfMoreThenMinimalUserBet(gameModel.UserBet + 1),
+                    IsDemo = gameModel.IsDemoPlay
+                })
+            })
+        };
+        var decreaseBetButton = new InlineKeyboardButton(ButtonConstants.DecreaseAmountButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = changeDiceBet,
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
+                {
+                    Bet = GetAndCheckIfMoreThenMinimalUserBet(gameModel.UserBet - 1),
+                    IsDemo = gameModel.IsDemoPlay
+                })
+            })
+        };
+        var redoubleBetButton = new InlineKeyboardButton(ButtonConstants.RedoubleAmountButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = changeDiceBet,
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
+                {
+                    Bet = gameModel.UserBet * 2,
+                    IsDemo = gameModel.IsDemoPlay
+                })
+            })
+        };
+        var halvingBetButton = new InlineKeyboardButton(ButtonConstants.HalvingAmountButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = changeDiceBet,
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
+                {
+                    Bet = GetAndCheckIfMoreThenMinimalUserBet(gameModel.UserBet / 2),
+                    IsDemo = gameModel.IsDemoPlay
+                })
+            })
+        };
+        var maxBetButton = new InlineKeyboardButton(ButtonConstants.MaxAmountButtonText)
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = changeDiceBet,
+                Param = JsonConvert.SerializeObject(new GameBetParamDto
+                {
+                    Bet = gameModel.IsDemoPlay ? gameModel.Chat.DemoBalance : (int)gameModel.Chat.Balance,
+                    IsDemo = gameModel.IsDemoPlay
+                })
+            })
+        };
+        var buttonsPanel = new[]
+        {
+            new[]
+            {
+                decreaseBetButton, currentUserBetButton, increaseBetButton
+            },
+            new[]
+            {
+                halvingBetButton, maxBetButton, redoubleBetButton
+            }
+        };
+
+        return buttonsPanel;
+    }
+
+    private static int GetAndCheckIfMoreThenMinimalUserBet(int userBet)
+    {
+        return userBet >= AppConstants.MinBet 
+            ? userBet
+            : AppConstants.MinBet;
     }
 
     private InlineKeyboardButton GetChooseWithdrawMethodButton(WithdrawModel withdrawModel, Currency currency, string methodName)

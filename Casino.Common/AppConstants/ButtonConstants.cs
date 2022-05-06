@@ -2,6 +2,8 @@
 
 public class ButtonConstants
 {
+    public const string RedoubleAmountButtonText = "⏫✖️2️⃣";
+    public const string HalvingAmountButtonText = "⏬✖️2️⃣";
     public const string DiceOnePointButtonText = "1️⃣";
     public const string DiceTwoPointButtonText = "2️⃣";
     public const string DiceThreePointButtonText = "3️⃣";
@@ -12,6 +14,5 @@ public class ButtonConstants
     public const string DollarSignButtonText = "💵";
     public const string IncreaseAmountButtonText = "🔼";
     public const string DecreaseAmountButtonText = "🔽";
-    public const string DepositBalance = "Deposit";
-    public const string WithdrawBalance = "Withdraw";
+    public const string MaxAmountButtonText = "MAX";
 }

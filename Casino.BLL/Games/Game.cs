@@ -8,6 +8,7 @@ public abstract class Game
 {
     private readonly GameModel _gameModel;
     private readonly IChatService _chatService;
+    protected double WinningsScore;
 
     protected Game(GameModel gameModel, IServiceProvider serviceProvider)
     {
@@ -48,7 +49,7 @@ public abstract class Game
 
     public virtual async Task UpdateBalanceAsync()
     {
-        await _chatService.ChangeBalanceAsync(_gameModel);
+        WinningsScore = await _chatService.ChangeBalanceAsync(_gameModel);
     }
 
     protected abstract Task SendDoNotHaveEnoughMoneyToPlayMessageAsync();

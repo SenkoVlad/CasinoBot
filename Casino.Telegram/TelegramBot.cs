@@ -83,6 +83,8 @@ class TelegramBot
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                if(newMessage.CallbackQuery != null)
+                    await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
             }
         }, cancellationToken);
     }

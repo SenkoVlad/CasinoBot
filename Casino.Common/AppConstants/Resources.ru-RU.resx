@@ -124,22 +124,22 @@
     <value>{0:D}% ({1:D}🍀)</value>
   </data>
   <data name="Back" xml:space="preserve">
-    <value>Назад </value>
+    <value>Назад 🔙 </value>
   </data>
   <data name="Balance" xml:space="preserve">
-    <value>Баланс</value>
+    <value>Баланс 💰</value>
   </data>
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Пожалуйста, выбери другую сумму, у тебя недостаточно средств для вывода ❗️</value>
   </data>
   <data name="CardWithdraw" xml:space="preserve">
-    <value>Банковская карта</value>
+    <value>Банковская карта 💳</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
-    <value>Выбери действие</value>
+    <value>Выбери действие ⤵️</value>
   </data>
   <data name="ChooseGameMode" xml:space="preserve">
-    <value>Тип игры</value>
+    <value>Тип игры ⤵️</value>
   </data>
   <data name="ChooseYourBet" xml:space="preserve">
     <value>Твоя ставка</value>
@@ -151,22 +151,23 @@
     <value>Текущий язык: </value>
   </data>
   <data name="Deposit" xml:space="preserve">
-    <value>Депозит</value>
+    <value>Депозит 💸</value>
   </data>
   <data name="DepositBalance" xml:space="preserve">
     <value>Пополнить баланс</value>
   </data>
   <data name="DepositInstruction" xml:space="preserve">
-    <value>Инструкция как пополнить баланс</value>
+    <value>Инструкция как пополнить баланс 📝</value>
   </data>
   <data name="Dice" xml:space="preserve">
-    <value>Кости</value>
+    <value>Кости 🎲</value>
   </data>
   <data name="DiceLost" xml:space="preserve">
     <value>Неудача 😢</value>
   </data>
   <data name="DiceWon" xml:space="preserve">
-    <value>ПОБЕДА 🏆</value>
+    <value>ПОБЕДА 🏆
+Ты выиграл {0:D} {0:S}</value>
   </data>
   <data name="DoNotHaveEnoughMoneyToWithdraw" xml:space="preserve">
     <value>Для выводе средств на балансе должно быть более 100 🍀</value>
@@ -180,25 +181,26 @@
 Пополни баланс 💵 </value>
   </data>
   <data name="Football" xml:space="preserve">
-    <value>Футбол</value>
-  </data>
-  <data name="FootballGoal" xml:space="preserve">
-    <value>Гол ⚽️</value>
+    <value>Футбол ⚽️</value>
   </data>
   <data name="FootballMiss" xml:space="preserve">
     <value>Промах 😟</value>
   </data>
+  <data name="FootballWon" xml:space="preserve">
+    <value>ГОЛ 🥅
+Ты выиграл {0:D} {1:S}</value>
+  </data>
   <data name="Games" xml:space="preserve">
-    <value>Игры</value>
+    <value>Игры 🎮</value>
   </data>
   <data name="GoodLuck" xml:space="preserve">
-    <value>Удачи</value>
+    <value>Удачи 🤞</value>
   </data>
   <data name="HitBall" xml:space="preserve">
-    <value>Удар!</value>
+    <value>Удар⚽️</value>
   </data>
   <data name="Menu" xml:space="preserve">
-    <value>Меню</value>
+    <value>Меню 🎛</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
     <value>Твой баланс: {0:F2} 🍀</value>
@@ -210,22 +212,22 @@
     <value>2. Пополни, чтобы играть</value>
   </data>
   <data name="PlayDiceDemo" xml:space="preserve">
-    <value>Игра в кости демо</value>
+    <value>Игра в кости демо ♦️</value>
   </data>
   <data name="PlayDiceReal" xml:space="preserve">
-    <value>Игра в кости на деньги</value>
+    <value>Игра в кости на деньги 🍀</value>
   </data>
   <data name="PlayFootballDemo" xml:space="preserve">
-    <value>Играть демо</value>
+    <value>Играть демо ♦️</value>
   </data>
   <data name="PlayFootballReal" xml:space="preserve">
-    <value>Игра на деньги</value>
+    <value>Игра на деньги 🍀</value>
   </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>Русская рулетка</value>
   </data>
   <data name="Settings" xml:space="preserve">
-    <value>Настройки</value>
+    <value>Настройки ⚙️</value>
   </data>
   <data name="ShotStoryHowToDeposit" xml:space="preserve">
     <value>1. Пополни свой внутренний кошелек в телеграме 
@@ -239,13 +241,13 @@
     <value>Что-то не так. Попробуй ещё раз 🔴⚠️</value>
   </data>
   <data name="TonWithdraw" xml:space="preserve">
-    <value>TON</value>
+    <value>TON 💎</value>
   </data>
   <data name="Wallet" xml:space="preserve">
     <value>1. Твой кошелек в телеграм</value>
   </data>
   <data name="WithdrawBalance" xml:space="preserve">
-    <value>Вывести деньги</value>
+    <value>Вывести деньги 💸</value>
   </data>
   <data name="WithdrawSuccess" xml:space="preserve">
     <value>Успешно! Скоро вывод средст будет обработан и ты получишь сообщение о зачислении ✅</value>
