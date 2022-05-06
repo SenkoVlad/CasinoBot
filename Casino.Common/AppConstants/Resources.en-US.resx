@@ -130,7 +130,7 @@
     <value>Balance</value>
   </data>
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
-    <value>Please choose another amount, you don't have enough on balance to withdraw</value>
+    <value>Please choose another amount, you don't have enough on balance to withdraw ❗️</value>
   </data>
   <data name="CardWithdraw" xml:space="preserve">
     <value>Credit card</value>
@@ -169,7 +169,7 @@
     <value>WIN 🏆</value>
   </data>
   <data name="DoNotHaveEnoughMoneyToWithdraw" xml:space="preserve">
-    <value>Mininal withdraw is 25% of balance and can't be less then 25🍀</value>
+    <value>The balance must be more 100🍀to withdraw</value>
   </data>
   <data name="DotHaveEnoughMoneyDemoBalance" xml:space="preserve">
     <value>You don't have enough money to play 😟
@@ -196,6 +196,9 @@ Top up the balance 💵</value>
   </data>
   <data name="HitBall" xml:space="preserve">
     <value>Hit!</value>
+  </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Menu</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
     <value>Your balance is {0:F2} 🍀</value>
@@ -233,7 +236,7 @@ Top up the balance 💵</value>
 130 RUB = 100🍀</value>
   </data>
   <data name="SomethingWrongTryAgain" xml:space="preserve">
-    <value>Something wrong. Please try again</value>
+    <value>Something wrong. Please try again 🔴⚠️</value>
   </data>
   <data name="TonWithdraw" xml:space="preserve">
     <value>TON</value>
@@ -245,6 +248,7 @@ Top up the balance 💵</value>
     <value>Withdraw money</value>
   </data>
   <data name="WithdrawSuccess" xml:space="preserve">
-    <value>Your withdraw will be processed soon. You will be sent a message with confirmation</value>
+    <value>Your withdraw will be processed soon
+You will be sent a message with confirmation ✅</value>
   </data>
 </root>

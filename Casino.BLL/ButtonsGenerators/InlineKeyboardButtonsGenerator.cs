@@ -49,17 +49,6 @@ public class InlineKeyboardButtonsGenerator
         ReplyText = GetBalanceMessage(chat);
     }
 
-    private string GetBalanceMessage(ChatModel chat)
-    {
-        return string.Concat(
-            _localizer[Resources.GetMyBalanceResource, chat.Balance],
-            Environment.NewLine,
-            _localizer[Resources.GetMyDemoBalanceResource, chat.DemoBalance],
-            Environment.NewLine,
-            _localizer[Resources.ChooseActionResource]);
-    }
-
-
     public void InitGamesButtons()
     {
         var diceGameButton = new InlineKeyboardButton(_localizer[Resources.DiceGameButtonText])
@@ -567,6 +556,42 @@ public class InlineKeyboardButtonsGenerator
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
+    public void SomethingWrongTryAgainButtons()
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.MenuButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToMenuButton
+            })
+        };
+        
+        var buttonRows = new[]
+        {
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.SomethingWrongTryAgain];
+    }
+
+    public void InitWithdrawSuccessButtons()
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.MenuButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ToMenuButton
+            })
+        };
+
+        var buttonRows = new[]
+        {
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.WithdrawSuccess];
+    }
+
     private InlineKeyboardButton GetChooseWithdrawMethodButton(WithdrawModel withdrawModel, Currency currency, string methodName)
     {
         var isClicked = IsWithdrawMethodButtonClick(withdrawModel, currency);
@@ -624,5 +649,14 @@ public class InlineKeyboardButtonsGenerator
         withdrawModel.Amount == amount;
 
     private static bool IsBalanceEnoughToWithdraw(double balance) =>
-        (int)(balance * AppConstants.MinPercentOfBalanceToWithdraw / 100) >= AppConstants.MinBalanceToWithdraw;
+        balance >= AppConstants.MinBalanceToWithdraw;
+    private string GetBalanceMessage(ChatModel chat)
+    {
+        return string.Concat(
+            _localizer[Resources.GetMyBalanceResource, chat.Balance],
+            Environment.NewLine,
+            _localizer[Resources.GetMyDemoBalanceResource, chat.DemoBalance],
+            Environment.NewLine,
+            _localizer[Resources.ChooseActionResource]);
+    }
 }

@@ -115,6 +115,15 @@ public class ButtonClickHandler : IClickHandler
     private async Task PushConfirmWithdrawAsync(WithdrawModel withdrawModel)
     {
         var withdrawResult =  await _withdrawService.WithdrawAsync(withdrawModel, _telegramMessageDto.ChatId);
+        if (withdrawResult.IsSuccess)
+        {
+            _inlineKeyboardButtonsGenerator.InitWithdrawSuccessButtons();
+        }
+        else
+        {
+            _inlineKeyboardButtonsGenerator.SomethingWrongTryAgainButtons();
+        }
+        await EditCurrentScreenAsync();
     }
 
     private async Task PushWithdrawBalanceButtonAsync(WithdrawModel? withdrawModel = null)
@@ -122,7 +131,7 @@ public class ButtonClickHandler : IClickHandler
         var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         withdrawModel ??= new()
         {
-            Amount = (int)(chat.Balance * AppConstants.MinBalanceToWithdraw / 100),
+            Amount = (int)(chat.Balance * AppConstants.MinPercentOfBalanceToWithdraw / 100),
             Method = Currency.TON
         };
         var chatModel = new ChatModel

@@ -44,4 +44,5 @@ public class Resources
     public const string WithdrawSuccess = "WithdrawSuccess";
     public const string BalanceIsNotEnoughToWithdraw = "BalanceIsNotEnoughToWithdraw";
     public const string SomethingWrongTryAgain = "SomethingWrongTryAgain";
+    public const string MenuButtonText = "Menu";
 }

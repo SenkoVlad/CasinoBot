@@ -39,10 +39,8 @@ public class FootBallGame : Game
     protected override async Task SendDoNotHaveEnoughMoneyToPlayMessageAsync()
     {
         var message = _gameModel.IsDemoPlay ?
-            string.Concat(_localizer[Resources.DoNotHaveEnoughMoneyToDemoPlayResource],
-                _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]) :
-            string.Concat(_localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource],
-                _localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance]);
+                _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance] :
+                _localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, message,
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }

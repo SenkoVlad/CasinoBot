@@ -31,11 +31,9 @@ public class WithdrawService : IWithdrawService
         try
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-                
             var chat = await _chatRepository.GetChatByIdAsync(chatId);
-            var currentUnAccountedWithdraws = (await _withdrawRepo.GetUnAccountedByChatId(chatId)).ToArray();
 
-            if (IsBalanceEnoughToWithdraw(chat.Balance, withdrawModel.Amount, currentUnAccountedWithdraws))
+            if (IsBalanceEnoughToWithdraw(chat.Balance, withdrawModel.Amount))
             {
                 await _withdrawRepo.InsertAsync(new WithdrawRequest
                 {
@@ -47,7 +45,7 @@ public class WithdrawService : IWithdrawService
                 });
                 await _chatRepository.ChangeBalanceAsync(chatId, -withdrawModel.Amount);
 
-                withdrawResult.IsSuccess = false;
+                withdrawResult.IsSuccess = true;
                 withdrawResult.Message = _localizer[Resources.WithdrawSuccess];
             }
             else
@@ -68,11 +66,7 @@ public class WithdrawService : IWithdrawService
         }
     }
 
-    private bool IsBalanceEnoughToWithdraw(double chatBalance, int withdrawAmount, WithdrawRequest[] currentUnAccountedWithdraws)
-    {
-        var sumOfUnAccountedWithdraw = currentUnAccountedWithdraws.Sum(c => c.Amount);
-        return chatBalance >= withdrawAmount + sumOfUnAccountedWithdraw;
-    }
+    private bool IsBalanceEnoughToWithdraw(double chatBalance, int withdrawAmount) => chatBalance >= withdrawAmount;
 }
 
 public class WithdrawResult
