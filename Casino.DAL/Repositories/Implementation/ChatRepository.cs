@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
-using Casino.BLL.Services.Implementation;
 using Casino.Configuration.Configuration;
 using Casino.DAL.DataModels;
+using Casino.DAL.Exceptions;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 using Dapper;
@@ -35,7 +35,7 @@ public class ChatRepository : IChatRepository
     public async Task AddAsync(Chat chat)
     {
         await using var db = new SqlConnection(_connectionString);
-        var sqlQuery = "INSERT INTO Chats (id, language, balance, demoBalance) VALUES (@id, @language, @balance, @demoBalance)";
+        var sqlQuery = "INSERT INTO dbo.Chats (id, language, balance, demoBalance) VALUES (@id, @language, @balance, @demoBalance)";
         await db.ExecuteAsync(sqlQuery, chat);
     }
 
@@ -52,17 +52,17 @@ public class ChatRepository : IChatRepository
         return chat;
     }
 
-    public async Task ChangeDemoBalanceAsync(long chatId, double score)
+    public async Task ChangeDemoBalanceAsync(long chatId, double amount)
     {
         await using var db = new SqlConnection(_connectionString);
-        var sqlQuery = "UPDATE dbo.Chats SET demoBalance = demoBalance + @score WHERE Id = @chatId";
-        await db.ExecuteAsync(sqlQuery, new { chatId, score });
+        var sqlQuery = "UPDATE dbo.Chats SET demoBalance = demoBalance + @amount WHERE Id = @chatId";
+        await db.ExecuteAsync(sqlQuery, new { chatId, amount });
     }
 
-    public async Task ChangeBalanceAsync(long chatId, double score)
+    public async Task ChangeBalanceAsync(long chatId, double amount)
     {
         await using var db = new SqlConnection(_connectionString);
-        var sqlQuery = "UPDATE dbo.Chats SET balance = balance + @score WHERE Id = @chatId";
-        await db.ExecuteAsync(sqlQuery, new { chatId, score });
+        var sqlQuery = "UPDATE dbo.Chats SET balance = balance + @amount WHERE Id = @chatId";
+        await db.ExecuteAsync(sqlQuery, new { chatId, amount });
     }
 }

@@ -10,5 +10,5 @@ public interface IChatRepository
     public Task AddAsync(Chat chat);
     public Task<Chat> GetChatByIdAsync(long chatId);
     Task ChangeDemoBalanceAsync(long chatId, double score);
-    Task ChangeBalanceAsync(long chatId, double score);
+    Task ChangeBalanceAsync(long chatId, double amount);
 }

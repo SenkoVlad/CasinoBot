@@ -41,4 +41,7 @@ public class Resources
     public const string ChooseAmountToWithdraw = "AmountToWithdraw";
     public const string TonWithdraw = "TonWithdraw";
     public const string CardWithdraw = "CardWithdraw";
+    public const string WithdrawSuccess = "WithdrawSuccess";
+    public const string BalanceIsNotEnoughToWithdraw = "BalanceIsNotEnoughToWithdraw";
+    public const string SomethingWrongTryAgain = "SomethingWrongTryAgain";
 }

@@ -23,6 +23,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IChatsLanguagesInMemoryRepository _chatsLanguagesInMemoryRepository;
     private readonly IChatRepository _chatRepository;
     private readonly IChatService _chatService;
+    private readonly IWithdrawService _withdrawService;
 
     public ButtonClickHandler(TelegramMessageDto telegramMessageDto,
         ITelegramBotClient telegramBotClient, 
@@ -35,6 +36,7 @@ public class ButtonClickHandler : IClickHandler
         _chatRepository = serviceProvider.GetRequiredService<IChatRepository>();
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
         _chatService = serviceProvider.GetRequiredService<IChatService>();
+        _withdrawService = serviceProvider.GetRequiredService<IWithdrawService>();
     }
 
     public async Task PushButtonAsync()
@@ -110,9 +112,9 @@ public class ButtonClickHandler : IClickHandler
         }
     }
 
-    private async Task PushConfirmWithdrawAsync(WithdrawModel withdrawAmount)
+    private async Task PushConfirmWithdrawAsync(WithdrawModel withdrawModel)
     {
-        
+        var withdrawResult =  await _withdrawService.WithdrawAsync(withdrawModel, _telegramMessageDto.ChatId);
     }
 
     private async Task PushWithdrawBalanceButtonAsync(WithdrawModel? withdrawModel = null)
@@ -121,7 +123,7 @@ public class ButtonClickHandler : IClickHandler
         withdrawModel ??= new()
         {
             Amount = (int)(chat.Balance * AppConstants.MinBalanceToWithdraw / 100),
-            Method = WithdrawMethod.Ton
+            Method = Currency.TON
         };
         var chatModel = new ChatModel
         {

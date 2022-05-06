@@ -17,17 +17,9 @@ public class BettingResultsRepo : IBettingResultsRepo
 
     public IEnumerable<BettingResult> GetAllBettingResults()
     {
-        try
-        {
-            using var db = new SqlConnection(_connectionString);
-            var sql = "SELECT * FROM dbo.BettingResults";
-            var bettingResults = db.Query<BettingResult>(sql);
-            return bettingResults;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            throw;
-        }
+        using var db = new SqlConnection(_connectionString);
+        var sql = "SELECT * FROM dbo.BettingResults";
+        var bettingResults = db.Query<BettingResult>(sql);
+        return bettingResults;
     }
 }

@@ -18,17 +18,9 @@ public class GamesRepo : IGamesRepo
 
     public IEnumerable<Game> GetAllGames()
     {
-        try
-        {
-            using var db = new SqlConnection(_connectionString);
-            var sql = "SELECT * FROM dbo.Games";
-            var games = db.Query<Game>(sql);
-            return games;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            throw;
-        }
+        using var db = new SqlConnection(_connectionString);
+        var sql = "SELECT * FROM dbo.Games";
+        var games = db.Query<Game>(sql);
+        return games;
     }
 }

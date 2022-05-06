@@ -14,7 +14,9 @@ IF NOT EXISTS
             INSERT INTO Casino.dbo.Currencies (id, name, coefficient) VALUES
             (1, N'TON', 100),
             (2, N'ETH', 150000),
-            (3, N'BTC', 2044000);
+            (3, N'BTC', 2044000),
+            (4, N'RUB', 0.78),
+            (5, N'USD', 51);
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

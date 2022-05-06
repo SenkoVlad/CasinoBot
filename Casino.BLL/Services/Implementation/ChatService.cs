@@ -1,5 +1,7 @@
 ﻿using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
+using Casino.DAL;
+using Casino.DAL.Exceptions;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
 

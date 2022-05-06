@@ -1,4 +1,4 @@
-﻿namespace Casino.BLL.Services.Implementation
+﻿namespace Casino.DAL.Exceptions
 {
     public class EntityNotFoundException : Exception
     {

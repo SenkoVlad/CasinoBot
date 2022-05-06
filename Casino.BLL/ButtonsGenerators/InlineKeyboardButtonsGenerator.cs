@@ -524,8 +524,8 @@ public class InlineKeyboardButtonsGenerator
             var wholeBalanceButton = GetChooseWithdrawAmountButton(chatModel, withdrawModel, 100);
 
 
-            var tonMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, WithdrawMethod.Ton, _localizer[Resources.TonWithdraw]);
-            var cardMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, WithdrawMethod.Card, _localizer[Resources.CardWithdraw]);
+            var tonMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, Currency.TON, _localizer[Resources.TonWithdraw]);
+            var cardMethodWithdraw = GetChooseWithdrawMethodButton(withdrawModel, Currency.USD, _localizer[Resources.CardWithdraw]);
 
             var confirmWithdraw = new InlineKeyboardButton(_localizer[Resources.WithdrawBalanceButtonText])
             {
@@ -567,9 +567,9 @@ public class InlineKeyboardButtonsGenerator
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
     }
 
-    private InlineKeyboardButton GetChooseWithdrawMethodButton(WithdrawModel withdrawModel, WithdrawMethod withdrawMethod, string methodName)
+    private InlineKeyboardButton GetChooseWithdrawMethodButton(WithdrawModel withdrawModel, Currency currency, string methodName)
     {
-        var isClicked = IsWithdrawMethodButtonClick(withdrawModel, withdrawMethod);
+        var isClicked = IsWithdrawMethodButtonClick(withdrawModel, currency);
         var buttonText = isClicked
             ? string.Concat("✔️", methodName)
             : methodName;
@@ -580,7 +580,7 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.WithdrawBalance,
                 Param = JsonConvert.SerializeObject(new WithdrawModel
                 {
-                    Method = withdrawMethod,
+                    Method = currency,
                     Amount = withdrawModel.Amount
                 })
             })
@@ -617,7 +617,7 @@ public class InlineKeyboardButtonsGenerator
         return buttonText;
     }
 
-    private bool IsWithdrawMethodButtonClick(WithdrawModel withdrawModel, WithdrawMethod ton) => 
+    private bool IsWithdrawMethodButtonClick(WithdrawModel withdrawModel, Currency ton) => 
         withdrawModel.Method == ton;
 
     private static bool IsWithdrawAmountButtonClicked(WithdrawModel withdrawModel, int amount) => 

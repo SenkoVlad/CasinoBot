@@ -1,8 +1,8 @@
-IF OBJECT_ID('[dbo].[PaymentMessages]') IS NULL
-create table dbo.PaymentMessages
+IF OBJECT_ID('[dbo].[PaymentRequests]') IS NULL
+create table dbo.PaymentRequests
 (
 	id int identity
-		constraint PaymentMessages_pk
+		constraint PaymentRequests_pk
 			primary key nonclustered,
 	chatId int not null,
 	depositAmount FLOAT not null,

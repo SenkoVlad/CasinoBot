@@ -129,6 +129,9 @@
   <data name="Balance" xml:space="preserve">
     <value>Баланс</value>
   </data>
+  <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
+    <value>Пожалуйста, выбери другую сумму, у тебя недостаточно средств для вывода</value>
+  </data>
   <data name="CardWithdraw" xml:space="preserve">
     <value>Банковская карта</value>
   </data>
@@ -229,6 +232,9 @@
 1 BTC = 2044000🍀
 130 RUB = 100🍀</value>
   </data>
+  <data name="SomethingWrongTryAgain" xml:space="preserve">
+    <value>Что-то не так. Попробуй ещё раз</value>
+  </data>
   <data name="TonWithdraw" xml:space="preserve">
     <value>TON</value>
   </data>
@@ -237,5 +243,8 @@
   </data>
   <data name="WithdrawBalance" xml:space="preserve">
     <value>Вывести деньги</value>
+  </data>
+  <data name="WithdrawSuccess" xml:space="preserve">
+    <value>Успешно! Скоро вывод средст будет обработан и ты получишь сообщение о зачислении</value>
   </data>
 </root>

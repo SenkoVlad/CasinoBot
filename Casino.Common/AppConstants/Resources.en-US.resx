@@ -129,6 +129,9 @@
   <data name="Balance" xml:space="preserve">
     <value>Balance</value>
   </data>
+  <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
+    <value>Please choose another amount, you don't have enough on balance to withdraw</value>
+  </data>
   <data name="CardWithdraw" xml:space="preserve">
     <value>Credit card</value>
   </data>
@@ -229,6 +232,9 @@ Top up the balance 💵</value>
 1 BTC = 2044000🍀
 130 RUB = 100🍀</value>
   </data>
+  <data name="SomethingWrongTryAgain" xml:space="preserve">
+    <value>Something wrong. Please try again</value>
+  </data>
   <data name="TonWithdraw" xml:space="preserve">
     <value>TON</value>
   </data>
@@ -237,5 +243,8 @@ Top up the balance 💵</value>
   </data>
   <data name="WithdrawBalance" xml:space="preserve">
     <value>Withdraw money</value>
+  </data>
+  <data name="WithdrawSuccess" xml:space="preserve">
+    <value>Your withdraw will be processed soon. You will be sent a message with confirmation</value>
   </data>
 </root>

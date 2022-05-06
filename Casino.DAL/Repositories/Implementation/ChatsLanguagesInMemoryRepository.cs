@@ -18,47 +18,31 @@ public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepositor
 
     public void AddOrUpdateChatLanguage(long chatId, string language)
     {
-        try
-        {
-            var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
+        var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
 
-            if (chat == null)
-            {
-                _usersLanguages.Add(new ChatDataModel
-                {
-                    Id = chatId,
-                    Language = language
-                });
-            }
-            else
-            {
-                chat.Language = language;
-            }
-        }
-        catch (Exception e)
+        if (chat == null)
         {
-            Console.WriteLine($"Method {nameof(AddOrUpdateChatLanguage)}. {e.Message}");
-            throw;
+            _usersLanguages.Add(new ChatDataModel
+            {
+                Id = chatId,
+                Language = language
+            });
+        }
+        else
+        {
+            chat.Language = language;
         }
     }
 
     public string GetChatLanguage(long chatId)
     {
-        try
-        {
-            var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
+        var chat = _usersLanguages.FirstOrDefault(c => c.Id == chatId);
 
-            if (chat == null)
-            {
-                return AppConstants.DefaultLanguage;
-            }
-
-            return chat.Language;
-        }
-        catch (Exception e)
+        if (chat == null)
         {
-            Console.WriteLine(e);
-            throw;
+            return AppConstants.DefaultLanguage;
         }
+
+        return chat.Language;
     }
 }

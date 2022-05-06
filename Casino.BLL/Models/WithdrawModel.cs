@@ -4,6 +4,6 @@ namespace Casino.BLL.Models;
 
 public class WithdrawModel
 {
-    public WithdrawMethod Method { get; set; }
+    public Currency Method { get; set; }
     public int Amount { get; set; }
 }
