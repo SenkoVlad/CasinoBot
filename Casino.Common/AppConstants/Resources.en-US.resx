@@ -206,7 +206,7 @@ You won {0:D} {1:S}</value>
     <value>Your balance is {0:F2} 🍀</value>
   </data>
   <data name="MyDemoBalance" xml:space="preserve">
-    <value>You demo balance is {0:D} ♦️</value>
+    <value>Your demo balance is {0:D} ♦️</value>
   </data>
   <data name="MyWallet" xml:space="preserve">
     <value>2. Deposit to play</value>
