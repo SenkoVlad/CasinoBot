@@ -45,4 +45,5 @@ public class Resources
     public const string BalanceIsNotEnoughToWithdraw = "BalanceIsNotEnoughToWithdraw";
     public const string SomethingWrongTryAgain = "SomethingWrongTryAgain";
     public const string MenuButtonText = "Menu";
+    public const string GameRoundFailed = "GameRoundFailed";
 }

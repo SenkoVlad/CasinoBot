@@ -345,7 +345,7 @@ public class InlineKeyboardButtonsGenerator
         var en = "en-US";
         var ru = "ru-RU";
 
-        var switchToEnglishButton = new InlineKeyboardButton(en)
+        var switchToEnglishButton = new InlineKeyboardButton(AppConstants.BritainFlag)
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -353,7 +353,7 @@ public class InlineKeyboardButtonsGenerator
                 Param = en
             })
         };
-        var switchToRussianButton = new InlineKeyboardButton(ru)
+        var switchToRussianButton = new InlineKeyboardButton(AppConstants.RusFlag)
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -361,7 +361,6 @@ public class InlineKeyboardButtonsGenerator
                 Param = ru
             })
         };
-        var a = _localizer[Resources.BackButtonText];
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -381,9 +380,9 @@ public class InlineKeyboardButtonsGenerator
             }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = string.Concat(
-            _localizer[Resources.CurrentLanguageButtonText],
-            currentLanguage);
+        ReplyText = currentLanguage == en
+            ? _localizer[Resources.CurrentLanguageButtonText, currentLanguage, AppConstants.BritainFlag]
+            : _localizer[Resources.CurrentLanguageButtonText, currentLanguage, AppConstants.RusFlag];
     }
 
     public void InitDepositBalanceButtons()

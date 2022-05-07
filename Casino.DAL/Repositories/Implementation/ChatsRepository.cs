@@ -8,11 +8,11 @@ using Dapper;
 
 namespace Casino.DAL.Repositories.Implementation;
 
-public class ChatRepository : IChatRepository
+public class ChatsRepository : IChatsRepository
 {
     private readonly string _connectionString;
 
-    public ChatRepository(IAppConfiguration appConfiguration)
+    public ChatsRepository(IAppConfiguration appConfiguration)
     {
         _connectionString = appConfiguration.DbConnectionString;
     }

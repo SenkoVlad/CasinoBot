@@ -148,7 +148,7 @@
     <value>Do you confitm the withdraw {0:D}🍀?</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
-    <value>Current language is: </value>
+    <value>Current language is: {0:S} {1:S}</value>
   </data>
   <data name="Deposit" xml:space="preserve">
     <value>Deposit 💸</value>
@@ -189,6 +189,9 @@ Top up the balance 💵</value>
   <data name="FootballWon" xml:space="preserve">
     <value>GOAL 🥅
 You won {0:D} {1:S}</value>
+  </data>
+  <data name="GameRoundFailed" xml:space="preserve">
+    <value>Game is failed ⚠️ Your balance is not changes. Please try again 🔂</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>Games 🎮</value>

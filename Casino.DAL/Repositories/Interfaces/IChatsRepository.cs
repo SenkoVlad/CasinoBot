@@ -3,7 +3,7 @@ using Casino.DAL.Models;
 
 namespace Casino.DAL.Repositories.Interfaces;
 
-public interface IChatRepository
+public interface IChatsRepository
 {
     public Task<IEnumerable<ChatDataModel>> GetChatsLanguagesAsync();
     public Task UpdateChatLanguageAsync(long chatId, string language);

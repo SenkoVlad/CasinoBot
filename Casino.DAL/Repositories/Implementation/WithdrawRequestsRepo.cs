@@ -6,11 +6,11 @@ using Dapper;
 
 namespace Casino.DAL.Repositories.Implementation;
 
-public class WithdrawRepo : IWithdrawRepo
+public class WithdrawRequestsRepo : IWithdrawRequestsRepo
 {
     private readonly string _connectionString;
 
-    public WithdrawRepo(IAppConfiguration appConfiguration)
+    public WithdrawRequestsRepo(IAppConfiguration appConfiguration)
     {
         _connectionString = appConfiguration.DbConnectionString;
     }

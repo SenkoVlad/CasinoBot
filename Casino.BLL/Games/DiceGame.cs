@@ -1,9 +1,7 @@
 ﻿using Casino.BLL.ButtonsGenerators;
-using Casino.BLL.ClickHandlers.Implementation;
 using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
-using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Telegram.Bot;
@@ -85,7 +83,7 @@ public class DiceGame : Game
         return _scoreResult == _diceBet;
     }
 
-    protected override async Task SendRoundResultMessageAsync()
+    protected override async Task SendRoundResultMessageAsync(SaveGameResultModel saveGameResultModel)
     {
         var roundResultMessage = _gameModel.DidWin 
             ? _localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]

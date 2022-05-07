@@ -8,7 +8,7 @@ public class GameResult
 {
     [Key]
     public int Id { get; set; }
-    public int ChatId { get; set; }
+    public long ChatId { get; set; }
     public int Bet { get; set; }
     public int BettingResultId { get; set; }
 }

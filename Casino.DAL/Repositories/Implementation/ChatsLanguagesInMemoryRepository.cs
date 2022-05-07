@@ -8,9 +8,9 @@ public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepositor
 {
     private readonly List<ChatDataModel> _usersLanguages;
 
-    public ChatsLanguagesInMemoryRepository(IChatRepository chatRepository)
+    public ChatsLanguagesInMemoryRepository(IChatsRepository chatsRepository)
     {
-        _usersLanguages = chatRepository.GetChatsLanguagesAsync()
+        _usersLanguages = chatsRepository.GetChatsLanguagesAsync()
             .GetAwaiter()
             .GetResult()
             .ToList();

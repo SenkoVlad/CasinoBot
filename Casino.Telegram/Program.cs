@@ -26,8 +26,9 @@ class Program
                     .AddScoped<InlineKeyboardButtonsGenerator>()
                     .AddScoped<IChatService, ChatService>()
                     .AddScoped<IWithdrawService, WithdrawService>()
-                    .AddScoped<IWithdrawRepo, WithdrawRepo>()
-                    .AddScoped<IChatRepository, ChatRepository>()
+                    .AddScoped<IWithdrawRequestsRepo, WithdrawRequestsRepo>()
+                    .AddScoped<IChatsRepository, ChatsRepository>()
+                    .AddScoped<IGameResultsRepo, GameResultsRepo>()
                     .AddLocalization())
             .Build();
 

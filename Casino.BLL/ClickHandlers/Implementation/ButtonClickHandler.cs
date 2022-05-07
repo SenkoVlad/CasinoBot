@@ -21,7 +21,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IServiceProvider _serviceProvider;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
     private readonly IChatsLanguagesInMemoryRepository _chatsLanguagesInMemoryRepository;
-    private readonly IChatRepository _chatRepository;
+    private readonly IChatsRepository _chatsRepository;
     private readonly IChatService _chatService;
     private readonly IWithdrawService _withdrawService;
 
@@ -33,7 +33,7 @@ public class ButtonClickHandler : IClickHandler
         _telegramBotClient = telegramBotClient;
         _serviceProvider = serviceProvider;
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
-        _chatRepository = serviceProvider.GetRequiredService<IChatRepository>();
+        _chatsRepository = serviceProvider.GetRequiredService<IChatsRepository>();
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
         _chatService = serviceProvider.GetRequiredService<IChatService>();
         _withdrawService = serviceProvider.GetRequiredService<IWithdrawService>();
@@ -161,7 +161,7 @@ public class ButtonClickHandler : IClickHandler
 
         CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(newLanguage);
         _chatsLanguagesInMemoryRepository.AddOrUpdateChatLanguage(_telegramMessageDto.ChatId, newLanguage);
-        await _chatRepository.UpdateChatLanguageAsync(_telegramMessageDto.ChatId, newLanguage);
+        await _chatsRepository.UpdateChatLanguageAsync(_telegramMessageDto.ChatId, newLanguage);
         await PushSettingsButtonAsync();
     }
 
@@ -270,7 +270,7 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushGetBalanceButtonAsync()
     {
-        var chat = await _chatRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
+        var chat = await _chatsRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
         var chatModel = new ChatModel
         {
             Balance = chat.Balance,
@@ -283,7 +283,7 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushMenuButtonAsync()
     {
-        var chat = await _chatRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
+        var chat = await _chatsRepository.GetChatByIdAsync(_telegramMessageDto.ChatId);
         var chatModel = new ChatModel
         {
             Balance = chat.Balance,

@@ -148,7 +148,7 @@
     <value>Вы подтверждаете вывод средств {0:D}🍀?</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
-    <value>Текущий язык: </value>
+    <value>Текущий язык: {0:S} {1:S}</value>
   </data>
   <data name="Deposit" xml:space="preserve">
     <value>Депозит 💸</value>
@@ -189,6 +189,9 @@
   <data name="FootballWon" xml:space="preserve">
     <value>ГОЛ 🥅
 Ты выиграл {0:D} {1:S}</value>
+  </data>
+  <data name="GameRoundFailed" xml:space="preserve">
+    <value>Раунд не состоялся ⚠️ Баланс не был изменен. Пожалуйтса, попробуй ещё раз 🔂</value>
   </data>
   <data name="Games" xml:space="preserve">
     <value>Игры 🎮</value>

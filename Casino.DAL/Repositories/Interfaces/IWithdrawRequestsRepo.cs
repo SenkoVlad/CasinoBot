@@ -2,7 +2,7 @@
 
 namespace Casino.DAL.Repositories.Interfaces;
 
-public interface IWithdrawRepo
+public interface IWithdrawRequestsRepo
 {
     Task InsertAsync(WithdrawRequest request);
 }

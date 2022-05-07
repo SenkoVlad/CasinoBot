@@ -81,11 +81,20 @@ public class FootBallGame : Game
         return GoalScores.Contains((int)_scoreResult!);
     }
 
-    protected override async Task SendRoundResultMessageAsync()
+    protected override async Task SendRoundResultMessageAsync(SaveGameResultModel saveGameResultModel)
     {
-        var roundResultMessage = _gameModel.DidWin
-            ? _localizer[Resources.FootballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
-            : _localizer[Resources.FootballMissResource];
+        string roundResultMessage;
+        if (saveGameResultModel.Success)
+        {
+            roundResultMessage = _gameModel.DidWin
+                ? _localizer[Resources.FootballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+                : _localizer[Resources.FootballMissResource];
+        }
+        else
+        {
+            roundResultMessage = saveGameResultModel.Message;
+        }
+
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }

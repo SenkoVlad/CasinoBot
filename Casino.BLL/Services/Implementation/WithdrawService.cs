@@ -10,17 +10,17 @@ namespace Casino.BLL.Services.Implementation;
 
 public class WithdrawService : IWithdrawService
 {
-    private readonly IWithdrawRepo _withdrawRepo;
-    private readonly IChatRepository _chatRepository;
+    private readonly IWithdrawRequestsRepo _withdrawRequestsRepo;
+    private readonly IChatsRepository _chatsRepository;
     private readonly IStringLocalizer<Resources> _localizer;
 
 
-    public WithdrawService(IWithdrawRepo withdrawRepo,
-        IChatRepository chatRepository, 
+    public WithdrawService(IWithdrawRequestsRepo withdrawRequestsRepo,
+        IChatsRepository chatsRepository, 
         IStringLocalizer<Resources> localizer)
     {
-        _withdrawRepo = withdrawRepo;
-        _chatRepository = chatRepository;
+        _withdrawRequestsRepo = withdrawRequestsRepo;
+        _chatsRepository = chatsRepository;
         _localizer = localizer;
     }
 
@@ -31,11 +31,11 @@ public class WithdrawService : IWithdrawService
         try
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
-            var chat = await _chatRepository.GetChatByIdAsync(chatId);
+            var chat = await _chatsRepository.GetChatByIdAsync(chatId);
 
             if (IsBalanceEnoughToWithdraw(chat.Balance, withdrawModel.Amount))
             {
-                await _withdrawRepo.InsertAsync(new WithdrawRequest
+                await _withdrawRequestsRepo.InsertAsync(new WithdrawRequest
                 {
                     ChatId = chatId,
                     Amount = withdrawModel.Amount,
@@ -43,7 +43,7 @@ public class WithdrawService : IWithdrawService
                     IsAccounted = false,
                     CurrencyId = (int) withdrawModel.Method
                 });
-                await _chatRepository.ChangeBalanceAsync(chatId, -withdrawModel.Amount);
+                await _chatsRepository.ChangeBalanceAsync(chatId, -withdrawModel.Amount);
 
                 withdrawResult.IsSuccess = true;
                 withdrawResult.Message = _localizer[Resources.WithdrawSuccess];
@@ -67,10 +67,4 @@ public class WithdrawService : IWithdrawService
     }
 
     private bool IsBalanceEnoughToWithdraw(double chatBalance, int withdrawAmount) => chatBalance >= withdrawAmount;
-}
-
-public class WithdrawResult
-{
-    public bool IsSuccess { get; set; }
-    public string Message { get; set; }
 }
