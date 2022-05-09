@@ -5,7 +5,7 @@ IF(NOT EXISTS(select fk.name
 BEGIN
     alter table PaymentRequests
 	add constraint PaymentRequests_Chats_id_fk
-		foreign key (chatId) references Chats
+		foreign key (chatId) references dbo.Chats
 END
 GO
 

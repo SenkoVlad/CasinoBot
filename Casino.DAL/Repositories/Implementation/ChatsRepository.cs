@@ -43,12 +43,6 @@ public class ChatsRepository : IChatsRepository
     {
         await using var db = new SqlConnection(_connectionString);
         var chat = await db.QueryFirstOrDefaultAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
-
-        if (chat == null)
-        {
-            throw new EntityNotFoundException($"Chat with id {chatId} is not found");
-        }
-
         return chat;
     }
 

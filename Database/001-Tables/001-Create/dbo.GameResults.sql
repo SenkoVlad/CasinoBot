@@ -4,7 +4,7 @@ create table GameResults
 	id int identity
 		constraint GameResults_pk
 			primary key nonclustered,
-	chatId int not null,
+	chatId BIGINT not null,
 	bet int not null,
 	bettingResultId int not null
 )

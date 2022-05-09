@@ -4,7 +4,7 @@ create table dbo.PaymentRequests
 	id int identity
 		constraint PaymentRequests_pk
 			primary key nonclustered,
-	chatId int not null,
+	chatId bigint not null,
 	depositAmount FLOAT not null,
 	currencyId int not null,
 	telegramMessageId int not null,

@@ -57,6 +57,12 @@ public class ChatService : IChatService
         try
         {
             var chat = await _chatsRepository.GetChatByIdAsync(chatId);
+            
+            if (chat == null)
+            {
+                throw new Common.Exceptions.EntityNotFoundException($"Not found chat with id {chatId}");
+            }
+
             return chat;
         }
         catch (EntityNotFoundException e)

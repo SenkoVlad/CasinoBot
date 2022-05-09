@@ -4,7 +4,7 @@ IF OBJECT_ID('[dbo].[WithdrawRequests]') IS NULL
         id int identity
             constraint WithdrawRequests_pk
                 primary key nonclustered,
-        chatId int not null,
+        chatId bigint not null,
         currencyId int not null,
         amount int not null,
         isAccounted BIT not null,
