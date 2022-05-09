@@ -1,6 +1,5 @@
 ﻿using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
-using Casino.DAL;
 using Casino.DAL.Exceptions;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
@@ -10,28 +9,34 @@ namespace Casino.BLL.Services.Implementation;
 public class ChatService : IChatService
 {
     private readonly IChatsRepository _chatsRepository;
-    private readonly GameParameters _gameParameters;
+    private readonly INetworkService _networkService;
 
     public ChatService(IChatsRepository chatsRepository,
-        GameParameters gameParameters)
+        INetworkService networkService)
     {
         _chatsRepository = chatsRepository;
-        _gameParameters = gameParameters;
+        _networkService = networkService;
     }
 
-    public async Task<Chat> GetOrCreateChatIfNotExistAsync(long chatId)
+    public async Task<ChatModel> GetOrCreateChatIfNotExistAsync(long chatId)
     {
+        var userIp = await _networkService.GetUserPublicIpAddressAsync();
         var chat = await _chatsRepository.GetChatByIdAsync(chatId);
         if (chat == null)
         {
             await _chatsRepository.AddAsync(new Chat
             {
-                Id = chatId
+                Id = chatId,
             });
             chat = await _chatsRepository.GetChatByIdAsync(chatId);
         }
 
-        return chat;
+        return new ChatModel
+        {
+            Id = chat.Id,
+            Balance = chat.Balance,
+            DemoBalance = chat.DemoBalance
+        };
     }
 
     public async Task<double> ChangeBalanceAsync(GameModel gameModel, BettingResult bettingResult)
@@ -52,7 +57,7 @@ public class ChatService : IChatService
         return score;
     }
 
-    public async Task<Chat> GetChatByIdOrException(long chatId)
+    public async Task<ChatModel> GetChatByIdOrException(long chatId)
     {
         try
         {
@@ -63,7 +68,12 @@ public class ChatService : IChatService
                 throw new Common.Exceptions.EntityNotFoundException($"Not found chat with id {chatId}");
             }
 
-            return chat;
+            return new ChatModel
+            {
+                Id = chat.Id,
+                Balance = chat.Balance,
+                DemoBalance = chat.DemoBalance
+            };
         }
         catch (EntityNotFoundException e)
         {

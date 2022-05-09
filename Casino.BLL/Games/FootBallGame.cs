@@ -47,13 +47,8 @@ public class FootBallGame : Game
 
     protected override async Task InitGameAsync()
     {
-        var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
-        _gameModel.Chat = new ChatModel
-        {
-            Id = chat.Id,
-            Balance = chat.Balance,
-            DemoBalance = chat.DemoBalance
-        };
+        var chatModel = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        _gameModel.Chat = chatModel;
         _inlineKeyboardButtonsGenerator.InitPlayFootballButtons(_gameModel);
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         var footballGameButtonText = _gameModel.IsDemoPlay

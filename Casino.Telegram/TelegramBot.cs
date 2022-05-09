@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Casino.BLL.ClickHandlers.Implementation;
+using Casino.BLL.Services.Interfaces;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
 using Casino.Configuration.Configuration;

@@ -17,11 +17,11 @@ public class ChatsRepository : IChatsRepository
         _connectionString = appConfiguration.DbConnectionString;
     }
 
-    public async Task<IEnumerable<ChatDataModel>> GetChatsLanguagesAsync()
+    public async Task<IEnumerable<ChatLanguageDataModel>> GetChatsLanguagesAsync()
     {
         await using var db = new SqlConnection(_connectionString);
         var sql = "SELECT C.Id, C.language FROM dbo.Chats AS C";
-        var languages = await db.QueryAsync<ChatDataModel>(sql);
+        var languages = await db.QueryAsync<ChatLanguageDataModel>(sql);
         return languages;
     }
 
@@ -35,14 +35,15 @@ public class ChatsRepository : IChatsRepository
     public async Task AddAsync(Chat chat)
     {
         await using var db = new SqlConnection(_connectionString);
-        var sqlQuery = "INSERT INTO dbo.Chats (id, language, balance, demoBalance) VALUES (@id, @language, @balance, @demoBalance)";
+        var sqlQuery = "INSERT INTO dbo.Chats (id, language, balance, demoBalance, createDateTimeUtc) VALUES (@id, @language, @balance, @demoBalance, @createDateTimeUtc)";
         await db.ExecuteAsync(sqlQuery, chat);
     }
 
-    public async Task<Chat> GetChatByIdAsync(long chatId)
+    public async Task<ChatDataModel> GetChatByIdAsync(long chatId)
     {
         await using var db = new SqlConnection(_connectionString);
-        var chat = await db.QueryFirstOrDefaultAsync<Chat>("SELECT * FROM dbo.Chats WHERE Chats.Id = @id", new { id = chatId });
+        var chat = await db.QueryFirstOrDefaultAsync<ChatDataModel>(@"SELECT C.Id, C.balance, C.demoBalance
+                                                                          FROM dbo.Chats AS C WHERE C.Id = @id", new { id = chatId });
         return chat;
     }
 

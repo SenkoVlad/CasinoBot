@@ -3,5 +3,6 @@
 public class ChatDataModel
 {
     public long Id { get; set; }
-    public string Language { get; set; } = null!;
+    public double Balance { get; set; }
+    public int DemoBalance { get; set; }
 }

@@ -12,4 +12,5 @@ public class Chat
     public string Language { get; set; } = AppConstants.DefaultLanguage;
     public double Balance { get; set; } = 0;
     public int DemoBalance { get; set; } = AppConstants.DefaultBalance;
+    public DateTime CreateDateTimeUtc { get; set; } = DateTime.UtcNow;
 }

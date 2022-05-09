@@ -6,7 +6,8 @@ IF OBJECT_ID('[dbo].[Chats]') IS NULL
                 primary key nonclustered,
         language VARCHAR(5)  not null,
         balance FLOAT not null,
-        demoBalance int not null
+        demoBalance int not null,
+        createDateTimeUtc DATETIME
     )
 GO
 

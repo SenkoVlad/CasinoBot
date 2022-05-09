@@ -126,18 +126,13 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushWithdrawBalanceButtonAsync(WithdrawModel? withdrawModel = null)
     {
-        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         withdrawModel ??= new()
         {
-            Amount = (int)(chat.Balance * AppConstants.MinPercentOfBalanceToWithdraw / 100),
+            Amount = (int)(chatModel.Balance * AppConstants.MinPercentOfBalanceToWithdraw / 100),
             Method = Currency.TON
         };
-        var chatModel = new ChatModel
-        {
-            Balance = chat.Balance,
-            DemoBalance = chat.DemoBalance,
-            Id = chat.Id
-        };
+        
         _inlineKeyboardButtonsGenerator.InitWithdrawBalanceButtons(chatModel, withdrawModel);
         await EditCurrentScreenAsync();
     }
@@ -180,16 +175,11 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushChooseDiceAsync(DiceGameParamDto diceGameParam)
     {
-        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
             GameId = (int)Common.Enum.Games.Dice,
-            Chat = new ChatModel
-            {
-                Id = _telegramMessageDto.ChatId,
-                Balance = chat.Balance,
-                DemoBalance = chat.DemoBalance
-            },
+            Chat = chatModel,
             UserBet = diceGameParam.Bet,
             IsDemoPlay = Convert.ToBoolean(diceGameParam.IsDemo)
         };
@@ -200,13 +190,7 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task StartBotAsync()
     {
-        var chat = await _chatService.GetOrCreateChatIfNotExistAsync(_telegramMessageDto.ChatId);
-        var chatModel = new ChatModel
-        {
-            Balance = chat.Balance,
-            DemoBalance = chat.DemoBalance,
-            Id = chat.Id
-        };
+        var chatModel = await _chatService.GetOrCreateChatIfNotExistAsync(_telegramMessageDto.ChatId);
         _inlineKeyboardButtonsGenerator.InitStartButtons(chatModel);
         await _telegramBotClient.SendTextMessageAsync(_telegramMessageDto.ChatId, _inlineKeyboardButtonsGenerator.ReplyText,
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
@@ -214,15 +198,10 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushDiceButtonAsync(bool isDemoPlay, int userDiceBet = AppConstants.MinBet)
     {
-        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
-            Chat = new ChatModel
-            {
-                Id = _telegramMessageDto.ChatId,
-                Balance = chat.Balance,
-                DemoBalance = chat.DemoBalance
-            },
+            Chat = chatModel,
             UserBet = userDiceBet,
             IsDemoPlay = isDemoPlay
         };
@@ -232,16 +211,11 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushHitBallButtonAsync(GameBetParamDto gameBetParam)
     {
-        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
             GameId = (int) Common.Enum.Games.Football,
-            Chat = new ChatModel
-            {
-                Id = _telegramMessageDto.ChatId,
-                Balance = chat!.Balance,
-                DemoBalance = chat.DemoBalance
-            },
+            Chat = chatModel,
             UserBet = gameBetParam.Bet,
             IsDemoPlay = gameBetParam.IsDemo
         };
@@ -252,15 +226,10 @@ public class ButtonClickHandler : IClickHandler
 
     private async Task PushFootballPlayButtonAsync(bool isDemoPlay, int userBet = AppConstants.MinBet)
     {
-        var chat = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
         {
-            Chat = new ChatModel
-            {
-                Id = chat!.Id,
-                Balance = chat.Balance,
-                DemoBalance = chat.DemoBalance
-            },
+            Chat =  chatModel,
             UserBet = userBet,
             IsDemoPlay = isDemoPlay
         };

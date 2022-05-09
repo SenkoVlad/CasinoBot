@@ -6,7 +6,7 @@ namespace Casino.DAL.Repositories.Implementation;
 
 public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepository
 {
-    private readonly List<ChatDataModel> _usersLanguages;
+    private readonly List<ChatLanguageDataModel> _usersLanguages;
 
     public ChatsLanguagesInMemoryRepository(IChatsRepository chatsRepository)
     {
@@ -22,7 +22,7 @@ public class ChatsLanguagesInMemoryRepository : IChatsLanguagesInMemoryRepositor
 
         if (chat == null)
         {
-            _usersLanguages.Add(new ChatDataModel
+            _usersLanguages.Add(new ChatLanguageDataModel
             {
                 Id = chatId,
                 Language = language

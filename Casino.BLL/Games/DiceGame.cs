@@ -48,13 +48,8 @@ public class DiceGame : Game
 
     protected override async Task InitGameAsync()
     {
-        var chat = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
-        _gameModel.Chat = new ChatModel
-        {
-            Id = chat.Id,
-            Balance = chat.Balance,
-            DemoBalance = chat.DemoBalance
-        };
+        var chatModel = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        _gameModel.Chat = chatModel;
         _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel);
         var chooseYourBetMessage = _gameModel.IsDemoPlay
             ? _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
@@ -78,16 +73,21 @@ public class DiceGame : Game
         _scoreResult = diceResult.Dice?.Value;
     }
 
-    protected override bool GetRoundResult()
-    {
-        return _scoreResult == _diceBet;
-    }
+    protected override bool GetRoundResult() => _scoreResult == _diceBet;
 
     protected override async Task SendRoundResultMessageAsync(SaveGameResultModel saveGameResultModel)
     {
-        var roundResultMessage = _gameModel.DidWin 
-            ? _localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
-            : _localizer[Resources.DiceLostResource];
+        string roundResultMessage;
+        if (saveGameResultModel.Success)
+        {
+            roundResultMessage = _gameModel.DidWin
+                ? _localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+                : _localizer[Resources.DiceLostResource];
+        }
+        else
+        {
+            roundResultMessage = saveGameResultModel.Message;
+        }
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, text: roundResultMessage,
             messageId: _goodLuckMessageId);
     }
