@@ -24,7 +24,6 @@ class Program
                     .AddSingleton<GameParameters>()
 
                     .AddScoped<InlineKeyboardButtonsGenerator>()
-                    .AddScoped<INetworkService, NetworkService>()
                     .AddScoped<IChatService, ChatService>()
                     .AddScoped<IWithdrawService, WithdrawService>()
                     .AddScoped<IWithdrawRequestsRepo, WithdrawRequestsRepo>()

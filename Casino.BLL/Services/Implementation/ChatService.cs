@@ -9,18 +9,14 @@ namespace Casino.BLL.Services.Implementation;
 public class ChatService : IChatService
 {
     private readonly IChatsRepository _chatsRepository;
-    private readonly INetworkService _networkService;
 
-    public ChatService(IChatsRepository chatsRepository,
-        INetworkService networkService)
+    public ChatService(IChatsRepository chatsRepository)
     {
         _chatsRepository = chatsRepository;
-        _networkService = networkService;
     }
 
     public async Task<ChatModel> GetOrCreateChatIfNotExistAsync(long chatId)
     {
-        var userIp = await _networkService.GetUserPublicIpAddressAsync();
         var chat = await _chatsRepository.GetChatByIdAsync(chatId);
         if (chat == null)
         {
