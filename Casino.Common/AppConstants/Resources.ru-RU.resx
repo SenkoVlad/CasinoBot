@@ -150,6 +150,19 @@
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Текущий язык: {0:S} {1:S}</value>
   </data>
+  <data name="Darts" xml:space="preserve">
+    <value>Дартс 🎯</value>
+  </data>
+  <data name="DartsWon" xml:space="preserve">
+    <value>Прямо в цель! 🥇 
+Ты выиграл {0:D} {0:S}</value>
+  </data>
+  <data name="DatsLost" xml:space="preserve">
+    <value>Промах 😟 Удачи в следующий раз</value>
+  </data>
+  <data name="DemoPlayDarts" xml:space="preserve">
+    <value>Играть в дартс демо ♦️</value>
+  </data>
   <data name="Deposit" xml:space="preserve">
     <value>Депозит 💸</value>
   </data>
@@ -226,6 +239,9 @@
   <data name="PlayFootballReal" xml:space="preserve">
     <value>Игра на деньги 🍀</value>
   </data>
+  <data name="RealPlayDarts" xml:space="preserve">
+    <value>Играть в дартс на деньги 🍀</value>
+  </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>Русская рулетка</value>
   </data>
@@ -242,6 +258,9 @@
   </data>
   <data name="SomethingWrongTryAgain" xml:space="preserve">
     <value>Что-то не так. Попробуй ещё раз 🔴⚠️</value>
+  </data>
+  <data name="ThrowDart" xml:space="preserve">
+    <value>Бросить 🎯</value>
   </data>
   <data name="TonWithdraw" xml:space="preserve">
     <value>TON 💎</value>

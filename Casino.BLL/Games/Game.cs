@@ -13,16 +13,18 @@ namespace Casino.BLL.Games;
 public abstract class Game
 {
     private readonly GameModel _gameModel;
-    private readonly IChatService _chatService;
-    protected double WinningsScore;
-    
+    private readonly int _delayAfterRound;
     private readonly IGameResultsRepo _gameResultsRepo;
-    private readonly GameParameters _gameParameters;
-    private readonly IStringLocalizer<Resources> _localizer;
+    
+    protected readonly IStringLocalizer<Resources> _localizer;
+    protected readonly IChatService _chatService;
+    protected double WinningsScore;
+    protected readonly GameParameters _gameParameters;
 
-    protected Game(GameModel gameModel, IServiceProvider serviceProvider)
+    protected Game(GameModel gameModel, IServiceProvider serviceProvider, int delayAfterRound)
     {
         _gameModel = gameModel;
+        _delayAfterRound = delayAfterRound;
         _chatService = serviceProvider.GetRequiredService<IChatService>();
         _gameResultsRepo = serviceProvider.GetRequiredService<IGameResultsRepo>();
         _gameParameters = serviceProvider.GetRequiredService<GameParameters>();
@@ -41,9 +43,9 @@ public abstract class Game
         await SentStartMessageAsync();
         await PlayGameRoundAsync();
 
-        await Task.Delay(3500);
+        await Task.Delay(_delayAfterRound);
 
-        _gameModel.DidWin = GetRoundResult();
+        SetRoundResult();
         var saveGameResult = await SaveGameResultAsync();
         await SendRoundResultMessageAsync(saveGameResult);
 
@@ -66,11 +68,7 @@ public abstract class Game
         {
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-            var bettingResult = _gameParameters.BettingResults.FirstOrDefault(b =>
-                b.IsWin == _gameModel.DidWin &&
-                b.GameId == _gameModel.GameId);
-
-            if (bettingResult == null)
+            if (_gameModel.BettingResult == null)
             {
                 throw new Exception("Something wrong, try again");
             }
@@ -79,9 +77,9 @@ public abstract class Game
             {
                 ChatId = _gameModel.Chat.Id,
                 Bet = _gameModel.UserBet,
-                BettingResultId = bettingResult.Id
+                BettingResultId = _gameModel.BettingResult.Id
             });
-            WinningsScore = await _chatService.ChangeBalanceAsync(_gameModel, bettingResult);
+            WinningsScore = await _chatService.ChangeBalanceAsync(_gameModel);
             transactionScope.Complete();
 
             return new SaveGameResultModel
@@ -101,10 +99,35 @@ public abstract class Game
         }
     }
 
+    protected virtual void SetRoundResult()
+    {
+        var bettingWinResult = _gameParameters.BettingResults.FirstOrDefault(b => 
+            b.DiceResult == _gameModel.DiceResult &&
+            b.GameId == _gameModel.GameId &&
+            b.IsWon);
+
+        var bettingLostResult = _gameParameters.BettingResults.FirstOrDefault(b =>
+            b.GameId == _gameModel.GameId &&
+            !b.IsWon);
+
+        var bettingResult = bettingWinResult ?? bettingLostResult;
+
+        if (bettingResult == null)
+        {
+            throw new Exception($"{nameof(SetRoundResult)} bettingResult was not found");
+        }
+
+        _gameModel.BettingResult = new BettingResultModel
+        {
+            Id = bettingResult.Id,
+            Coefficient = bettingResult.Coefficient,
+            IsWon = bettingResult.IsWon
+        };
+    }
+
     protected abstract Task SendDoNotHaveEnoughMoneyToPlayMessageAsync();
     protected abstract Task InitGameAsync();
     protected abstract Task SentStartMessageAsync();
     protected abstract Task PlayGameRoundAsync();
-    protected abstract bool GetRoundResult();
     protected abstract Task SendRoundResultMessageAsync(SaveGameResultModel saveGameResultModel);
 }

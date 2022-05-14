@@ -1,6 +1,5 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.Models;
-using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -16,21 +15,16 @@ public class FootBallGame : Game
     private readonly IStringLocalizer<Resources> _localizer;
     private readonly GameModel _gameModel;
     private readonly ITelegramBotClient _telegramBotClient;
-    private readonly IChatService _chatService;
-    private int? _scoreResult;
     private int _goodLuckMessageId;
-
-    private static readonly int[] GoalScores = { 5, 3, 4 };
 
     public FootBallGame(
         GameModel gameModel,
         int messageId,
         ITelegramBotClient telegramBotClient,
-        IServiceProvider serviceProvider) : base(gameModel, serviceProvider)
+        IServiceProvider serviceProvider) : base(gameModel, serviceProvider, AppConstants.FootballDelayAfterRound)
     {
         _gameModel = gameModel;
         _telegramBotClient = telegramBotClient;
-        _chatService = serviceProvider.GetRequiredService<IChatService>();
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
         _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
         _messageId = messageId;
@@ -68,12 +62,7 @@ public class FootBallGame : Game
     protected override async Task PlayGameRoundAsync()
     {
         var hitResult = await _telegramBotClient.SendDiceAsync(_gameModel.Chat.Id, Emoji.Football);
-        _scoreResult = hitResult.Dice?.Value;
-    }
-
-    protected override bool GetRoundResult()
-    {
-        return GoalScores.Contains((int)_scoreResult!);
+        _gameModel.DiceResult = hitResult.Dice!.Value;
     }
 
     protected override async Task SendRoundResultMessageAsync(SaveGameResultModel saveGameResultModel)
@@ -81,7 +70,7 @@ public class FootBallGame : Game
         string roundResultMessage;
         if (saveGameResultModel.Success)
         {
-            roundResultMessage = _gameModel.DidWin
+            roundResultMessage = _gameModel.BettingResult.IsWon
                 ? _localizer[Resources.FootballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
                 : _localizer[Resources.FootballMissResource];
         }

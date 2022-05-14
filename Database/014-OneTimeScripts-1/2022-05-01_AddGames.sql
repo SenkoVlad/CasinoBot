@@ -13,7 +13,8 @@ IF NOT EXISTS
 
             INSERT INTO dbo.Games (name)
             VALUES ('Dice'),
-                   ('Football')
+                   ('Football'),
+                   ('Darts')
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

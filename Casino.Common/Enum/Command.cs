@@ -21,6 +21,9 @@ public enum Command
     WithdrawBalance,
     ToBalanceButton,
     DepositInstruction,
-    ConfirmWithdraw
-
+    ConfirmWithdraw,
+    ChooseDarts,
+    PlayDarts,
+    ChangeDartsBet,
+    ThrowDart
 }

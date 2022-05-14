@@ -20,7 +20,6 @@ class TelegramBot
 {
     private readonly IHost _hosting;
     private readonly ITelegramBotClient _bot;
-
     public TelegramBot(IHost hosting)
     {
         _hosting = hosting;

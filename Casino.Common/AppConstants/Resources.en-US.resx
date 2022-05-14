@@ -150,6 +150,19 @@
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Current language is: {0:S} {1:S}</value>
   </data>
+  <data name="Darts" xml:space="preserve">
+    <value>Darts 🎯</value>
+  </data>
+  <data name="DartsWon" xml:space="preserve">
+    <value>Bull's eye 🥇
+You won {0:D} {1:S}</value>
+  </data>
+  <data name="DatsLost" xml:space="preserve">
+    <value>Miss 😟 Better luck next time</value>
+  </data>
+  <data name="DemoPlayDarts" xml:space="preserve">
+    <value>Play darts demo ♦️</value>
+  </data>
   <data name="Deposit" xml:space="preserve">
     <value>Deposit 💸</value>
   </data>
@@ -226,6 +239,9 @@ You won {0:D} {1:S}</value>
   <data name="PlayFootballReal" xml:space="preserve">
     <value>Play football real 🍀</value>
   </data>
+  <data name="RealPlayDarts" xml:space="preserve">
+    <value>Play darts real 🍀</value>
+  </data>
   <data name="RussianRoulette" xml:space="preserve">
     <value>Russian roulette</value>
   </data>
@@ -242,6 +258,9 @@ You won {0:D} {1:S}</value>
   </data>
   <data name="SomethingWrongTryAgain" xml:space="preserve">
     <value>Something wrong. Please try again 🔴⚠️</value>
+  </data>
+  <data name="ThrowDart" xml:space="preserve">
+    <value>Throw 🎯</value>
   </data>
   <data name="TonWithdraw" xml:space="preserve">
     <value>TON 💎</value>

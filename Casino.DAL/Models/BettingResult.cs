@@ -10,5 +10,6 @@ public class BettingResult
     public int Id { get; set; }
     public int GameId { get; set; }
     public double Coefficient { get; set; }
-    public bool IsWin { get; set; }
+    public bool IsWon { get; set; }
+    public int DiceResult { get; set; }
 }

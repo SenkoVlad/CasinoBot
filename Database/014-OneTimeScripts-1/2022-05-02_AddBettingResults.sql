@@ -11,11 +11,20 @@ IF NOT EXISTS
         BEGIN TRANSACTION
         BEGIN TRY
 
-            INSERT INTO dbo.BettingResults (id, gameId, coefficient, isWin)
-            VALUES (1, 1, 1,0),
-                   (2, 1, 4,1),
-                   (3, 2, 1,0),
-                   (4, 2, 1.5,1)
+            INSERT INTO dbo.BettingResults (id, gameId, coefficient, isWon, diceResult)
+            VALUES (1,1,1,0,0),
+                    (2,1,4,0,0),
+                    (3,2,1,0,0),
+                    (4,2,1.5,1,5),
+                    (5,2,1.5,1,4),
+                    (6,2,1.5,1,3),
+                    (7,3,1,0,0),
+                    (8,3,3,1,6),
+                    (9,3,2,1,4),
+                    (10,3,1,1,2)
+
+
+
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

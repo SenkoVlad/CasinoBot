@@ -66,13 +66,24 @@ public class ButtonClickHandler : IClickHandler
             case Command.ChooseDice:
                 await PushChooseDiceGame();
                 break;
+            case Command.ChooseDarts:
+                await PushChooseDartsGame();
+                break;
             case Command.HitBall:
                 var footballGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
                 await PushHitBallButtonAsync(footballGameParam);
                 break;
+            case Command.ThrowDart:
+                var dartsGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
+                await PushThrowDartButtonAsync(dartsGameParam);
+                break;
             case Command.PlayDice:
                 var isDemoDicePlay = bool.Parse(commandDto.Param!);
                 await PushDiceButtonAsync(isDemoDicePlay);
+                break;
+            case Command.PlayDarts:
+                var isDemoDartsPlay = bool.Parse(commandDto.Param!);
+                await PushDartsButtonAsync(isDemoDartsPlay);
                 break;
             case Command.PlayFootball:
                 var isDemoFootballPlay = bool.Parse(commandDto.Param!);
@@ -90,8 +101,12 @@ public class ButtonClickHandler : IClickHandler
                 var footballGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushFootballPlayButtonAsync(footballGame.IsDemo, footballGame.Bet);
                 break;
+            case Command.ChangeDartsBet:
+                var dartsGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
+                await PushDartsButtonAsync(dartsGame.IsDemo, dartsGame.Bet);
+                break;
             case Command.DepositBalance:
-                await PushDepositBalanceButtonAsync();
+                await PushDepositBalanceButtonAsync();  
                 break;
             case Command.WithdrawBalance:
                 var withdrawModel =  commandDto.Param == null ? null : JsonConvert.DeserializeObject<WithdrawModel>(commandDto.Param!);
@@ -108,6 +123,40 @@ public class ButtonClickHandler : IClickHandler
             case Command.DoNothing:
                 break;
         }
+    }
+
+    private async Task PushThrowDartButtonAsync(GameBetParamDto dartsGameParam)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            GameId = (int)Common.Enum.Games.Darts,
+            Chat = chatModel,
+            UserBet = dartsGameParam.Bet,
+            IsDemoPlay = dartsGameParam.IsDemo
+        };
+        var footBallGame = new DartsGame(gameModel, _telegramMessageDto.MessageId,
+            _telegramBotClient, _serviceProvider);
+        await footBallGame.PlayRoundAsync();
+    }
+
+    private async Task PushDartsButtonAsync(bool isDemoDartsPlay, int userDartsBet = AppConstants.MinBet)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            Chat = chatModel,
+            UserBet = userDartsBet,
+            IsDemoPlay = isDemoDartsPlay
+        };
+        _inlineKeyboardButtonsGenerator.InitDartsChooseBetButtons(gameModel);
+        await EditCurrentScreenAsync();
+    }
+
+    private async Task PushChooseDartsGame()
+    {
+        _inlineKeyboardButtonsGenerator.InitChooseDartsMode();
+        await EditCurrentScreenAsync();
     }
 
     private async Task PushConfirmWithdrawAsync(WithdrawModel withdrawModel)

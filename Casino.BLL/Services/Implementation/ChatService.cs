@@ -35,11 +35,11 @@ public class ChatService : IChatService
         };
     }
 
-    public async Task<double> ChangeBalanceAsync(GameModel gameModel, BettingResult bettingResult)
+    public async Task<double> ChangeBalanceAsync(GameModel gameModel)
     {
-        var score = gameModel.DidWin
-            ? bettingResult.Coefficient * gameModel.UserBet
-            : -bettingResult.Coefficient * gameModel.UserBet;
+        var score = gameModel.BettingResult.IsWon
+            ? gameModel.BettingResult!.Coefficient * gameModel.UserBet
+            : -gameModel.BettingResult.Coefficient * gameModel.UserBet;
 
         if (gameModel.IsDemoPlay)
         {
