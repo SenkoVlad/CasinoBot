@@ -1,5 +1,7 @@
 ﻿using System.Globalization;
+using AutoMapper;
 using Casino.BLL.ClickHandlers.Implementation;
+using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
@@ -12,6 +14,7 @@ using Telegram.Bot;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.Payments;
 using MessageType = Casino.Common.Enum.MessageType;
 
 namespace Casino.Telegram;
@@ -29,15 +32,9 @@ class TelegramBot
 
     public void StartReceiving()
     {
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
-        var receiverOption = new ReceiverOptions();
-
         _bot.StartReceiving(
             HandleUpdate,
-            HandleUpdateError,
-            receiverOption,
-            cancellationToken);
+            HandleUpdateError);
     }
 
     private Task HandleUpdateError(ITelegramBotClient telegramBotClient,
@@ -78,6 +75,10 @@ class TelegramBot
                         await _bot.DeleteMessageAsync(telegramMessage.ChatId,
                             telegramMessage.MessageId, cancellationToken);
                         break;
+                    case MessageType.Payment:
+                        await ProcessPaymentAsync(newMessage, provider);
+                        _bot.AnswerPreCheckoutQueryAsync(newMessage.PreCheckoutQuery!.Id, cancellationToken).GetAwaiter().GetResult();
+                        break;
                 }
             }
             catch (Exception e)
@@ -87,6 +88,14 @@ class TelegramBot
                     await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
             }
         }, cancellationToken);
+    }
+
+    private static async Task ProcessPaymentAsync(Update newMessage, IServiceProvider provider)
+    {
+        var paymentService = provider.GetRequiredService<IPaymentService>();
+        var mapper = provider.GetRequiredService<IMapper>();
+        var paymentModel = mapper.Map<PaymentModel>(newMessage.PreCheckoutQuery);
+        await paymentService.SavePaymentAsync(paymentModel);
     }
 
     private static void SetChatLanguage(IServiceProvider provider, long chatId)
@@ -148,6 +157,14 @@ class TelegramBot
                 MessageType = MessageType.UserMessage
             };
         }
+        else if (IsPaymentMessage(newMessage))
+        {
+            telegramMessage = new TelegramMessageDto
+            {
+                ChatId = newMessage.PreCheckoutQuery!.From.Id,
+                MessageType = MessageType.Payment
+            };
+        }
 
         return telegramMessage;
     }
@@ -167,4 +184,7 @@ class TelegramBot
 
     private static bool IsItStartMessageAndNotNull(Message? message) =>
         message != null && message.Text?.ToLower() == "/start";
+
+    private static bool IsPaymentMessage(Update newMessage) =>
+        newMessage.PreCheckoutQuery != null;
 }

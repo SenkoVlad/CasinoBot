@@ -1,4 +1,6 @@
-﻿using Casino.BLL.ButtonsGenerators;
+﻿using System.Reflection;
+using AutoMapper;
+using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.Services.Implementation;
 using Casino.BLL.Services.Interfaces;
 using Casino.Configuration.Configuration;
@@ -21,16 +23,23 @@ class Program
                     .AddSingleton<IAppConfiguration, AppConfiguration>()
                     .AddSingleton<IGamesRepo, GamesRepo>()
                     .AddSingleton<IBettingResultsRepo, BettingResultsRepo>()
+                    .AddSingleton<ICurrenciesRepo, CurrenciesRepo>()
                     .AddSingleton<GameParameters>()
 
                     .AddScoped<InlineKeyboardButtonsGenerator>()
+                    .AddScoped<IPaymentService, PaymentService>()
                     .AddScoped<IChatService, ChatService>()
                     .AddScoped<IWithdrawService, WithdrawService>()
                     .AddScoped<IWithdrawRequestsRepo, WithdrawRequestsRepo>()
                     .AddScoped<IChatsRepository, ChatsRepository>()
                     .AddScoped<IGameResultsRepo, GameResultsRepo>()
-                    .AddLocalization())
+                    .AddScoped<IPaymentsRepo, PaymentsRepo>()
+                    .AddLocalization()
+            
+                    .AddAutoMapper(m => m.AddMaps(GetSolutionAssemblies())))
             .Build();
+
+
 
         var telegramBot = new TelegramBot(hosting);
         telegramBot.StartReceiving();
@@ -38,4 +47,12 @@ class Program
         hosting.Run();
         Console.ReadLine();
     }
+
+    private static Assembly[] GetSolutionAssemblies()
+    {
+        var assemblies = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll")
+            .Select(x => Assembly.Load(AssemblyName.GetAssemblyName(x)));
+        return assemblies.ToArray();
+    }
+
 }
