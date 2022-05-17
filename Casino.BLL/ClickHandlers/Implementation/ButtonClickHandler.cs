@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using AutoMapper;
 using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.ClickHandlers.Interfaces;
 using Casino.BLL.Games;
@@ -24,6 +25,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IChatsRepository _chatsRepository;
     private readonly IChatService _chatService;
     private readonly IWithdrawService _withdrawService;
+    private readonly IMapper _mapper;
 
     public ButtonClickHandler(TelegramMessageDto telegramMessageDto,
         ITelegramBotClient telegramBotClient, 
@@ -37,6 +39,7 @@ public class ButtonClickHandler : IClickHandler
         _chatsLanguagesInMemoryRepository = serviceProvider.GetRequiredService<IChatsLanguagesInMemoryRepository>();
         _chatService = serviceProvider.GetRequiredService<IChatService>();
         _withdrawService = serviceProvider.GetRequiredService<IWithdrawService>();
+        _mapper = serviceProvider.GetRequiredService<IMapper>();
     }
 
     public async Task PushButtonAsync()
@@ -53,10 +56,10 @@ public class ButtonClickHandler : IClickHandler
             case Command.Start:
                 await StartBotAsync();
                 break;
-            case Command.ToMenuButton:
+            case Command.ToMenu:
                 await PushMenuButtonAsync();
                 break;
-            case Command.ToBalanceButton:
+            case Command.Balance:
             case Command.GetBalance:
                 await PushGetBalanceButtonAsync();
                 break;
@@ -105,8 +108,8 @@ public class ButtonClickHandler : IClickHandler
                 var dartsGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushDartsButtonAsync(dartsGame.IsDemo, dartsGame.Bet);
                 break;
-            case Command.DepositBalance:
-                await PushDepositBalanceButtonAsync();  
+            case Command.DepositByTon:
+                await PushDepositByTonButtonAsync();  
                 break;
             case Command.WithdrawBalance:
                 var withdrawModel =  commandDto.Param == null ? null : JsonConvert.DeserializeObject<WithdrawModel>(commandDto.Param!);
@@ -120,9 +123,48 @@ public class ButtonClickHandler : IClickHandler
                 var withdraw = JsonConvert.DeserializeObject<WithdrawModel>(commandDto.Param!);
                 await PushConfirmWithdrawAsync(withdraw);
                 break;
+            case Command.DepositMethods:
+                await PushChooseDepositMethodAsync();
+                break;
+            case Command.DepositByCard:
+                await PushDepositByCardMethodAsync();
+                break;
+            case Command.ChangeDeposit:
+            case Command.ChooseDepositCurrency:
+                var depositDto = JsonConvert.DeserializeObject<DepositDto>(commandDto.Param!);
+                await PushDepositByCardMethodAsync(depositDto);
+                break;
             case Command.DoNothing:
                 break;
         }
+    }
+
+    private async Task PushDepositByCardMethodAsync()
+    {
+        var depositModel = new DepositModel
+        {
+            Amount = AppConstants.DefaultDepositAmount,
+            Currency = AppConstants.DefaultDepositCurrency
+        };
+        var balance = (await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId)).Balance;
+        _inlineKeyboardButtonsGenerator.InitChooseDepositByCardMethod(depositModel, balance);
+        await EditCurrentScreenAsync();
+    }
+
+
+    private async Task PushDepositByCardMethodAsync(DepositDto depositDto)
+    {
+        var depositModel = _mapper.Map<DepositModel>(depositDto);
+        var balance = (await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId)).Balance;
+        _inlineKeyboardButtonsGenerator.InitChooseDepositByCardMethod(depositModel, balance);
+        await EditCurrentScreenAsync();
+    }
+
+    private async Task PushChooseDepositMethodAsync()
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        _inlineKeyboardButtonsGenerator.InitChooseDepositBalanceButtons(chatModel);
+        await EditCurrentScreenAsync();
     }
 
     private async Task PushThrowDartButtonAsync(GameBetParamDto dartsGameParam)
@@ -186,9 +228,9 @@ public class ButtonClickHandler : IClickHandler
         await EditCurrentScreenAsync();
     }
 
-    private async Task PushDepositBalanceButtonAsync()
+    private async Task PushDepositByTonButtonAsync()
     {
-        _inlineKeyboardButtonsGenerator.InitDepositBalanceButtons();
+        _inlineKeyboardButtonsGenerator.InitDepositByTonButtons();
         await EditCurrentScreenAsync();
     }
 

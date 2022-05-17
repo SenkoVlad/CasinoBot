@@ -132,11 +132,20 @@
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Please choose another amount, you don't have enough on balance to withdraw ❗️</value>
   </data>
-  <data name="CardWithdraw" xml:space="preserve">
+  <data name="Card" xml:space="preserve">
     <value>Credit card 💳</value>
+  </data>
+  <data name="CardDeposit" xml:space="preserve">
+    <value>Card 💳</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Choose an action ⤵️</value>
+  </data>
+  <data name="ChooseDepositMethod" xml:space="preserve">
+    <value>Choose a method to deposit ⤵️</value>
+  </data>
+  <data name="ChooseDepositParameters" xml:space="preserve">
+    <value>Choose deposit parameters and create an invoice ⤵️</value>
   </data>
   <data name="ChooseGameMode" xml:space="preserve">
     <value>Choose play mode ⤵️</value>
@@ -171,6 +180,9 @@ You won {0:D} {1:S}</value>
   </data>
   <data name="DepositInstruction" xml:space="preserve">
     <value>Instruction how to top up balance 📝</value>
+  </data>
+  <data name="DepositInvoice" xml:space="preserve">
+    <value>Create invoice🧾</value>
   </data>
   <data name="Dice" xml:space="preserve">
     <value>Dice 🎲</value>
@@ -262,7 +274,7 @@ You won {0:D} {1:S}</value>
   <data name="ThrowDart" xml:space="preserve">
     <value>Throw 🎯</value>
   </data>
-  <data name="TonWithdraw" xml:space="preserve">
+  <data name="Ton" xml:space="preserve">
     <value>TON 💎</value>
   </data>
   <data name="Wallet" xml:space="preserve">

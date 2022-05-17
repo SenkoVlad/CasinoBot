@@ -1,8 +1,13 @@
 ﻿using System.Globalization;
+using System.Net;
+using System.Text;
+using System.Text.Json.Nodes;
 using AutoMapper;
 using Casino.BLL.ClickHandlers.Implementation;
 using Casino.BLL.Models;
+using Casino.BLL.Services.Implementation;
 using Casino.BLL.Services.Interfaces;
+using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
 using Casino.Configuration.Configuration;
@@ -11,7 +16,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Telegram.Bot;
-using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.Payments;
@@ -71,13 +75,14 @@ class TelegramBot
                     case MessageType.Callback:
                         await ProcessButtonClickAsync(telegramMessage, _bot, provider);
                         break;
-                    case MessageType.UserMessage:
-                        await _bot.DeleteMessageAsync(telegramMessage.ChatId,
-                            telegramMessage.MessageId, cancellationToken);
-                        break;
                     case MessageType.Payment:
                         await ProcessPaymentAsync(newMessage, provider);
-                        _bot.AnswerPreCheckoutQueryAsync(newMessage.PreCheckoutQuery!.Id, cancellationToken).GetAwaiter().GetResult();
+                        break;
+                    case MessageType.UserMessage:
+                        await _bot.DeleteMessageAsync(telegramMessage.ChatId, telegramMessage.MessageId, cancellationToken);
+                        break;
+                    case MessageType.SuccessPayment:
+                        await SavePaymentAsync(newMessage, provider);
                         break;
                 }
             }
@@ -90,12 +95,19 @@ class TelegramBot
         }, cancellationToken);
     }
 
+    private static async Task SavePaymentAsync(Update newMessage, IServiceProvider serviceProvider)
+    {
+        var paymentService = serviceProvider.GetRequiredService<IPaymentService>();
+        var mapper = serviceProvider.GetRequiredService<IMapper>();
+
+        var paymentModel = mapper.Map<PaymentModel>(newMessage.PreCheckoutQuery);
+        await paymentService.SavePaymentAsync(paymentModel);
+    }
+
     private static async Task ProcessPaymentAsync(Update newMessage, IServiceProvider provider)
     {
         var paymentService = provider.GetRequiredService<IPaymentService>();
-        var mapper = provider.GetRequiredService<IMapper>();
-        var paymentModel = mapper.Map<PaymentModel>(newMessage.PreCheckoutQuery);
-        await paymentService.SavePaymentAsync(paymentModel);
+        await paymentService.ConfirmPayment(newMessage.PreCheckoutQuery!.Id);
     }
 
     private static void SetChatLanguage(IServiceProvider provider, long chatId)
@@ -165,6 +177,14 @@ class TelegramBot
                 MessageType = MessageType.Payment
             };
         }
+        else if (IsSuccessPaymentStatusMessage(newMessage))
+        {
+            telegramMessage = new TelegramMessageDto
+            {
+                ChatId = newMessage.Message!.Chat.Id,
+                MessageType = MessageType.SuccessPayment
+            };
+        }
 
         return telegramMessage;
     }
@@ -180,11 +200,16 @@ class TelegramBot
         newMessage.Type == UpdateType.CallbackQuery && newMessage.CallbackQuery != null;
 
     private static bool IsUpdateTypeMessageAndMessageNotNull(Update newMessage) =>
-        newMessage.Type == UpdateType.Message && newMessage.Message != null;
+        newMessage.Type == UpdateType.Message && 
+        newMessage.Message is {SuccessfulPayment: null};
 
     private static bool IsItStartMessageAndNotNull(Message? message) =>
         message != null && message.Text?.ToLower() == "/start";
 
     private static bool IsPaymentMessage(Update newMessage) =>
         newMessage.PreCheckoutQuery != null;
+
+    private static bool IsSuccessPaymentStatusMessage(Update newMessage) =>
+        newMessage.Type == UpdateType.Message && 
+        newMessage.Message is {SuccessfulPayment: { }};
 }

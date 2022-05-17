@@ -5,5 +5,6 @@ public enum MessageType
     Start,
     Callback,
     UserMessage,
-    Payment
+    Payment,
+    SuccessPayment
 }

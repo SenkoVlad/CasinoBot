@@ -132,11 +132,17 @@
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Пожалуйста, выбери другую сумму, у тебя недостаточно средств для вывода ❗️</value>
   </data>
-  <data name="CardWithdraw" xml:space="preserve">
+  <data name="Card" xml:space="preserve">
     <value>Банковская карта 💳</value>
   </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Выбери действие ⤵️</value>
+  </data>
+  <data name="ChooseDepositMethod" xml:space="preserve">
+    <value>Выбери метод для депозита ⤵️</value>
+  </data>
+  <data name="ChooseDepositParameters" xml:space="preserve">
+    <value>Выберите параметры депозита и создайте invoice ⤵️</value>
   </data>
   <data name="ChooseGameMode" xml:space="preserve">
     <value>Тип игры ⤵️</value>
@@ -171,6 +177,9 @@
   </data>
   <data name="DepositInstruction" xml:space="preserve">
     <value>Инструкция как пополнить баланс 📝</value>
+  </data>
+  <data name="DepositInvoice" xml:space="preserve">
+    <value>Создать invoice 🧾</value>
   </data>
   <data name="Dice" xml:space="preserve">
     <value>Кости 🎲</value>
@@ -262,7 +271,7 @@
   <data name="ThrowDart" xml:space="preserve">
     <value>Бросить 🎯</value>
   </data>
-  <data name="TonWithdraw" xml:space="preserve">
+  <data name="Ton" xml:space="preserve">
     <value>TON 💎</value>
   </data>
   <data name="Wallet" xml:space="preserve">

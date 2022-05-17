@@ -4,7 +4,7 @@ public enum Command
 {
     GetGames,
     Start,
-    ToMenuButton,
+    ToMenu,
     GetBalance,
     ChooseFootball,
     ChooseDice,
@@ -17,13 +17,18 @@ public enum Command
     ChangeFootballBet,
     ChangeDiceBet,
     SwitchLanguage,
-    DepositBalance,
+    DepositByTon,
+    DepositMethods,
     WithdrawBalance,
-    ToBalanceButton,
+    Balance,
     DepositInstruction,
     ConfirmWithdraw,
     ChooseDarts,
     PlayDarts,
     ChangeDartsBet,
-    ThrowDart
+    ThrowDart,
+    DepositByCard,
+    GetDepositInvoice,
+    ChangeDeposit,
+    ChooseDepositCurrency
 }

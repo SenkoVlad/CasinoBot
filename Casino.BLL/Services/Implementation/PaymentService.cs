@@ -1,9 +1,12 @@
-﻿using System.Transactions;
+﻿using System.Text;
+using System.Transactions;
 using AutoMapper;
 using Casino.BLL.Models;
 using Casino.BLL.Services.Interfaces;
+using Casino.Common.AppConstants;
 using Casino.DAL.Models;
 using Casino.DAL.Repositories.Interfaces;
+using Newtonsoft.Json;
 
 namespace Casino.BLL.Services.Implementation;
 
@@ -47,5 +50,18 @@ public class PaymentService : IPaymentService
         {
             Console.WriteLine(e);
         }
+    }
+
+    public async Task<HttpResponseMessage> ConfirmPayment(string preCheckoutQueryId)
+    {
+        var confirmDepositJson = new ConfirmDepositModel
+        {
+            pre_checkout_query_id = preCheckoutQueryId,
+            ok = true
+        };
+        var content = new StringContent(JsonConvert.SerializeObject(confirmDepositJson), Encoding.UTF8, "application/json");
+        var httpClient = new HttpClient();
+        var depositResult = await httpClient.PostAsync(new Uri(AppConstants.TelegramApiConfirmDeposit), content);
+        return depositResult;
     }
 }
