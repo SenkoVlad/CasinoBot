@@ -19,6 +19,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.Payments;
+using Telegram.Bot.Types.ReplyMarkups;
 using MessageType = Casino.Common.Enum.MessageType;
 
 namespace Casino.Telegram;
@@ -83,14 +84,16 @@ class TelegramBot
                         break;
                     case MessageType.SuccessPayment:
                         await SavePaymentAsync(newMessage, provider);
+                        await ProcessButtonClickAsync(telegramMessage, _bot, provider);
                         break;
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                if(newMessage.CallbackQuery != null)
+                if (newMessage.CallbackQuery != null)
                     await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
+
             }
         }, cancellationToken);
     }
@@ -100,7 +103,7 @@ class TelegramBot
         var paymentService = serviceProvider.GetRequiredService<IPaymentService>();
         var mapper = serviceProvider.GetRequiredService<IMapper>();
 
-        var paymentModel = mapper.Map<PaymentModel>(newMessage.PreCheckoutQuery);
+        var paymentModel = mapper.Map<PaymentModel>(newMessage.Message!.SuccessfulPayment);
         await paymentService.SavePaymentAsync(paymentModel);
     }
 
@@ -157,6 +160,7 @@ class TelegramBot
                 ChatId = callbackMessage.Chat.Id,
                 MessageId = callbackMessage.MessageId,
                 CommandDto = commandDto,
+                CallbackQueryId = newMessage.CallbackQuery.Id,
                 MessageType = MessageType.Callback
             };
         }
@@ -181,8 +185,13 @@ class TelegramBot
         {
             telegramMessage = new TelegramMessageDto
             {
-                ChatId = newMessage.Message!.Chat.Id,
-                MessageType = MessageType.SuccessPayment
+                MessageId = message!.MessageId,
+                ChatId = message.Chat.Id,
+                MessageType = MessageType.SuccessPayment,
+                CommandDto = new CommandDto
+                {
+                    Command = Command.StartAfterDepositing
+                } 
             };
         }
 

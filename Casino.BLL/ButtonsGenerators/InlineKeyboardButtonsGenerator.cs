@@ -655,15 +655,54 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.DepositMethods
             })
         };
+        var depositInvoiceButton = new InlineKeyboardButton(_localizer[Resources.DepositInvoice])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.CreateDepositInvoice,
+                Param = JsonConvert.SerializeObject(depositModel)
+            })
+        };
+        var depositPanelButton = new InlineKeyboardButton(_localizer[Resources.ChangeDepositParametersButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ChangeDepositAmount,
+                Param = JsonConvert.SerializeObject(depositModel)
+            })
+        };
+
+        var buttonRows = new[]
+        {
+            new [] { depositPanelButton},
+            new [] { depositInvoiceButton },
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = string.Concat(_localizer[Resources.GetMyBalanceResource, balance],
+            Environment.NewLine,
+            _localizer[Resources.CurrentDepositParameter, depositModel.AmountCents, depositModel.Currency.ToString()]);
+    }
+
+    public void InitDepositPanel(DepositModel depositModel)
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.DepositByCard,
+                Param = JsonConvert.SerializeObject(depositModel)
+            })
+        };
 
         var usdButton = new InlineKeyboardButton(GetCurrencyButtonText(DepositCurrency.USD, depositModel.Currency))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseDepositCurrency,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.Amount,
+                    AmountCents = AppConstants.UsdDefaultDepositIncreasingAmount,
                     Currency = DepositCurrency.USD
                 })
             })
@@ -672,10 +711,10 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseDepositCurrency,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.Amount,
+                    AmountCents = AppConstants.EuroDefaultDepositIncreasingAmount,
                     Currency = DepositCurrency.EURO
                 })
             })
@@ -684,10 +723,10 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChooseDepositCurrency,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.Amount,
+                    AmountCents = AppConstants.RubDefaultDepositIncreasingAmount,
                     Currency = DepositCurrency.RUB
                 })
             })
@@ -696,10 +735,10 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChangeDeposit,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.Amount * 2,
+                    AmountCents = depositModel.AmountCents * 2,
                     Currency = depositModel.Currency
                 })
             })
@@ -708,38 +747,36 @@ public class InlineKeyboardButtonsGenerator
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChangeDeposit,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.GetHalvedAmount(),
+                    AmountCents = depositModel.HalveAmount(),
                     Currency = depositModel.Currency
                 })
             })
         };
-        var increaseDepositButton = new InlineKeyboardButton(string.Concat(depositModel.GetDefaultChangeAmount(),
-            Environment.NewLine,
+        var increaseDepositButton = new InlineKeyboardButton(string.Concat(depositModel.GetDefaultChangeAmountString(),
             ButtonConstants.IncreaseAmountButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChangeDeposit,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.GetIncreasedAmount(),
+                    AmountCents = depositModel.IncreasedAmount(),
                     Currency = depositModel.Currency
                 })
             })
         };
-        var decreaseDepositButton = new InlineKeyboardButton(string.Concat(depositModel.GetDefaultChangeAmount(),
-            Environment.NewLine,
+        var decreaseDepositButton = new InlineKeyboardButton(string.Concat(depositModel.GetDefaultChangeAmountString(),
             ButtonConstants.DecreaseAmountButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.ChangeDeposit,
+                Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    Amount = depositModel.GetDecreaseAmount(),
+                    AmountCents = depositModel.DecreaseAmount(),
                     Currency = depositModel.Currency
                 })
             })
@@ -753,26 +790,44 @@ public class InlineKeyboardButtonsGenerator
                 Param = JsonConvert.SerializeObject(depositModel)
             })
         };
-        var depositInvoiceButton = new InlineKeyboardButton(_localizer[Resources.DepositInvoice])
-        {
-            CallbackData = JsonConvert.SerializeObject(new CommandDto
-            {
-                Command = Command.GetDepositInvoice,
-                Param = JsonConvert.SerializeObject(depositModel)
-            })
-        };
 
         var buttonRows = new[]
         {
-            new [] { halvingDepositButton, decreaseDepositButton, currentUserDepositButton, increaseDepositButton, redoubleDepositButton },
+            new [] { decreaseDepositButton, currentUserDepositButton, increaseDepositButton },
+            new [] { halvingDepositButton, redoubleDepositButton },
             new [] { rubButton, usdButton, euroButton },
-            new [] { depositInvoiceButton },
             new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
-        ReplyText = string.Concat(_localizer[Resources.GetMyBalanceResource, balance],
+        ReplyText = string.Concat(
+            _localizer[Resources.ChooseDepositParameters],
             Environment.NewLine,
-            _localizer[Resources.ChooseDepositParameters]);
+            _localizer[Resources.CurrentDepositParameter, depositModel.AmountCents, depositModel.Currency.ToString()]);
+    }
+
+    public void InitInvoiceButtons(DepositModel depositModel)
+    {
+        var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.BackToDepositByCardFromDeposit,
+                Param = JsonConvert.SerializeObject(depositModel)
+            })
+        };
+        var depositButton = new InlineKeyboardButton(_localizer[Resources.DepositButtonText])
+        {
+            Pay = true
+        };
+
+
+        var buttonRows = new[]
+        {
+            new [] { depositButton},
+            new [] { backButton }
+        };
+        GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
+        ReplyText = _localizer[Resources.CurrentDepositParameter, depositModel.AmountCents, depositModel.Currency.ToString()];
     }
 
     private static string GetCurrencyButtonText(DepositCurrency forCurrency, DepositCurrency chosenCurrency)

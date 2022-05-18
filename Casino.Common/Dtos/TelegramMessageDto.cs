@@ -9,4 +9,5 @@ public class TelegramMessageDto
     public string? Text { get; set; }
     public CommandDto CommandDto { get; set; } = null!;
     public MessageType MessageType { get; set; }
+    public string CallbackQueryId { get; set; }
 }

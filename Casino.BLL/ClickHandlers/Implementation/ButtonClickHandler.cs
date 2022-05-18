@@ -12,6 +12,7 @@ using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Telegram.Bot;
+using Telegram.Bot.Types.Payments;
 
 namespace Casino.BLL.ClickHandlers.Implementation;
 
@@ -55,6 +56,9 @@ public class ButtonClickHandler : IClickHandler
                 break;
             case Command.Start:
                 await StartBotAsync();
+                break;
+            case Command.StartAfterDepositing:
+                await PushStartAfterDepositingButtonAsync();
                 break;
             case Command.ToMenu:
                 await PushMenuButtonAsync();
@@ -127,36 +131,79 @@ public class ButtonClickHandler : IClickHandler
                 await PushChooseDepositMethodAsync();
                 break;
             case Command.DepositByCard:
-                await PushDepositByCardMethodAsync();
+                var deposit = commandDto.Param != null ? JsonConvert.DeserializeObject<DepositDto>(commandDto.Param!) : null;
+                await PushDepositByCardButtonAsync(deposit);
                 break;
-            case Command.ChangeDeposit:
-            case Command.ChooseDepositCurrency:
+            case Command.ChangeDepositAmount:
                 var depositDto = JsonConvert.DeserializeObject<DepositDto>(commandDto.Param!);
-                await PushDepositByCardMethodAsync(depositDto);
+                await PushChangeDepositParametersAsync(depositDto);
+                break;
+            case Command.CreateDepositInvoice:
+                var depositAmount = JsonConvert.DeserializeObject<DepositDto>(commandDto.Param!);
+                await PushCreateDepositInvoiceAsync(depositAmount);
+                break;
+            case Command.BackToDepositByCardFromDeposit:
+                await PushBackFromDepositButtonAsync();
                 break;
             case Command.DoNothing:
+                await _telegramBotClient.AnswerCallbackQueryAsync(_telegramMessageDto.CallbackQueryId);
                 break;
         }
     }
 
-    private async Task PushDepositByCardMethodAsync()
+    private async Task PushStartAfterDepositingButtonAsync()
+    {
+        await _telegramBotClient.DeleteMessageAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId - 1); 
+        await StartBotAsync();
+    }
+
+    private async Task PushBackFromDepositButtonAsync()
     {
         var depositModel = new DepositModel
         {
-            Amount = AppConstants.DefaultDepositAmount,
+            AmountCents = AppConstants.DefaultDepositAmount,
             Currency = AppConstants.DefaultDepositCurrency
         };
+        var balance = (await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId)).Balance;
+        _inlineKeyboardButtonsGenerator.InitChooseDepositByCardMethod(depositModel, balance);
+        await _telegramBotClient.DeleteMessageAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId);
+        await _telegramBotClient.SendTextMessageAsync(_telegramMessageDto.ChatId, _inlineKeyboardButtonsGenerator.ReplyText,
+            replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
+    }
+
+    private async Task PushCreateDepositInvoiceAsync(DepositDto depositAmount)
+    {
+        var depositModel = _mapper.Map<DepositModel>(depositAmount);
+        _inlineKeyboardButtonsGenerator.InitInvoiceButtons(depositModel);
+
+        await _telegramBotClient.DeleteMessageAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId);
+        await _telegramBotClient.SendInvoiceAsync(_telegramMessageDto.ChatId,
+            "title", "desc", _telegramMessageDto.ChatId.ToString(),
+            AppConstants.TrazzonTestTokenProvider,
+            depositAmount.Currency.ToString(),
+            new[] {new LabeledPrice(depositAmount.Currency.ToString(), depositAmount.AmountCents * 100)},
+            replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
+    }
+
+    private async Task PushDepositByCardButtonAsync(DepositDto? depositDto)
+    {
+        var depositModel = depositDto == null
+            ? new DepositModel
+            {
+                AmountCents = AppConstants.DefaultDepositAmount,
+                Currency = AppConstants.DefaultDepositCurrency
+            }
+            : _mapper.Map<DepositModel>(depositDto);
+
         var balance = (await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId)).Balance;
         _inlineKeyboardButtonsGenerator.InitChooseDepositByCardMethod(depositModel, balance);
         await EditCurrentScreenAsync();
     }
 
-
-    private async Task PushDepositByCardMethodAsync(DepositDto depositDto)
+    private async Task PushChangeDepositParametersAsync(DepositDto depositDto)
     {
         var depositModel = _mapper.Map<DepositModel>(depositDto);
-        var balance = (await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId)).Balance;
-        _inlineKeyboardButtonsGenerator.InitChooseDepositByCardMethod(depositModel, balance);
+        _inlineKeyboardButtonsGenerator.InitDepositPanel(depositModel);
         await EditCurrentScreenAsync();
     }
 

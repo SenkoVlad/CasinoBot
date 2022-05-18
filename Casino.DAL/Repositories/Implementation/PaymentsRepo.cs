@@ -18,7 +18,7 @@ public class PaymentsRepo : IPaymentsRepo
     public void AddPayment(Payment payment)
     {
         using var db = new SqlConnection(_connectionString);
-        var sqlQuery = "INSERT INTO dbo.Payments (paymentId, chatId, currencyId, totalAmount) VALUES (@paymentId, @chatId, @currencyId, @totalAmount)";
+        var sqlQuery = "INSERT INTO dbo.Payments (paymentProviderId, chatId, currencyId, totalAmount) VALUES (@paymentProviderId, @chatId, @currencyId, @totalAmount)";
         db.Execute(sqlQuery, payment);
     }
 }

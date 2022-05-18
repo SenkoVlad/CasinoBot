@@ -53,4 +53,7 @@ public class Resources
     public const string ChooseDepositMethod = "ChooseDepositMethod";
     public const string DepositInvoice = "DepositInvoice";
     public const string ChooseDepositParameters = "ChooseDepositParameters";
+    public const string ChangeDepositParametersButtonText = "ChangeDepositParametersButtonText";
+    public const string CurrentDepositParameter = "CurrentDepositParameter";
+    public const string DepositButtonText = "DepositButtonText";
 }

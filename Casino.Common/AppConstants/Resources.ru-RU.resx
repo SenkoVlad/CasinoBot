@@ -135,6 +135,9 @@
   <data name="Card" xml:space="preserve">
     <value>Банковская карта 💳</value>
   </data>
+  <data name="ChangeDepositParametersButtonText" xml:space="preserve">
+    <value>Параметры депозита ⚙️</value>
+  </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Выбери действие ⤵️</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="ConfirmWithdrawQuestion" xml:space="preserve">
     <value>Вы подтверждаете вывод средств {0:D}🍀?</value>
+  </data>
+  <data name="CurrentDepositParameter" xml:space="preserve">
+    <value>Ты хочешь пополнить счёт на {0:D} {1:S}</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Текущий язык: {0:S} {1:S}</value>
@@ -174,6 +180,9 @@
   </data>
   <data name="DepositBalance" xml:space="preserve">
     <value>Пополнить баланс</value>
+  </data>
+  <data name="DepositButtonText" xml:space="preserve">
+    <value>Внести платёж</value>
   </data>
   <data name="DepositInstruction" xml:space="preserve">
     <value>Инструкция как пополнить баланс 📝</value>

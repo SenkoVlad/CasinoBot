@@ -4,7 +4,7 @@ create table Payments
 	id int identity
 		constraint Payments_pk
 			primary key nonclustered,
-	paymentId BIGINT not null,
+	paymentProviderId VARCHAR(100) not null,
 	chatId BIGINT not null,
 	currencyId int not null,
 	totalAmount FLOAT not null,

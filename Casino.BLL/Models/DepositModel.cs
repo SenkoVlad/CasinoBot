@@ -5,9 +5,10 @@ namespace Casino.BLL.Models;
 public class DepositModel
 {
     public DepositCurrency Currency { get; set; }
-    public int Amount { get; set; }
 
-    public string GetDefaultChangeAmount()
+    public int AmountCents { get; set; }
+
+    public string GetDefaultChangeAmountString()
     {
         switch (Currency)
         {
@@ -25,80 +26,66 @@ public class DepositModel
     public override string ToString()
     {
         return string.Concat(
-            Amount, 
+            AmountCents, 
             Environment.NewLine,
             Currency.ToString());
     }
 
-    public int GetHalvedAmount()
+    public int IncreasedAmount()
     {
-        var halvedAmount = Amount / 2;
+        return Currency switch
+        {
+            DepositCurrency.EURO => AmountCents + AppConstants.EuroDefaultDepositIncreasingAmount,
+            DepositCurrency.USD => AmountCents + AppConstants.UsdDefaultDepositIncreasingAmount,
+            DepositCurrency.RUB => AmountCents + AppConstants.RubDefaultDepositIncreasingAmount,
+            _ => throw new Exception($"{nameof(IncreasedAmount)} currency is out from default")
+        };
+    }
+
+    public int DecreaseAmount()
+    {
+        int decreasedAmount;
         switch (Currency)
         {
             case DepositCurrency.EURO:
-                return halvedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
-                    ? Amount 
+                decreasedAmount = AmountCents - AppConstants.EuroDefaultDepositIncreasingAmount;
+                return decreasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.EuroDefaultDepositIncreasingAmount;
             case DepositCurrency.USD:
-                return halvedAmount >= AppConstants.UsdDefaultDepositIncreasingAmount
-                    ? Amount
+                decreasedAmount = AmountCents - AppConstants.UsdDefaultDepositIncreasingAmount;
+                return decreasedAmount >= AppConstants.UsdDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.UsdDefaultDepositIncreasingAmount;
             case DepositCurrency.RUB:
-                return halvedAmount >= AppConstants.RubDefaultDepositIncreasingAmount
-                    ? Amount
+                decreasedAmount = AmountCents - AppConstants.RubDefaultDepositIncreasingAmount;
+                return decreasedAmount >= AppConstants.RubDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.RubDefaultDepositIncreasingAmount;
             default:
-                throw new Exception($"{nameof(GetHalvedAmount)} currency is out from default");
+                throw new Exception($"{nameof(DecreaseAmount)} currency is out from default");
         }
     }
 
-    public int GetIncreasedAmount()
+    public int HalveAmount()
     {
-        int increasedAmount;
+        int decreasedAmount = AmountCents / 2;
         switch (Currency)
         {
             case DepositCurrency.EURO:
-                increasedAmount = Amount - AppConstants.EuroDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
-                    ? Amount
+                return decreasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.EuroDefaultDepositIncreasingAmount;
             case DepositCurrency.USD:
-                increasedAmount = Amount - AppConstants.UsdDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.UsdDefaultDepositIncreasingAmount
-                    ? Amount
+                return decreasedAmount >= AppConstants.UsdDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.UsdDefaultDepositIncreasingAmount;
             case DepositCurrency.RUB:
-                increasedAmount = Amount - AppConstants.RubDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.RubDefaultDepositIncreasingAmount
-                    ? Amount
+                return decreasedAmount >= AppConstants.RubDefaultDepositIncreasingAmount
+                    ? decreasedAmount
                     : AppConstants.RubDefaultDepositIncreasingAmount;
             default:
-                throw new Exception($"{nameof(GetHalvedAmount)} currency is out from default");
-        }
-    }
-
-    public int GetDecreaseAmount()
-    {
-        int increasedAmount;
-        switch (Currency)
-        {
-            case DepositCurrency.EURO:
-                increasedAmount = Amount + AppConstants.EuroDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
-                    ? Amount
-                    : AppConstants.EuroDefaultDepositIncreasingAmount;
-            case DepositCurrency.USD:
-                increasedAmount = Amount + AppConstants.UsdDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.UsdDefaultDepositIncreasingAmount
-                    ? Amount
-                    : AppConstants.UsdDefaultDepositIncreasingAmount;
-            case DepositCurrency.RUB:
-                increasedAmount = Amount + AppConstants.RubDefaultDepositIncreasingAmount;
-                return increasedAmount >= AppConstants.RubDefaultDepositIncreasingAmount
-                    ? Amount
-                    : AppConstants.RubDefaultDepositIncreasingAmount;
-            default:
-                throw new Exception($"{nameof(GetHalvedAmount)} currency is out from default");
+                throw new Exception($"{nameof(DecreaseAmount)} currency is out from default");
         }
     }
 }

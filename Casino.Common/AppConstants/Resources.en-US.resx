@@ -138,6 +138,9 @@
   <data name="CardDeposit" xml:space="preserve">
     <value>Card 💳</value>
   </data>
+  <data name="ChangeDepositParametersButtonText" xml:space="preserve">
+    <value>Parameter of the deposit ⚙️</value>
+  </data>
   <data name="ChooseAction" xml:space="preserve">
     <value>Choose an action ⤵️</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="ConfirmWithdrawQuestion" xml:space="preserve">
     <value>Do you confitm the withdraw {0:D}🍀?</value>
+  </data>
+  <data name="CurrentDepositParameter" xml:space="preserve">
+    <value>You want to deposit by card {0:D} {1:S}</value>
   </data>
   <data name="CurrentLanguage" xml:space="preserve">
     <value>Current language is: {0:S} {1:S}</value>
@@ -177,6 +183,9 @@ You won {0:D} {1:S}</value>
   </data>
   <data name="DepositBalance" xml:space="preserve">
     <value>Deposit money</value>
+  </data>
+  <data name="DepositButtonText" xml:space="preserve">
+    <value>Deposit</value>
   </data>
   <data name="DepositInstruction" xml:space="preserve">
     <value>Instruction how to top up balance 📝</value>

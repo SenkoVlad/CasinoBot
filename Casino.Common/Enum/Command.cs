@@ -28,7 +28,8 @@ public enum Command
     ChangeDartsBet,
     ThrowDart,
     DepositByCard,
-    GetDepositInvoice,
-    ChangeDeposit,
-    ChooseDepositCurrency
+    CreateDepositInvoice,
+    ChangeDepositAmount,
+    BackToDepositByCardFromDeposit,
+    StartAfterDepositing
 }
