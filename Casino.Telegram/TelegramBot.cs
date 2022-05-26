@@ -62,12 +62,12 @@ class TelegramBot
     {
         Task.Run(async () =>
         {
+            using var serviceScope = _hosting.Services.CreateScope();
+            var provider = serviceScope.ServiceProvider;
+            var telegramMessage = GetTelegramMessageDto(newMessage);
+
             try
             {
-                using var serviceScope = _hosting!.Services.CreateScope();
-                var provider = serviceScope.ServiceProvider;
-                var telegramMessage = GetTelegramMessageDto(newMessage);
-
                 SetChatLanguage(provider, telegramMessage.ChatId);
 
                 switch (telegramMessage.MessageType)
@@ -92,8 +92,12 @@ class TelegramBot
             {
                 Console.WriteLine(e);
                 if (newMessage.CallbackQuery != null)
+                {
                     await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
+                }
 
+                telegramMessage.CommandDto.Command = Command.Start;
+                await ProcessButtonClickAsync(telegramMessage, _bot, provider);
             }
         }, cancellationToken);
     }

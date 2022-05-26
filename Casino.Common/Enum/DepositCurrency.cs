@@ -1,9 +1,8 @@
-﻿namespace Casino.BLL.Models
+﻿namespace Casino.Common.Enum;
+
+public enum DepositCurrency
 {
-    public enum DepositCurrency
-    {
-        USD,
-        EURO,
-        RUB
-    }
+    USD,
+    EUR,
+    RUB
 }

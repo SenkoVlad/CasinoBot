@@ -1,4 +1,5 @@
 ﻿using Casino.Common.AppConstants;
+using Casino.Common.Enum;
 
 namespace Casino.BLL.Models;
 
@@ -12,7 +13,7 @@ public class DepositModel
     {
         switch (Currency)
         {
-            case DepositCurrency.EURO:
+            case DepositCurrency.EUR:
                 return string.Concat(AppConstants.EuroDefaultDepositIncreasingAmount, " ", Currency.ToString());
             case DepositCurrency.USD:
                 return string.Concat(AppConstants.UsdDefaultDepositIncreasingAmount, " ", Currency.ToString());
@@ -35,7 +36,7 @@ public class DepositModel
     {
         return Currency switch
         {
-            DepositCurrency.EURO => AmountCents + AppConstants.EuroDefaultDepositIncreasingAmount,
+            DepositCurrency.EUR => AmountCents + AppConstants.EuroDefaultDepositIncreasingAmount,
             DepositCurrency.USD => AmountCents + AppConstants.UsdDefaultDepositIncreasingAmount,
             DepositCurrency.RUB => AmountCents + AppConstants.RubDefaultDepositIncreasingAmount,
             _ => throw new Exception($"{nameof(IncreasedAmount)} currency is out from default")
@@ -47,7 +48,7 @@ public class DepositModel
         int decreasedAmount;
         switch (Currency)
         {
-            case DepositCurrency.EURO:
+            case DepositCurrency.EUR:
                 decreasedAmount = AmountCents - AppConstants.EuroDefaultDepositIncreasingAmount;
                 return decreasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
                     ? decreasedAmount
@@ -72,7 +73,7 @@ public class DepositModel
         int decreasedAmount = AmountCents / 2;
         switch (Currency)
         {
-            case DepositCurrency.EURO:
+            case DepositCurrency.EUR:
                 return decreasedAmount >= AppConstants.EuroDefaultDepositIncreasingAmount
                     ? decreasedAmount
                     : AppConstants.EuroDefaultDepositIncreasingAmount;

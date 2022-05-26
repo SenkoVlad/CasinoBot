@@ -179,7 +179,7 @@ public class ButtonClickHandler : IClickHandler
         await _telegramBotClient.DeleteMessageAsync(_telegramMessageDto.ChatId, _telegramMessageDto.MessageId);
         await _telegramBotClient.SendInvoiceAsync(_telegramMessageDto.ChatId,
             "title", "desc", _telegramMessageDto.ChatId.ToString(),
-            AppConstants.TrazzonTestTokenProvider,
+            AppConstants.UnlimintTestTokenProvider,
             depositAmount.Currency.ToString(),
             new[] {new LabeledPrice(depositAmount.Currency.ToString(), depositAmount.AmountCents * 100)},
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);

@@ -39,8 +39,6 @@ class Program
                     .AddAutoMapper(m => m.AddMaps(GetSolutionAssemblies())))
             .Build();
 
-
-
         var telegramBot = new TelegramBot(hosting);
         telegramBot.StartReceiving();
 

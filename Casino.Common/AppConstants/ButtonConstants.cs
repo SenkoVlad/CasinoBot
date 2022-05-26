@@ -12,11 +12,8 @@ public class ButtonConstants
     public const string DiceSixPointButtonText = "6️⃣";
 
     public const string DollarSignButtonText = "💵";
-    public const string DollarButtonText = "USD";
-    public const string EuroButtonText = "EURO";
     public const string IncreaseAmountButtonText = "🔼";
     public const string DecreaseAmountButtonText = "🔽";
     public const string MaxAmountButtonText = "MAX";
-    public const string RubButtonText = "RUB";
     public const string IsChecked = "✔️";
 }

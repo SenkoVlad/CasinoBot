@@ -16,7 +16,8 @@ IF NOT EXISTS
             (2, N'ETH', 150000),
             (3, N'BTC', 2044000),
             (4, N'RUB', 0.78),
-            (5, N'USD', 51);
+            (5, N'USD', 51),
+            (6, N'EUR', 53);
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

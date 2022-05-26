@@ -6,5 +6,6 @@ public enum Currency
     EHT,
     BTC,
     RUB,
-    USD
+    USD,
+    EUR
 }

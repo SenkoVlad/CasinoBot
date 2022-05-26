@@ -1,4 +1,4 @@
-﻿using Casino.BLL.Models;
+﻿using Casino.Common.Enum;
 
 namespace Casino.Common.Dtos;
 

@@ -65,6 +65,13 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ChooseFootball
             })
         };
+        var basketballGameButton = new InlineKeyboardButton(_localizer[Resources.BasketballGameButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ChooseBasketBall
+            })
+        };
         var dartsGameButton = new InlineKeyboardButton(_localizer[Resources.DartsGameButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -82,7 +89,8 @@ public class InlineKeyboardButtonsGenerator
 
         var buttonRows = new[] 
         {
-            new[] { footballGameButton, diceGameButton, dartsGameButton },
+            new[] { footballGameButton, diceGameButton },
+            new[] { basketballGameButton, dartsGameButton },
             new[] { backButton}
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
@@ -707,7 +715,7 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var euroButton = new InlineKeyboardButton(GetCurrencyButtonText(DepositCurrency.EURO, depositModel.Currency))
+        var euroButton = new InlineKeyboardButton(GetCurrencyButtonText(DepositCurrency.EUR, depositModel.Currency))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
@@ -715,7 +723,7 @@ public class InlineKeyboardButtonsGenerator
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
                     AmountCents = AppConstants.EuroDefaultDepositIncreasingAmount,
-                    Currency = DepositCurrency.EURO
+                    Currency = DepositCurrency.EUR
                 })
             })
         };
