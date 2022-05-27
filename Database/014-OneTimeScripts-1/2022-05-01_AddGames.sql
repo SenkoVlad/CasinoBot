@@ -15,7 +15,8 @@ IF NOT EXISTS
             VALUES ('Dice'),
                    ('Football'),
                    ('Darts'),
-                   ('Basketball')
+                   ('Basketball'),
+                   ('Bowling')
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES
