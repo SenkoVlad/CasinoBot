@@ -55,4 +55,7 @@ public class Resources
     public const string RealPlayButtonText = "RealPlayButtonText";
     public const string ThrowBasketBallButtonText = "ThrowBasketBallButtonText";
     public const string BasketballWonResource = "BasketballWonResource";
+    public const string HitBowlingBallButtonText = "HitBowlingBallButtonText";
+    public const string BowlingGameButtonText = "BowlingGameButtonText";
+    public const string WonMessageResource = "WonMessageResource";
 }

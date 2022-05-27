@@ -31,5 +31,9 @@ public enum Command
     PlayBasketball,
     ChangeBasketBet,
     ThrowBasketBall,
-    ChooseGame
+    ChooseGame,
+    PlayBowling,
+    ChangeBowlingBet,
+    HitBowlingBall,
+    ThrowBowlingBet
 }

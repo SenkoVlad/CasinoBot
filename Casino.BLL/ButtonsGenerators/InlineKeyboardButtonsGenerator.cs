@@ -83,6 +83,14 @@ public class InlineKeyboardButtonsGenerator
                 Param = Command.PlayDarts.ToString()
             })
         };
+        var bowlingGameButton = new InlineKeyboardButton(_localizer[Resources.BowlingGameButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ChooseGame,
+                Param = Command.PlayBowling.ToString()
+            })
+        };
         var backButton = new InlineKeyboardButton(_localizer[Resources.BackButtonText])
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
@@ -95,6 +103,7 @@ public class InlineKeyboardButtonsGenerator
         {
             new[] { footballGameButton, diceGameButton },
             new[] { basketballGameButton, dartsGameButton },
+            new []{ bowlingGameButton },
             new[] { backButton}
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);

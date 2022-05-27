@@ -139,6 +139,9 @@
     <value>Hit 🏀
 You won {0:D} {1:S}</value>
   </data>
+  <data name="BowlingGameButtonText" xml:space="preserve">
+    <value>Bowling 🎳</value>
+  </data>
   <data name="Card" xml:space="preserve">
     <value>Credit card 💳</value>
   </data>
@@ -240,6 +243,9 @@ You won {0:D} {1:S}</value>
   <data name="GoodLuck" xml:space="preserve">
     <value>Good luck 🤞</value>
   </data>
+  <data name="HitBowlingBallButtonText" xml:space="preserve">
+    <value>Throw 🎳 </value>
+  </data>
   <data name="HitFootBall" xml:space="preserve">
     <value>Hit ⚽️</value>
   </data>
@@ -311,5 +317,9 @@ You won {0:D} {1:S}</value>
   <data name="WithdrawSuccess" xml:space="preserve">
     <value>Your withdraw will be processed soon
 You will be sent a message with confirmation ✅</value>
+  </data>
+  <data name="WonMessageResource" xml:space="preserve">
+    <value>Win 🏆
+You won {0:D} {1:S}</value>
   </data>
 </root>

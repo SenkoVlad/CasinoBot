@@ -139,6 +139,9 @@
     <value>Попал 🏀
 Ты выиграл {0:D} {1:S}</value>
   </data>
+  <data name="BowlingGameButtonText" xml:space="preserve">
+    <value>Боулинг 🎳</value>
+  </data>
   <data name="Card" xml:space="preserve">
     <value>Банковская карта 💳</value>
   </data>
@@ -237,6 +240,9 @@
   <data name="GoodLuck" xml:space="preserve">
     <value>Удачи 🤞</value>
   </data>
+  <data name="HitBowlingBallButtonText" xml:space="preserve">
+    <value>Бросить 🎳 </value>
+  </data>
   <data name="HitFootBall" xml:space="preserve">
     <value>Удар⚽️</value>
   </data>
@@ -307,5 +313,9 @@
   </data>
   <data name="WithdrawSuccess" xml:space="preserve">
     <value>Успешно! Скоро вывод средст будет обработан и ты получишь сообщение о зачислении ✅</value>
+  </data>
+  <data name="WonMessageResource" xml:space="preserve">
+    <value>Победа 🏆
+Ты выиграл {0:D} {1:S}</value>
   </data>
 </root>

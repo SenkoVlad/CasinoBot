@@ -93,6 +93,10 @@ public class ButtonClickHandler : IClickHandler
                 var isDemoFootballPlay = bool.Parse(commandDto.Param!);
                 await PushFootballPlayButtonAsync(isDemoFootballPlay);
                 break;
+            case Command.PlayBowling:
+                var isDemoBowlingPlay = bool.Parse(commandDto.Param!);
+                await PushBowlingPlayButtonAsync(isDemoBowlingPlay);
+                break;
             case Command.HitBall:
                 var footballGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
                 await PushHitBallButtonAsync(footballGameParam);
@@ -104,6 +108,10 @@ public class ButtonClickHandler : IClickHandler
             case Command.DiceBet:
                 var diceGameParamDto = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param);
                 await PushChooseDiceAsync(diceGameParamDto);
+                break;
+            case Command.HitBowlingBall:
+                var bowlingGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
+                await PushHitBowlingBallAsync(bowlingGameParam);
                 break;
             case Command.ChangeDiceBet:
                 var diceGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
@@ -120,6 +128,10 @@ public class ButtonClickHandler : IClickHandler
             case Command.ChangeBasketBet:
                 var basketGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushBasketButtonAsync(basketGame.IsDemo, basketGame.Bet);
+                break;
+            case Command.ChangeBowlingBet:
+                var bowlingGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
+                await PushBowlingPlayButtonAsync(bowlingGame.IsDemo, bowlingGame.Bet);
                 break;
             case Command.DepositByTon:
                 await PushDepositByTonButtonAsync();  
@@ -158,6 +170,41 @@ public class ButtonClickHandler : IClickHandler
                 await _telegramBotClient.AnswerCallbackQueryAsync(_telegramMessageDto.CallbackQueryId);
                 break;
         }
+    }
+
+    private async Task PushHitBowlingBallAsync(GameBetParamDto bowlingGameParam)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            GameId = (int)Common.Enum.Games.Bowling,
+            Chat = chatModel,
+            UserBet = bowlingGameParam.Bet,
+            IsDemoPlay = bowlingGameParam.IsDemo
+        };
+        var footBallGame = new BowlingGame(gameModel, _telegramMessageDto.MessageId,
+            _telegramBotClient, _serviceProvider);
+        await footBallGame.PlayRoundAsync();
+    }
+
+    private async Task PushBowlingPlayButtonAsync(bool isDemoBowlingPlay, int userBet = AppConstants.MinBet)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            Chat = chatModel,
+            UserBet = userBet,
+            IsDemoPlay = isDemoBowlingPlay
+        };
+        var initGameModel = new InitGameModel
+        {
+            ChangeGameBetCommand = Command.ChangeBowlingBet,
+            PlayGameCommand = Command.HitBowlingBall,
+            PlayToCommand = Command.PlayBowling,
+            PlayButtonText = _localizer[Resources.HitBowlingBallButtonText]
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayGameButtons(gameModel, initGameModel);
+        await EditCurrentScreenAsync();
     }
 
     private async Task PushThrowBasketballButtonAsync(GameBetParamDto basketGameParam)
