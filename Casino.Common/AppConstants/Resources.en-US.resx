@@ -132,6 +132,13 @@
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Please choose another amount, you don't have enough on balance to withdraw ❗️</value>
   </data>
+  <data name="BasketballGameButtonText" xml:space="preserve">
+    <value>Basketball ⛹️</value>
+  </data>
+  <data name="BasketballWonResource" xml:space="preserve">
+    <value>Hit 🏀
+You won {0:D} {1:S}</value>
+  </data>
   <data name="Card" xml:space="preserve">
     <value>Credit card 💳</value>
   </data>
@@ -175,6 +182,9 @@ You won {0:D} {1:S}</value>
   <data name="DatsLost" xml:space="preserve">
     <value>Miss 😟 Better luck next time</value>
   </data>
+  <data name="DemoPlayButtonText" xml:space="preserve">
+    <value>Play demo ♦️</value>
+  </data>
   <data name="DemoPlayDarts" xml:space="preserve">
     <value>Play darts demo ♦️</value>
   </data>
@@ -217,9 +227,6 @@ Top up the balance 💵</value>
   <data name="Football" xml:space="preserve">
     <value>Football ⚽️</value>
   </data>
-  <data name="FootballMiss" xml:space="preserve">
-    <value>Miss 😟</value>
-  </data>
   <data name="FootballWon" xml:space="preserve">
     <value>GOAL 🥅
 You won {0:D} {1:S}</value>
@@ -233,11 +240,14 @@ You won {0:D} {1:S}</value>
   <data name="GoodLuck" xml:space="preserve">
     <value>Good luck 🤞</value>
   </data>
-  <data name="HitBall" xml:space="preserve">
+  <data name="HitFootBall" xml:space="preserve">
     <value>Hit ⚽️</value>
   </data>
   <data name="Menu" xml:space="preserve">
     <value>Menu 🎛</value>
+  </data>
+  <data name="MissedBall" xml:space="preserve">
+    <value>Miss 😟</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
     <value>Your balance is {0:F2} 🍀</value>
@@ -260,6 +270,9 @@ You won {0:D} {1:S}</value>
   <data name="PlayFootballReal" xml:space="preserve">
     <value>Play football real 🍀</value>
   </data>
+  <data name="RealPlayButtonText" xml:space="preserve">
+    <value>Play real 🍀</value>
+  </data>
   <data name="RealPlayDarts" xml:space="preserve">
     <value>Play darts real 🍀</value>
   </data>
@@ -279,6 +292,9 @@ You won {0:D} {1:S}</value>
   </data>
   <data name="SomethingWrongTryAgain" xml:space="preserve">
     <value>Something wrong. Please try again 🔴⚠️</value>
+  </data>
+  <data name="ThrowBasketBallButtonText" xml:space="preserve">
+    <value>Throw 🏀</value>
   </data>
   <data name="ThrowDart" xml:space="preserve">
     <value>Throw 🎯</value>

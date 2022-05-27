@@ -9,7 +9,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace Casino.BLL.Games;
 
-public class FootBallGame : Game
+public class BasketBallGame : Game
 {
     private readonly int _messageId;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
@@ -18,7 +18,7 @@ public class FootBallGame : Game
     private readonly ITelegramBotClient _telegramBotClient;
     private int _goodLuckMessageId;
 
-    public FootBallGame(
+    public BasketBallGame(
         GameModel gameModel,
         int messageId,
         ITelegramBotClient telegramBotClient,
@@ -46,18 +46,17 @@ public class FootBallGame : Game
         _gameModel.Chat = chatModel;
         var initGameModel = new InitGameModel
         {   
-            ChangeGameBetCommand = Command.ChangeFootballBet,
-            PlayGameCommand = Command.HitBall,
-            PlayToCommand = Command.PlayFootball,
-            PlayButtonText = _localizer[Resources.HitFootBallButtonText]
+            ChangeGameBetCommand = Command.ChangeBasketBet,
+            PlayGameCommand = Command.ThrowBasketBall,
+            PlayToCommand = Command.PlayBasketball,
+            PlayButtonText = _localizer[Resources.ThrowBasketBallButtonText]
         };
         _inlineKeyboardButtonsGenerator.InitPlayGameButtons(_gameModel, initGameModel);
-        var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         var footballGameButtonText = _gameModel.IsDemoPlay
             ? _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
             : _localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];
-        await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: footballGameButtonText,
-            replyMarkup: inlineKeyboardButtons);
+        await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, footballGameButtonText,
+            replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }
 
     protected override async Task SentStartMessageAsync()
@@ -69,7 +68,7 @@ public class FootBallGame : Game
 
     protected override async Task PlayGameRoundAsync()
     {
-        var hitResult = await _telegramBotClient.SendDiceAsync(_gameModel.Chat.Id, Emoji.Football);
+        var hitResult = await _telegramBotClient.SendDiceAsync(_gameModel.Chat.Id, Emoji.Basketball);
         _gameModel.DiceResult = hitResult.Dice!.Value;
     }
 
@@ -79,7 +78,7 @@ public class FootBallGame : Game
         if (saveGameResultModel.Success)
         {
             roundResultMessage = _gameModel.BettingResult.IsWon
-                ? _localizer[Resources.FootballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+                ? _localizer[Resources.BasketballWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
                 : _localizer[Resources.MissedResource];
         }
         else

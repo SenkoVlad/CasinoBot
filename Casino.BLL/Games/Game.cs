@@ -16,19 +16,19 @@ public abstract class Game
     private readonly int _delayAfterRound;
     private readonly IGameResultsRepo _gameResultsRepo;
     
-    protected readonly IStringLocalizer<Resources> _localizer;
-    protected readonly IChatService _chatService;
+    protected readonly IStringLocalizer<Resources> Localizer;
+    protected readonly IChatService ChatService;
     protected double WinningsScore;
-    protected readonly GameParameters _gameParameters;
+    protected readonly GameParameters GameParameters;
 
     protected Game(GameModel gameModel, IServiceProvider serviceProvider, int delayAfterRound)
     {
         _gameModel = gameModel;
         _delayAfterRound = delayAfterRound;
-        _chatService = serviceProvider.GetRequiredService<IChatService>();
+        ChatService = serviceProvider.GetRequiredService<IChatService>();
         _gameResultsRepo = serviceProvider.GetRequiredService<IGameResultsRepo>();
-        _gameParameters = serviceProvider.GetRequiredService<GameParameters>();
-        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
+        GameParameters = serviceProvider.GetRequiredService<GameParameters>();
+        Localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
     }
 
     public virtual async Task PlayRoundAsync()
@@ -79,13 +79,13 @@ public abstract class Game
                 Bet = _gameModel.UserBet,
                 BettingResultId = _gameModel.BettingResult.Id
             });
-            WinningsScore = await _chatService.ChangeBalanceAsync(_gameModel);
+            WinningsScore = await ChatService.ChangeBalanceAsync(_gameModel);
             transactionScope.Complete();
 
             return new SaveGameResultModel
             {
                 Success = true,
-                Message = _localizer[Resources.GameRoundFailed]
+                Message = Localizer[Resources.GameRoundFailed]
             };
         }
         catch (Exception e)
@@ -94,19 +94,19 @@ public abstract class Game
             return new SaveGameResultModel
             {
                 Success = false,
-                Message = _localizer[Resources.GameRoundFailed]
+                Message = Localizer[Resources.GameRoundFailed]
             };
         }
     }
 
     protected virtual void SetRoundResult()
     {
-        var bettingWinResult = _gameParameters.BettingResults.FirstOrDefault(b => 
+        var bettingWinResult = GameParameters.BettingResults.FirstOrDefault(b => 
             b.DiceResult == _gameModel.DiceResult &&
             b.GameId == _gameModel.GameId &&
             b.IsWon);
 
-        var bettingLostResult = _gameParameters.BettingResults.FirstOrDefault(b =>
+        var bettingLostResult = GameParameters.BettingResults.FirstOrDefault(b =>
             b.GameId == _gameModel.GameId &&
             !b.IsWon);
 

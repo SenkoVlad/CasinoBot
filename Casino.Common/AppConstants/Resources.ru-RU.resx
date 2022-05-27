@@ -132,6 +132,13 @@
   <data name="BalanceIsNotEnoughToWithdraw" xml:space="preserve">
     <value>Пожалуйста, выбери другую сумму, у тебя недостаточно средств для вывода ❗️</value>
   </data>
+  <data name="BasketballGameButtonText" xml:space="preserve">
+    <value>Баскетбол ⛹️</value>
+  </data>
+  <data name="BasketballWonResource" xml:space="preserve">
+    <value>Попал 🏀
+Ты выиграл {0:D} {1:S}</value>
+  </data>
   <data name="Card" xml:space="preserve">
     <value>Банковская карта 💳</value>
   </data>
@@ -171,6 +178,9 @@
   </data>
   <data name="DatsLost" xml:space="preserve">
     <value>Промах 😟 Удачи в следующий раз</value>
+  </data>
+  <data name="DemoPlayButtonText" xml:space="preserve">
+    <value>Играть демо ♦️</value>
   </data>
   <data name="DemoPlayDarts" xml:space="preserve">
     <value>Играть в дартс демо ♦️</value>
@@ -214,9 +224,6 @@
   <data name="Football" xml:space="preserve">
     <value>Футбол ⚽️</value>
   </data>
-  <data name="FootballMiss" xml:space="preserve">
-    <value>Промах 😟</value>
-  </data>
   <data name="FootballWon" xml:space="preserve">
     <value>ГОЛ 🥅
 Ты выиграл {0:D} {1:S}</value>
@@ -230,11 +237,14 @@
   <data name="GoodLuck" xml:space="preserve">
     <value>Удачи 🤞</value>
   </data>
-  <data name="HitBall" xml:space="preserve">
+  <data name="HitFootBall" xml:space="preserve">
     <value>Удар⚽️</value>
   </data>
   <data name="Menu" xml:space="preserve">
     <value>Меню 🎛</value>
+  </data>
+  <data name="MissedBall" xml:space="preserve">
+    <value>Промах 😟</value>
   </data>
   <data name="MyBalance" xml:space="preserve">
     <value>Твой баланс: {0:F2} 🍀</value>
@@ -257,6 +267,9 @@
   <data name="PlayFootballReal" xml:space="preserve">
     <value>Игра на деньги 🍀</value>
   </data>
+  <data name="RealPlayButtonText" xml:space="preserve">
+    <value>Играть реально 🍀</value>
+  </data>
   <data name="RealPlayDarts" xml:space="preserve">
     <value>Играть в дартс на деньги 🍀</value>
   </data>
@@ -276,6 +289,9 @@
   </data>
   <data name="SomethingWrongTryAgain" xml:space="preserve">
     <value>Что-то не так. Попробуй ещё раз 🔴⚠️</value>
+  </data>
+  <data name="ThrowBasketBallButtonText" xml:space="preserve">
+    <value>Бросить 🏀</value>
   </data>
   <data name="ThrowDart" xml:space="preserve">
     <value>Бросить 🎯</value>

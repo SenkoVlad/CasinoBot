@@ -1,6 +1,7 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.Models;
 using Casino.Common.AppConstants;
+using Casino.Common.Enum;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
@@ -29,28 +30,35 @@ class DartsGame : Game
     protected override async Task SendDoNotHaveEnoughMoneyToPlayMessageAsync()
     {
         var message = _gameModel.IsDemoPlay ?
-            _localizer[Resources.DoNotHaveEnoughMoneyToDemoPlayResource] :
-            _localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource];
+            Localizer[Resources.DoNotHaveEnoughMoneyToDemoPlayResource] :
+            Localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, message,
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }
 
     protected override async Task InitGameAsync()
     {
-        var chatModel = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        var chatModel = await ChatService.GetChatByIdOrException(_gameModel.Chat.Id);
         _gameModel.Chat = chatModel;
-        _inlineKeyboardButtonsGenerator.InitDartsChooseBetButtons(_gameModel);
+        var initGameModel = new InitGameModel
+        {
+            PlayButtonText = Localizer[Resources.ThrowDartButtonText],
+            ChangeGameBetCommand = Command.ChangeDartsBet,
+            PlayGameCommand = Command.ThrowDarts,
+            PlayToCommand = Command.PlayDarts
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayGameButtons(_gameModel, initGameModel);
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
         var footballGameButtonText = _gameModel.IsDemoPlay
-            ? _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
-            : _localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];
+            ? Localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
+            : Localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];
         await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: footballGameButtonText,
             replyMarkup: inlineKeyboardButtons);
     }
 
     protected override async Task SentStartMessageAsync()
     {
-        var startMessage = $"{_localizer[Resources.GoodLuckResource]}";
+        var startMessage = $"{Localizer[Resources.GoodLuckResource]}";
         var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
@@ -67,8 +75,8 @@ class DartsGame : Game
         if (saveGameResultModel.Success)
         {
             roundResultMessage = _gameModel.BettingResult.IsWon
-                ? _localizer[Resources.DartsWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
-                : _localizer[Resources.DartsLostResource];
+                ? Localizer[Resources.DartsWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+                : Localizer[Resources.DartsLostResource];
         }
         else
         {

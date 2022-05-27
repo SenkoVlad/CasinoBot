@@ -14,7 +14,8 @@ IF NOT EXISTS
             INSERT INTO dbo.Games (name)
             VALUES ('Dice'),
                    ('Football'),
-                   ('Darts')
+                   ('Darts'),
+                   ('Basketball')
 
             INSERT INTO Maintenance.ExecutedOneTimeScripts(name)
             VALUES

@@ -10,6 +10,7 @@ using Casino.Common.Dtos;
 using Casino.Common.Enum;
 using Casino.DAL.Repositories.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types.Payments;
@@ -27,6 +28,7 @@ public class ButtonClickHandler : IClickHandler
     private readonly IChatService _chatService;
     private readonly IWithdrawService _withdrawService;
     private readonly IMapper _mapper;
+    private IStringLocalizer<Resources> _localizer;
 
     public ButtonClickHandler(TelegramMessageDto telegramMessageDto,
         ITelegramBotClient telegramBotClient, 
@@ -41,6 +43,7 @@ public class ButtonClickHandler : IClickHandler
         _chatService = serviceProvider.GetRequiredService<IChatService>();
         _withdrawService = serviceProvider.GetRequiredService<IWithdrawService>();
         _mapper = serviceProvider.GetRequiredService<IMapper>();
+        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
     }
 
     public async Task PushButtonAsync()
@@ -64,23 +67,13 @@ public class ButtonClickHandler : IClickHandler
                 await PushMenuButtonAsync();
                 break;
             case Command.Balance:
-            case Command.GetBalance:
                 await PushGetBalanceButtonAsync();
                 break;
-            case Command.ChooseFootball:
-                await PushChooseFootballGame();
+            case Command.ChooseGame:
+                var playToCommand = Enum.Parse<Command>(commandDto.Param!);
+                await PushChooseGameAsync(playToCommand);
                 break;
-            case Command.ChooseDice:
-                await PushChooseDiceGame();
-                break;
-            case Command.ChooseDarts:
-                await PushChooseDartsGame();
-                break;
-            case Command.HitBall:
-                var footballGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
-                await PushHitBallButtonAsync(footballGameParam);
-                break;
-            case Command.ThrowDart:
+            case Command.ThrowDarts:
                 var dartsGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
                 await PushThrowDartButtonAsync(dartsGameParam);
                 break;
@@ -92,9 +85,21 @@ public class ButtonClickHandler : IClickHandler
                 var isDemoDartsPlay = bool.Parse(commandDto.Param!);
                 await PushDartsButtonAsync(isDemoDartsPlay);
                 break;
+            case Command.PlayBasketball:
+                var isDemoBasketPlay = bool.Parse(commandDto.Param!);
+                await PushBasketButtonAsync(isDemoBasketPlay);
+                break;
             case Command.PlayFootball:
                 var isDemoFootballPlay = bool.Parse(commandDto.Param!);
                 await PushFootballPlayButtonAsync(isDemoFootballPlay);
+                break;
+            case Command.HitBall:
+                var footballGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
+                await PushHitBallButtonAsync(footballGameParam);
+                break;
+            case Command.ThrowBasketBall:
+                var basketGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
+                await PushThrowBasketballButtonAsync(basketGameParam);
                 break;
             case Command.DiceBet:
                 var diceGameParamDto = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param);
@@ -111,6 +116,10 @@ public class ButtonClickHandler : IClickHandler
             case Command.ChangeDartsBet:
                 var dartsGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
                 await PushDartsButtonAsync(dartsGame.IsDemo, dartsGame.Bet);
+                break;
+            case Command.ChangeBasketBet:
+                var basketGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
+                await PushBasketButtonAsync(basketGame.IsDemo, basketGame.Bet);
                 break;
             case Command.DepositByTon:
                 await PushDepositByTonButtonAsync();  
@@ -149,6 +158,41 @@ public class ButtonClickHandler : IClickHandler
                 await _telegramBotClient.AnswerCallbackQueryAsync(_telegramMessageDto.CallbackQueryId);
                 break;
         }
+    }
+
+    private async Task PushThrowBasketballButtonAsync(GameBetParamDto basketGameParam)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            GameId = (int)Common.Enum.Games.Basketball,
+            Chat = chatModel,
+            UserBet = basketGameParam.Bet,
+            IsDemoPlay = basketGameParam.IsDemo
+        };
+        var footBallGame = new BasketBallGame(gameModel, _telegramMessageDto.MessageId,
+            _telegramBotClient, _serviceProvider);
+        await footBallGame.PlayRoundAsync();
+    }
+
+    private async Task PushBasketButtonAsync(bool isDemoBasketPlay, int userDartsBet = AppConstants.MinBet)
+    {
+        var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
+        var gameModel = new GameModel
+        {
+            Chat = chatModel,
+            UserBet = userDartsBet,
+            IsDemoPlay = isDemoBasketPlay
+        };
+        var initGameModel = new InitGameModel
+        {
+            ChangeGameBetCommand = Command.ChangeBasketBet,
+            PlayGameCommand = Command.ThrowBasketBall,
+            PlayToCommand = Command.PlayBasketball,
+            PlayButtonText = _localizer[Resources.ThrowBasketBallButtonText]
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayGameButtons(gameModel, initGameModel);
+        await EditCurrentScreenAsync();
     }
 
     private async Task PushStartAfterDepositingButtonAsync()
@@ -238,13 +282,14 @@ public class ButtonClickHandler : IClickHandler
             UserBet = userDartsBet,
             IsDemoPlay = isDemoDartsPlay
         };
-        _inlineKeyboardButtonsGenerator.InitDartsChooseBetButtons(gameModel);
-        await EditCurrentScreenAsync();
-    }
-
-    private async Task PushChooseDartsGame()
-    {
-        _inlineKeyboardButtonsGenerator.InitChooseDartsMode();
+        var initGameModel = new InitGameModel
+        {
+            PlayButtonText = _localizer[Resources.ThrowDartButtonText],
+            ChangeGameBetCommand = Command.ChangeDartsBet,
+            PlayToCommand = Command.PlayDarts,
+            PlayGameCommand = Command.ThrowDarts
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayGameButtons(gameModel, initGameModel);
         await EditCurrentScreenAsync();
     }
 
@@ -281,12 +326,6 @@ public class ButtonClickHandler : IClickHandler
         await EditCurrentScreenAsync();
     }
 
-    private async Task PushChooseDiceGame()
-    {
-        _inlineKeyboardButtonsGenerator.InitChooseDiceMode();
-        await EditCurrentScreenAsync();
-    }
-
     private async Task PushSwitchLanguageAsync(string newLanguage)
     {
         if (CultureInfo.CurrentUICulture.ToString() == newLanguage)
@@ -305,9 +344,9 @@ public class ButtonClickHandler : IClickHandler
         await EditCurrentScreenAsync();
     }
 
-    private async Task PushChooseFootballGame()
+    private async Task PushChooseGameAsync(Command playToCommand)
     {
-        _inlineKeyboardButtonsGenerator.InitChooseFootballMode();
+        _inlineKeyboardButtonsGenerator.InitChooseGameMode(playToCommand);
         await EditCurrentScreenAsync();
     }
 
@@ -371,7 +410,14 @@ public class ButtonClickHandler : IClickHandler
             UserBet = userBet,
             IsDemoPlay = isDemoPlay
         };
-        _inlineKeyboardButtonsGenerator.InitPlayFootballButtons(gameModel);
+        var initGameModel = new InitGameModel
+        {
+            ChangeGameBetCommand = Command.ChangeFootballBet,
+            PlayGameCommand = Command.HitBall,
+            PlayToCommand = Command.PlayFootball,
+            PlayButtonText = _localizer[Resources.HitFootBallButtonText]
+        };
+        _inlineKeyboardButtonsGenerator.InitPlayGameButtons(gameModel, initGameModel);
         await EditCurrentScreenAsync();
     }
 

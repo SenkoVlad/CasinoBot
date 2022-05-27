@@ -1,9 +1,7 @@
 ﻿using Casino.BLL.ButtonsGenerators;
 using Casino.BLL.Models;
-using Casino.BLL.Services.Interfaces;
 using Casino.Common.AppConstants;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Localization;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
@@ -16,7 +14,6 @@ public class DiceGame : Game
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly int _diceBet;
     private readonly InlineKeyboardButtonsGenerator _inlineKeyboardButtonsGenerator;
-    private readonly IStringLocalizer<Resources> _localizer;
     private int _goodLuckMessageId;
     private int? _scoreResult;
 
@@ -32,26 +29,25 @@ public class DiceGame : Game
         _telegramBotClient = telegramBotClient;
         _diceBet = diceBet;
         _inlineKeyboardButtonsGenerator = serviceProvider.GetRequiredService<InlineKeyboardButtonsGenerator>();
-        _localizer = serviceProvider.GetRequiredService<IStringLocalizer<Resources>>();
     }
 
     protected override async Task SendDoNotHaveEnoughMoneyToPlayMessageAsync()
     {
         var message = _gameModel.IsDemoPlay ?
-            _localizer[Resources.DoNotHaveEnoughMoneyToDemoPlayResource]:
-            _localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource];
+            Localizer[Resources.DoNotHaveEnoughMoneyToDemoPlayResource]:
+            Localizer[Resources.DoNotHaveEnoughMoneyToRealPlayResource];
         await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, message,
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }
 
     protected override async Task InitGameAsync()
     {
-        var chatModel = await _chatService.GetChatByIdOrException(_gameModel.Chat.Id);
+        var chatModel = await ChatService.GetChatByIdOrException(_gameModel.Chat.Id);
         _gameModel.Chat = chatModel;
         _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel);
         var chooseYourBetMessage = _gameModel.IsDemoPlay
-            ? _localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
-            : _localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];
+            ? Localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
+            : Localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];
         var inlineKeyboardButtons = _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup;
 
         await _telegramBotClient.SendTextMessageAsync(_gameModel.Chat.Id, text: chooseYourBetMessage,
@@ -60,7 +56,7 @@ public class DiceGame : Game
 
     protected override async Task SentStartMessageAsync()
     {
-        var startMessage = $"{_localizer[Resources.GoodLuckResource]}";
+        var startMessage = $"{Localizer[Resources.GoodLuckResource]}";
         var goodLuckMessage = await _telegramBotClient.EditMessageTextAsync(_gameModel.Chat.Id, _messageId, startMessage);
         _goodLuckMessageId = goodLuckMessage.MessageId;
     }
@@ -73,7 +69,7 @@ public class DiceGame : Game
 
     protected override void SetRoundResult()
     {
-        var bettingResult = _gameParameters.BettingResults.FirstOrDefault(b => b.GameId == _gameModel.GameId &&
+        var bettingResult = GameParameters.BettingResults.FirstOrDefault(b => b.GameId == _gameModel.GameId &&
                                                                                b.IsWon == (_diceBet == _scoreResult));
         
         if (bettingResult == null)
@@ -95,8 +91,8 @@ public class DiceGame : Game
         if (saveGameResultModel.Success)
         {
             roundResultMessage = _gameModel.BettingResult.IsWon
-                ? _localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
-                : _localizer[Resources.DiceLostResource];
+                ? Localizer[Resources.DiceWonResource, (int)WinningsScore, _gameModel.IsDemoPlay ? AppConstants.DemoCurrencySign : AppConstants.RealCurrencySign]
+                : Localizer[Resources.DiceLostResource];
         }
         else
         {

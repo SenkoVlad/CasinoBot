@@ -7,7 +7,7 @@ public class Resources
     public const string ChooseGameModeResource = "ChooseGameMode";
     public const string GetMyBalanceResource = "MyBalance";
     public const string GetMyDemoBalanceResource = "MyDemoBalance";
-    public const string FootballMissResource = "FootballMiss";
+    public const string MissedResource = "MissedBall";
     public const string DoNotHaveEnoughMoneyToRealPlayResource = "DotHaveEnoughMoneyRealBalance";
     public const string FootballWonResource = "FootballWon";
     public const string DoNotHaveEnoughMoneyToDemoPlayResource = "DotHaveEnoughMoneyDemoBalance";
@@ -26,15 +26,9 @@ public class Resources
     public const string GamesButtonText = "Games";
     public const string DiceGameButtonText = "Dice";
     public const string FootballGameButtonText = "Football";
-    public const string DemoPlayFootBallButtonText = "PlayFootballDemo";
-    public const string DemoPlayDiceButtonText = "PlayDiceDemo";
-    public const string RealPlayFootBallButtonText = "PlayFootballReal";
-    public const string RealPlayDiceButtonText = "PlayDiceReal";
     public const string BackButtonText = "Back";
-    public const string HitBallButtonText = "HitBall";
+    public const string HitFootBallButtonText = "HitFootBall";
     public const string ThrowDartButtonText = "ThrowDart";
-    public const string DemoPlayDartsButtonText = "DemoPlayDarts";
-    public const string RealPlayDartsButtonText = "RealPlayDarts";
     public const string TonButtonText = "Ton";
     public const string CardButtonText = "Card";
 
@@ -56,4 +50,9 @@ public class Resources
     public const string ChangeDepositParametersButtonText = "ChangeDepositParametersButtonText";
     public const string CurrentDepositParameter = "CurrentDepositParameter";
     public const string DepositButtonText = "DepositButtonText";
+    public const string BasketballGameButtonText = "BasketballGameButtonText";
+    public const string DemoPlayButtonText = "DemoPlayButtonText";
+    public const string RealPlayButtonText = "RealPlayButtonText";
+    public const string ThrowBasketBallButtonText = "ThrowBasketBallButtonText";
+    public const string BasketballWonResource = "BasketballWonResource";
 }

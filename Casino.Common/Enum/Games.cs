@@ -4,5 +4,6 @@ public enum Games
 {
     Dice = 1,
     Football,
-    Darts
+    Darts,
+    Basketball
 }
