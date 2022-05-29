@@ -305,6 +305,9 @@ You won {0:D} {1:S}</value>
   <data name="ThrowDart" xml:space="preserve">
     <value>Throw 🎯</value>
   </data>
+  <data name="ThrowDiceButtonText" xml:space="preserve">
+    <value>Throw dice 🎲</value>
+  </data>
   <data name="Ton" xml:space="preserve">
     <value>TON 💎</value>
   </data>

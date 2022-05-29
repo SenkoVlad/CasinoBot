@@ -32,18 +32,18 @@ public class DepositModel
             Currency.ToString());
     }
 
-    public int IncreasedAmount()
+    public int GetIncreasedAmount()
     {
         return Currency switch
         {
             DepositCurrency.EUR => AmountCents + AppConstants.EuroDefaultDepositIncreasingAmount,
             DepositCurrency.USD => AmountCents + AppConstants.UsdDefaultDepositIncreasingAmount,
             DepositCurrency.RUB => AmountCents + AppConstants.RubDefaultDepositIncreasingAmount,
-            _ => throw new Exception($"{nameof(IncreasedAmount)} currency is out from default")
+            _ => throw new Exception($"{nameof(GetIncreasedAmount)} currency is out from default")
         };
     }
 
-    public int DecreaseAmount()
+    public int GetDecreaseAmount()
     {
         int decreasedAmount;
         switch (Currency)
@@ -64,11 +64,11 @@ public class DepositModel
                     ? decreasedAmount
                     : AppConstants.RubDefaultDepositIncreasingAmount;
             default:
-                throw new Exception($"{nameof(DecreaseAmount)} currency is out from default");
+                throw new Exception($"{nameof(GetDecreaseAmount)} currency is out from default");
         }
     }
 
-    public int HalveAmount()
+    public int GetHalveAmount()
     {
         int decreasedAmount = AmountCents / 2;
         switch (Currency)
@@ -86,7 +86,7 @@ public class DepositModel
                     ? decreasedAmount
                     : AppConstants.RubDefaultDepositIncreasingAmount;
             default:
-                throw new Exception($"{nameof(DecreaseAmount)} currency is out from default");
+                throw new Exception($"{nameof(GetDecreaseAmount)} currency is out from default");
         }
     }
 }

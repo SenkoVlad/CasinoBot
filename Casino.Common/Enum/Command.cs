@@ -7,7 +7,7 @@ public enum Command
     ToMenu,
     HitBall,
     PlayDice,
-    DiceBet,
+    ThrowDice,
     Settings,
     PlayFootball,
     DoNothing,

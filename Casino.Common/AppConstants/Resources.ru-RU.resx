@@ -302,6 +302,9 @@
   <data name="ThrowDart" xml:space="preserve">
     <value>Бросить 🎯</value>
   </data>
+  <data name="ThrowDiceButtonText" xml:space="preserve">
+    <value>Бросить кость 🎲</value>
+  </data>
   <data name="Ton" xml:space="preserve">
     <value>TON 💎</value>
   </data>

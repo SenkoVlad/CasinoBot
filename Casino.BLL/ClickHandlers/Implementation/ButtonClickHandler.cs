@@ -105,7 +105,7 @@ public class ButtonClickHandler : IClickHandler
                 var basketGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param);
                 await PushThrowBasketballButtonAsync(basketGameParam);
                 break;
-            case Command.DiceBet:
+            case Command.ThrowDice:
                 var diceGameParamDto = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param);
                 await PushChooseDiceAsync(diceGameParamDto);
                 break;
@@ -114,8 +114,8 @@ public class ButtonClickHandler : IClickHandler
                 await PushHitBowlingBallAsync(bowlingGameParam);
                 break;
             case Command.ChangeDiceBet:
-                var diceGameParam = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
-                await PushDiceButtonAsync(Convert.ToBoolean(diceGameParam.IsDemo), diceGameParam.Bet);
+                var diceGameParam = JsonConvert.DeserializeObject<DiceGameParamDto>(commandDto.Param!);
+                await PushDiceButtonAsync(Convert.ToBoolean(diceGameParam.IsDemo), diceGameParam.Bet, diceGameParam.Dice);
                 break;
             case Command.ChangeFootballBet:
                 var footballGame = JsonConvert.DeserializeObject<GameBetParamDto>(commandDto.Param!);
@@ -420,7 +420,7 @@ public class ButtonClickHandler : IClickHandler
             replyMarkup: _inlineKeyboardButtonsGenerator.GetInlineKeyboardMarkup);
     }
 
-    private async Task PushDiceButtonAsync(bool isDemoPlay, int userDiceBet = AppConstants.MinBet)
+    private async Task PushDiceButtonAsync(bool isDemoPlay, int userDiceBet = AppConstants.MinBet, int chosenDice = AppConstants.DefaultChosenDice)
     {
         var chatModel = await _chatService.GetChatByIdOrException(_telegramMessageDto.ChatId);
         var gameModel = new GameModel
@@ -429,7 +429,7 @@ public class ButtonClickHandler : IClickHandler
             UserBet = userDiceBet,
             IsDemoPlay = isDemoPlay
         };
-        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(gameModel);
+        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(gameModel, chosenDice);
         await EditCurrentScreenAsync();
     }
 

@@ -96,8 +96,8 @@ class TelegramBot
                     await _bot.AnswerCallbackQueryAsync(newMessage.CallbackQuery!.Id, cancellationToken: cancellationToken);
                 }
 
-                telegramMessage.CommandDto.Command = Command.Start;
-                await ProcessButtonClickAsync(telegramMessage, _bot, provider);
+                //telegramMessage.CommandDto.Command = Command.Start;
+                //await ProcessButtonClickAsync(telegramMessage, _bot, provider);
             }
         }, cancellationToken);
     }

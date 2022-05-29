@@ -44,7 +44,7 @@ public class DiceGame : Game
     {
         var chatModel = await ChatService.GetChatByIdOrException(_gameModel.Chat.Id);
         _gameModel.Chat = chatModel;
-        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel);
+        _inlineKeyboardButtonsGenerator.InitDiceChooseBetButtons(_gameModel, _diceBet);
         var chooseYourBetMessage = _gameModel.IsDemoPlay
             ? Localizer[Resources.GetMyDemoBalanceResource, _gameModel.Chat.DemoBalance]
             : Localizer[Resources.GetMyBalanceResource, _gameModel.Chat.Balance];

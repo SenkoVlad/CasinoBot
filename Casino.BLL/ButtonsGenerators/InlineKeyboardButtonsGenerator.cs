@@ -180,26 +180,26 @@ public class InlineKeyboardButtonsGenerator
             : _localizer[Resources.GetMyBalanceResource, gameModel.Chat.Balance];
     }
 
-    public void InitDiceChooseBetButtons(GameModel gameModel)
+    public void InitDiceChooseBetButtons(GameModel gameModel, int chosenDice)
     {
-        var onePointButton = new InlineKeyboardButton(ButtonConstants.DiceOnePointButtonText)
+        var onePointButton = new InlineKeyboardButton(GetDiceNumberButton(1, chosenDice, ButtonConstants.DiceOnePointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
-                    Dice = 1,
+                    Dice = 1,   
                     Bet = gameModel.UserBet,
                     IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
             })
         };
-        var twoPointButton = new InlineKeyboardButton(ButtonConstants.DiceTwoPointButtonText)
+        var twoPointButton = new InlineKeyboardButton(GetDiceNumberButton(2, chosenDice, ButtonConstants.DiceTwoPointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 2,
@@ -208,11 +208,11 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var threePointButton = new InlineKeyboardButton(ButtonConstants.DiceThreePointButtonText)
+        var threePointButton = new InlineKeyboardButton(GetDiceNumberButton(3, chosenDice, ButtonConstants.DiceThreePointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 3,
@@ -221,11 +221,11 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var fourPointButton = new InlineKeyboardButton(ButtonConstants.DiceFourPointButtonText)
+        var fourPointButton = new InlineKeyboardButton(GetDiceNumberButton(4, chosenDice, ButtonConstants.DiceFourPointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 4,
@@ -234,11 +234,11 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var fivePointButton = new InlineKeyboardButton(ButtonConstants.DiceFivePointButtonText)
+        var fivePointButton = new InlineKeyboardButton(GetDiceNumberButton(5, chosenDice, ButtonConstants.DiceFivePointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 5,
@@ -247,14 +247,27 @@ public class InlineKeyboardButtonsGenerator
                 })
             })
         };
-        var sixPointButton = new InlineKeyboardButton(ButtonConstants.DiceSixPointButtonText)
+        var sixPointButton = new InlineKeyboardButton(GetDiceNumberButton(6, chosenDice, ButtonConstants.DiceSixPointButtonText))
         {
             CallbackData = JsonConvert.SerializeObject(new CommandDto
             {
-                Command = Command.DiceBet,
+                Command = Command.ChangeDiceBet,
                 Param = JsonConvert.SerializeObject(new DiceGameParamDto
                 {
                     Dice = 6,
+                    Bet = gameModel.UserBet,
+                    IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
+                })
+            })
+        };
+        var throwDiceButton = new InlineKeyboardButton(_localizer[Resources.ThrowDiceButtonText])
+        {
+            CallbackData = JsonConvert.SerializeObject(new CommandDto
+            {
+                Command = Command.ThrowDice,
+                Param = JsonConvert.SerializeObject(new DiceGameParamDto
+                {
+                    Dice = chosenDice,
                     Bet = gameModel.UserBet,
                     IsDemo = Convert.ToInt32(gameModel.IsDemoPlay)
                 })
@@ -278,17 +291,14 @@ public class InlineKeyboardButtonsGenerator
             { 
                 onePointButton, twoPointButton, threePointButton, fourPointButton, fivePointButton, sixPointButton
             },
-            new[]
-            {
-                backButton
-            }
+            new [] { throwDiceButton },
+            new [] { backButton }
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = gameModel.IsDemoPlay
             ? _localizer[Resources.GetMyDemoBalanceResource, gameModel.Chat.DemoBalance]
             : _localizer[Resources.GetMyBalanceResource, gameModel.Chat.Balance];
     }
-
     public void InitChooseGameMode(Command commandToPlayGame)
     {
         var playDemoDiceButton = new InlineKeyboardButton(_localizer[Resources.DemoPlayButtonText])
@@ -657,7 +667,7 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    AmountCents = depositModel.HalveAmount(),
+                    AmountCents = depositModel.GetHalveAmount(),
                     Currency = depositModel.Currency
                 })
             })
@@ -670,7 +680,7 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    AmountCents = depositModel.IncreasedAmount(),
+                    AmountCents = depositModel.GetIncreasedAmount(),
                     Currency = depositModel.Currency
                 })
             })
@@ -683,7 +693,7 @@ public class InlineKeyboardButtonsGenerator
                 Command = Command.ChangeDepositAmount,
                 Param = JsonConvert.SerializeObject(new DepositDto
                 {
-                    AmountCents = depositModel.DecreaseAmount(),
+                    AmountCents = depositModel.GetDecreaseAmount(),
                     Currency = depositModel.Currency
                 })
             })
@@ -735,6 +745,15 @@ public class InlineKeyboardButtonsGenerator
         };
         GetInlineKeyboardMarkup = new InlineKeyboardMarkup(buttonRows);
         ReplyText = _localizer[Resources.CurrentDepositParameter, depositModel.AmountCents, depositModel.Currency.ToString()];
+    }
+
+    private string GetDiceNumberButton(int diceButtonFor, int chosenDice, string buttonText)
+    {
+        var diceIsChosen = diceButtonFor == chosenDice;
+
+        return diceIsChosen 
+            ? string.Concat("🔘", buttonText) 
+            : buttonText;
     }
 
     private static string GetCurrencyButtonText(DepositCurrency forCurrency, DepositCurrency chosenCurrency)

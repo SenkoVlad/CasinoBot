@@ -58,4 +58,5 @@ public class Resources
     public const string HitBowlingBallButtonText = "HitBowlingBallButtonText";
     public const string BowlingGameButtonText = "BowlingGameButtonText";
     public const string WonMessageResource = "WonMessageResource";
+    public const string ThrowDiceButtonText = "ThrowDiceButtonText";
 }
