@@ -1,13 +1,8 @@
 ﻿using System.Globalization;
-using System.Net;
-using System.Text;
-using System.Text.Json.Nodes;
 using AutoMapper;
 using Casino.BLL.ClickHandlers.Implementation;
 using Casino.BLL.Models;
-using Casino.BLL.Services.Implementation;
 using Casino.BLL.Services.Interfaces;
-using Casino.Common.AppConstants;
 using Casino.Common.Dtos;
 using Casino.Common.Enum;
 using Casino.Configuration.Configuration;
@@ -18,8 +13,6 @@ using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.Payments;
-using Telegram.Bot.Types.ReplyMarkups;
 using MessageType = Casino.Common.Enum.MessageType;
 
 namespace Casino.Telegram;
